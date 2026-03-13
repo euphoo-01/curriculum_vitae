@@ -1,3 +1,16 @@
 {
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "login": "Login",
+  "create": "Create",
+  "email": "Email",
+  "password": "Password",
+
+  "loginScreenTitle": "Welcome back",
+  "loginScreenGreeting": "Glad to see you! Login to proceed",
+  "forgotPassword": "FORGOT PASSWORD",
+
+  "regScreenTitle": "Register",
+  "regScreenGreeting": "Welcome! Create an account to proceed",
+  "createAccount": "Create account",
+  "haveAccount": "I HAVE ACCOUNT"
 }

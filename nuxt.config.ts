@@ -45,7 +45,7 @@ export default defineNuxtConfig({
         name: 'Русский',
       },
     ],
-    defaultLocale: 'en',
+    defaultLocale: 'ru',
     strategy: 'no_prefix',
   },
 
@@ -57,6 +57,34 @@ export default defineNuxtConfig({
 
   vuetify: {
     moduleOptions: {},
-    vuetifyOptions: {},
+    vuetifyOptions: {
+      theme: {
+        defaultTheme: 'light',
+        themes: {
+          light: {
+            dark: false,
+            colors: {
+              background: '#F5F5F7',
+              surface: '#F5F5F7',
+              primary: '#C63031',
+              secondary: '#767676',
+              'on-background': '#2E2E2E',
+              'on-surface': '#2E2E2E',
+            },
+          },
+          dark: {
+            dark: true,
+            colors: {
+              background: '#444444',
+              surface: '#444444',
+              primary: '#C63031',
+              secondary: '#767676',
+              'on-background': '#FFFFFF',
+              'on-surface': '#FFFFFF',
+            },
+          },
+        },
+      },
+    },
   },
 });

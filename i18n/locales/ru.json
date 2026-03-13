@@ -1,3 +1,16 @@
 {
-  "welcome": "Добро пожаловать"
+  "welcome": "Добро пожаловать",
+  "login": "Войти",
+  "create": "Создать",
+  "email": "Почта",
+  "password": "Пароль",
+
+  "loginScreenTitle": "С возвращением",
+  "loginScreenGreeting": "Рады вас видеть! Войдите, чтобы продолжить",
+  "forgotPassword": "ЗАБЫЛИ ПАРОЛЬ",
+
+  "regScreenTitle": "Зарегистрируйтесь",
+  "regScreenGreeting": "Добро пожаловать! Создайте аккаунт, чтобы продолжить",
+  "createAccount": "Создать аккаунт",
+  "haveAccount": "У МЕНЯ ЕСТЬ АККАУНТ"
 }
