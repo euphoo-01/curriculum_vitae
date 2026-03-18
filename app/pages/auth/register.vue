@@ -1,30 +1,56 @@
 <script setup lang="ts">
 const passwordVisible = ref<boolean>(false);
+const email = ref('');
+const password = ref('');
+const errorMsg = ref('');
+const loading = ref(false);
+
+const router = useRouter();
+const auth = useAuth();
+
+const onSubmit = async () => {
+  if (!email.value || !password.value) return;
+  loading.value = true;
+  errorMsg.value = '';
+  try {
+    await auth.register({ email: email.value, password: password.value });
+    router.push('/users');
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      errorMsg.value = err.message;
+    } else {
+      errorMsg.value = 'Ошибка регистрации';
+    }
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
 
 <template>
   <div class="auth-wrapper">
-    <div class="auth-tabs">
-      <v-tabs align-tabs="center" color="primary">
-        <v-tab to="/auth/login" exact>
-          {{ $t('login') }}
-        </v-tab>
-        <v-tab to="/auth/register" exact>
-          {{ $t('create') }}
-        </v-tab>
-      </v-tabs>
-    </div>
+    <AuthTabs />
 
     <div class="auth-content">
       <div class="auth-box">
-        <v-form>
+        <v-form @submit.prevent="onSubmit">
           <div class="text-center mb-6">
             <h1 align="center">{{ $t('regScreenTitle') }}</h1>
             <p align="center">
               {{ $t('regScreenGreeting') }}
             </p>
           </div>
+          <v-alert
+            v-if="errorMsg"
+            type="error"
+            variant="tonal"
+            class="mb-4"
+            density="compact"
+          >
+            {{ errorMsg }}
+          </v-alert>
           <v-text-field
+            v-model="email"
             variant="outlined"
             :label="$t('email')"
             density="compact"
@@ -32,6 +58,7 @@ const passwordVisible = ref<boolean>(false);
             width="100%"
           ></v-text-field>
           <v-text-field
+            v-model="password"
             :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
             :type="passwordVisible ? 'text' : 'password'"
             :label="$t('password')"
@@ -41,6 +68,8 @@ const passwordVisible = ref<boolean>(false);
             @click:append-inner="passwordVisible = !passwordVisible"
           ></v-text-field>
           <v-btn
+            :loading="loading"
+            type="submit"
             rounded
             variant="flat"
             color="primary"
@@ -72,14 +101,6 @@ const passwordVisible = ref<boolean>(false);
   justify-content: center;
   overflow-y: auto;
   padding: 16px;
-}
-
-.auth-tabs {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding-top: 16px;
 }
 
 .auth-content {

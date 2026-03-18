@@ -1,7 +1,5 @@
 <template>
-  <v-container>
-    {{ $t('welcome') }}
-  </v-container>
+  <v-container> </v-container>
 </template>
 
 <script setup lang="ts"></script>

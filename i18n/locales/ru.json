@@ -12,5 +12,10 @@
   "regScreenTitle": "Зарегистрируйтесь",
   "regScreenGreeting": "Добро пожаловать! Создайте аккаунт, чтобы продолжить",
   "createAccount": "Создать аккаунт",
-  "haveAccount": "У МЕНЯ ЕСТЬ АККАУНТ"
+  "haveAccount": "У МЕНЯ ЕСТЬ АККАУНТ",
+  "$vuetify": {
+    "input": {
+      "appendAction": "Действие"
+    }
+  }
 }

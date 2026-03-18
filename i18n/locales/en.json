@@ -12,5 +12,10 @@
   "regScreenTitle": "Register",
   "regScreenGreeting": "Welcome! Create an account to proceed",
   "createAccount": "Create account",
-  "haveAccount": "I HAVE ACCOUNT"
+  "haveAccount": "I HAVE ACCOUNT",
+  "$vuetify": {
+    "input": {
+      "appendAction": "Action"
+    }
+  }
 }
