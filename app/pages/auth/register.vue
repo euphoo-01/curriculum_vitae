@@ -33,7 +33,7 @@ const onSubmit = async () => {
 
     <div class="auth-content">
       <div class="auth-box">
-        <v-form @submit.prevent="onSubmit">
+        <v-form data-test-id="register-form" @submit.prevent="onSubmit">
           <div class="text-center mb-6">
             <h1 align="center">{{ $t('regScreenTitle') }}</h1>
             <p align="center">
@@ -46,6 +46,7 @@ const onSubmit = async () => {
             variant="tonal"
             class="mb-4"
             density="compact"
+            data-test-id="error-alert"
           >
             {{ errorMsg }}
           </v-alert>
@@ -56,6 +57,7 @@ const onSubmit = async () => {
             density="compact"
             rounded="0"
             width="100%"
+            data-test-id="email-input"
           ></v-text-field>
           <v-text-field
             v-model="password"
@@ -65,6 +67,7 @@ const onSubmit = async () => {
             rounded="0"
             density="compact"
             variant="outlined"
+            data-test-id="password-input"
             @click:append-inner="passwordVisible = !passwordVisible"
           ></v-text-field>
           <v-btn
@@ -76,6 +79,7 @@ const onSubmit = async () => {
             size="x-large"
             class="pa-4 mb-4"
             block
+            data-test-id="submit-button"
             >{{ $t('createAccount') }}</v-btn
           >
           <div class="text-center">

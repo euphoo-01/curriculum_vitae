@@ -5,10 +5,14 @@ const route = useRoute();
 <template>
   <div class="auth-tabs">
     <v-tabs :model-value="route.path" align-tabs="center" color="primary">
-      <v-tab value="/auth/login" to="/auth/login">
+      <v-tab value="/auth/login" to="/auth/login" data-test-id="login-tab">
         {{ $t('login') }}
       </v-tab>
-      <v-tab value="/auth/register" to="/auth/register">
+      <v-tab
+        value="/auth/register"
+        to="/auth/register"
+        data-test-id="register-tab"
+      >
         {{ $t('create') }}
       </v-tab>
     </v-tabs>
