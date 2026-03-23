@@ -1,6 +1,13 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useAuthStore, type AuthUser } from '../../app/stores/auth';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+
+mockNuxtImport('useCookie', () => {
+  return () => {
+    return { value: null };
+  };
+});
 
 describe('Auth Store', () => {
   beforeEach(() => {
@@ -12,7 +19,7 @@ describe('Auth Store', () => {
     expect(store.user).toBeNull();
   });
 
-  it('sets user correctly', () => {
+  it('sets user and userId correctly', () => {
     const store = useAuthStore();
     const mockUser: AuthUser = {
       id: '1',
@@ -20,9 +27,10 @@ describe('Auth Store', () => {
     } as AuthUser;
     store.setUser(mockUser);
     expect(store.user).toEqual(mockUser);
+    expect(store.userId.value).toBe('1');
   });
 
-  it('clears user correctly', () => {
+  it('clears user and userId correctly', () => {
     const store = useAuthStore();
     const mockUser: AuthUser = {
       id: '1',
@@ -31,5 +39,6 @@ describe('Auth Store', () => {
     store.setUser(mockUser);
     store.clearUser();
     expect(store.user).toBeNull();
+    expect(store.userId.value).toBeNull();
   });
 });

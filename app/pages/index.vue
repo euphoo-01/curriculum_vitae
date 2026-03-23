@@ -1,5 +1,17 @@
-<template>
-  <v-container> </v-container>
-</template>
+<script setup lang="ts">
+const { t } = useI18n();
 
-<script setup lang="ts"></script>
+useBreadcrumbs([
+  {
+    title: t('dashboard'),
+    disabled: true,
+    to: '/',
+  },
+]);
+</script>
+
+<template>
+  <v-container>
+    <LayoutBreadcrumbs class="ml-4" />
+  </v-container>
+</template>

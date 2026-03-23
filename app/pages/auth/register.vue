@@ -1,15 +1,32 @@
 <script setup lang="ts">
+import type { VForm } from 'vuetify/components';
+definePageMeta({ layout: 'auth' });
+
+const { t } = useI18n();
+const router = useRouter();
+const auth = useAuth();
+
 const passwordVisible = ref<boolean>(false);
 const email = ref('');
 const password = ref('');
 const errorMsg = ref('');
 const loading = ref(false);
+const form = ref<VForm | null>(null);
 
-const router = useRouter();
-const auth = useAuth();
+const rules = {
+  required: (value: string) => !!value || t('fieldRequired'),
+  email: (value: string) => {
+    const pattern =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return pattern.test(value) || t('invalidEmail');
+  },
+};
 
 const onSubmit = async () => {
-  if (!email.value || !password.value) return;
+  if (!form.value) return;
+  const { valid } = await form.value.validate();
+  if (!valid) return;
+
   loading.value = true;
   errorMsg.value = '';
   try {
@@ -19,7 +36,7 @@ const onSubmit = async () => {
     if (err instanceof Error) {
       errorMsg.value = err.message;
     } else {
-      errorMsg.value = 'Ошибка регистрации';
+      errorMsg.value = t('regError');
     }
   } finally {
     loading.value = false;
@@ -28,15 +45,22 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <div class="auth-wrapper">
+  <div
+    class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center overflow-y-auto p-4"
+  >
     <AuthTabs />
 
-    <div class="auth-content">
-      <div class="auth-box">
-        <v-form data-test-id="register-form" @submit.prevent="onSubmit">
+    <div class="flex items-center justify-center w-full">
+      <div class="w-full max-w-[560px] flex items-center justify-center">
+        <v-form
+          ref="form"
+          data-test-id="register-form"
+          class="w-full"
+          @submit.prevent="onSubmit"
+        >
           <div class="text-center mb-6">
             <h1 align="center">{{ $t('regScreenTitle') }}</h1>
-            <p align="center">
+            <p align="center" class="mb-8">
               {{ $t('regScreenGreeting') }}
             </p>
           </div>
@@ -57,6 +81,10 @@ const onSubmit = async () => {
             density="compact"
             rounded="0"
             width="100%"
+            name="email"
+            autocomplete="email"
+            class="mb-2"
+            :rules="[rules.required, rules.email]"
             data-test-id="email-input"
           ></v-text-field>
           <v-text-field
@@ -67,55 +95,38 @@ const onSubmit = async () => {
             rounded="0"
             density="compact"
             variant="outlined"
+            name="password"
+            autocomplete="new-password"
+            :rules="[rules.required]"
             data-test-id="password-input"
+            class="mb-2"
             @click:append-inner="passwordVisible = !passwordVisible"
           ></v-text-field>
-          <v-btn
-            :loading="loading"
-            type="submit"
-            rounded
-            variant="flat"
-            color="primary"
-            size="x-large"
-            class="pa-4 mb-4"
-            block
-            data-test-id="submit-button"
-            >{{ $t('createAccount') }}</v-btn
-          >
+          <div class="flex justify-center mt-6 mb-4">
+            <v-btn
+              :loading="loading"
+              type="submit"
+              rounded
+              variant="flat"
+              color="primary"
+              size="x-large"
+              class="pa-4 min-w-[15rem]"
+              data-test-id="submit-button"
+              >{{ $t('createAccount') }}</v-btn
+            >
+          </div>
           <div class="text-center">
-            <v-btn block rounded variant="text" to="/auth/login">{{
-              $t('haveAccount')
-            }}</v-btn>
+            <v-btn
+              rounded
+              variant="text"
+              size="small"
+              @click="router.push('/auth/login')"
+            >
+              {{ $t('haveAccount') }}
+            </v-btn>
           </div>
         </v-form>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.auth-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.auth-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.auth-box {
-  width: 100%;
-  max-width: 450px;
-}
-</style>

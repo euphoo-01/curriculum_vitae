@@ -7,13 +7,48 @@
 
   "loginScreenTitle": "С возвращением",
   "loginScreenGreeting": "Рады вас видеть! Войдите, чтобы продолжить",
-  "forgotPassword": "ЗАБЫЛИ ПАРОЛЬ",
+  "forgotPassword": "Забыли пароль?",
 
   "regScreenTitle": "Зарегистрируйтесь",
   "regScreenGreeting": "Добро пожаловать! Создайте аккаунт, чтобы продолжить",
   "createAccount": "Создать аккаунт",
-  "haveAccount": "У МЕНЯ ЕСТЬ АККАУНТ",
+  "haveAccount": "У меня есть аккаунт",
+  "noDataAvailable": "Нет данных",
+  "dashboard": "Панель управления",
+  "sidebarUsers": "Сотрудники",
+  "sidebarSkills": "Навыки",
+  "sidebarLanguages": "Языки",
+  "sidebarCVs": "Резюме",
+  "usersTitle": "Сотрудники",
+  "searchUsers": "Поиск...",
+  "firstName": "Имя",
+  "lastName": "Фамилия",
+  "department": "Отдел",
+  "position": "Должность",
+  "fieldRequired": "Поле обязательно для ввода",
+  "invalidEmail": "Введен неправильный email",
   "$vuetify": {
+    "dataIterator": {
+      "loadingText": "Загрузка элементов..."
+    },
+    "dataFooter": {
+      "itemsPerPageText": "Строк на странице:",
+      "itemsPerPageAll": "Все",
+      "pageText": "{0}-{1} из {2}",
+      "firstPage": "Первая страница",
+      "prevPage": "Предыдущая страница",
+      "nextPage": "Следующая страница",
+      "lastPage": "Последняя страница"
+    },
+    "pagination": {
+      "ariaLabel": {
+        "root": "Навигация по страницам",
+        "next": "Следующая страница",
+        "previous": "Предыдущая страница",
+        "page": "Перейти на страницу {0}",
+        "currentPage": "Текущая страница, страница {0}"
+      }
+    },
     "input": {
       "appendAction": "Действие"
     }

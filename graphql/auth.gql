@@ -7,7 +7,10 @@ query Login($auth: AuthInput!) {
       profile {
         first_name
         last_name
+        full_name
+        avatar
       }
+      position_name
     }
     access_token
     refresh_token
@@ -23,7 +26,10 @@ mutation Signup($auth: AuthInput!) {
       profile {
         first_name
         last_name
+        full_name
+        avatar
       }
+      position_name
     }
     access_token
     refresh_token

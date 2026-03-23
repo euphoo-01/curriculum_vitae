@@ -7,13 +7,48 @@
 
   "loginScreenTitle": "Welcome back",
   "loginScreenGreeting": "Glad to see you! Login to proceed",
-  "forgotPassword": "FORGOT PASSWORD",
+  "forgotPassword": "Forgot password?",
 
   "regScreenTitle": "Register",
   "regScreenGreeting": "Welcome! Create an account to proceed",
   "createAccount": "Create account",
-  "haveAccount": "I HAVE ACCOUNT",
+  "haveAccount": "I have account",
+  "noDataAvailable": "No data available",
+  "dashboard": "Dashboard",
+  "sidebarUsers": "Employees",
+  "sidebarSkills": "Skills",
+  "sidebarLanguages": "Languages",
+  "sidebarCVs": "CVs",
+  "usersTitle": "Employees",
+  "searchUsers": "Search...",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "department": "Department",
+  "position": "Position",
+  "fieldRequired": "Field is required",
+  "invalidEmail": "Invalid email",
   "$vuetify": {
+    "dataIterator": {
+      "loadingText": "Loading items..."
+    },
+    "dataFooter": {
+      "itemsPerPageText": "Items per page:",
+      "itemsPerPageAll": "All",
+      "pageText": "{0}-{1} of {2}",
+      "firstPage": "First page",
+      "prevPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
+    },
+    "pagination": {
+      "ariaLabel": {
+        "root": "Pagination Navigation",
+        "next": "Next page",
+        "previous": "Previous page",
+        "page": "Go to page {0}",
+        "currentPage": "Current page, page {0}"
+      }
+    },
     "input": {
       "appendAction": "Action"
     }

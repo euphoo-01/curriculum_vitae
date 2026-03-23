@@ -1,0 +1,14 @@
+query Users {
+  users {
+    id
+    email
+    profile {
+      first_name
+      last_name
+      full_name
+      avatar
+    }
+    department_name
+    position_name
+  }
+}

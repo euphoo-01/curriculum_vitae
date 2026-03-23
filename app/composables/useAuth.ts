@@ -2,6 +2,7 @@ import {
   LoginDocument,
   SignupDocument,
   UpdateTokenDocument,
+  GetUserDocument,
 } from '../../graphql/generated/graphql';
 import type { AuthInput } from '../../graphql/generated/graphql';
 
@@ -30,7 +31,7 @@ export const useAuth = () => {
   }
 
   const refreshTokenCookie = useCookie('auth_refresh_token', {
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: 60 * 60 * 24 * 30,
     path: '/',
     sameSite: 'lax',
   });
@@ -50,6 +51,24 @@ export const useAuth = () => {
       }
     }
     return e instanceof Error ? e : new Error(defaultMessage);
+  };
+
+  const getUser = async (userId: string) => {
+    try {
+      const { data } = await client!.query({
+        query: GetUserDocument,
+        variables: { userId },
+        fetchPolicy: 'no-cache',
+      });
+
+      if (data?.user) {
+        authStore.setUser(data.user);
+        return data.user;
+      }
+      throw new Error('Пользователь не найден');
+    } catch (e) {
+      throw parseError(e, 'Ошибка при получении данных пользователя');
+    }
   };
 
   const login = async (auth: AuthInput) => {
@@ -129,7 +148,8 @@ export const useAuth = () => {
     register,
     logout,
     refresh,
-    user: authStore.user,
-    isAuthenticated: !!authStore.user,
+    getUser,
+    user: computed(() => authStore.user),
+    isAuthenticated: computed(() => !!authStore.user),
   };
 };

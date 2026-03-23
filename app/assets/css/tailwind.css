@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#__nuxt,
+#__nuxt > div {
+  @apply h-full;
+}
