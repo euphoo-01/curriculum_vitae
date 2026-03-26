@@ -4,7 +4,7 @@ export interface BreadcrumbItem {
   title: string;
   disabled?: boolean;
   href?: string;
-  to?: string | Record<string, any>;
+  to?: string | Record<string, unknown>;
 }
 
 export const useBreadcrumbs = (items?: BreadcrumbItem[]) => {

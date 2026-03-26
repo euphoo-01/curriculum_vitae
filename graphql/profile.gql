@@ -1,0 +1,48 @@
+query GetDepartments {
+  departments {
+    id
+    name
+  }
+}
+
+query GetPositions {
+  positions {
+    id
+    name
+  }
+}
+
+mutation UpdateUser($user: UpdateUserInput!) {
+  updateUser(user: $user) {
+    id
+    department {
+      id
+      name
+    }
+    department_name
+    position {
+      id
+      name
+    }
+    position_name
+    role
+  }
+}
+
+mutation UpdateProfile($profile: UpdateProfileInput!) {
+  updateProfile(profile: $profile) {
+    id
+    first_name
+    last_name
+    full_name
+    avatar
+  }
+}
+
+mutation UploadAvatar($avatar: UploadAvatarInput!) {
+  uploadAvatar(avatar: $avatar)
+}
+
+mutation DeleteAvatar($avatar: DeleteAvatarInput!) {
+  deleteAvatar(avatar: $avatar)
+}

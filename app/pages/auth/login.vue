@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// TODO: Добавить debounce на инпуты или сделать валидацию при сабмите
 import type { VForm } from 'vuetify/components';
 
 definePageMeta({ layout: 'auth' });

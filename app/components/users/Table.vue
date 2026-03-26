@@ -13,8 +13,6 @@ defineProps<{
 }>();
 
 const { t } = useI18n();
-const authStore = useAuthStore();
-const router = useRouter();
 
 const headers = computed(() => [
   { title: '', key: 'avatar', sortable: false, width: '60px' },
@@ -44,13 +42,13 @@ const headers = computed(() => [
     <template #bottom></template>
 
     <template #[`item.avatar`]="{ item }">
-      <v-avatar color="grey" size="40">
+      <v-avatar color="secondary" size="40">
         <v-img
           v-if="item.profile?.avatar"
           :src="item.profile?.avatar"
           alt="Avatar"
         ></v-img>
-        <span v-else class="text-h6 text-white">{{
+        <span v-else class="text-h6">{{
           item.email?.charAt(0).toUpperCase()
         }}</span>
       </v-avatar>
@@ -59,18 +57,10 @@ const headers = computed(() => [
     <template #[`item.actions`]="{ item }">
       <div class="flex items-center justify-end">
         <v-btn
-          v-if="item.id === authStore.userId"
-          icon="mdi-dots-vertical"
-          variant="text"
-          size="small"
-          class="mr-2"
-          @click.stop="router.push('/profile')"
-        ></v-btn>
-        <v-btn
           icon="mdi-chevron-right"
           variant="text"
           size="small"
-          @click.stop="router.push(`/users/${item.id}`)"
+          :to="`/users/${item.id}/profile`"
         ></v-btn>
       </div>
     </template>

@@ -6,6 +6,8 @@ import {
 } from '../../graphql/generated/graphql';
 import type { AuthInput } from '../../graphql/generated/graphql';
 
+// TODO: Исправить выброс из аккаунта когда токен протухает
+
 interface GraphQLErrorExtension {
   response?: {
     message?: string | string[];
@@ -114,6 +116,7 @@ export const useAuth = () => {
     await onLogout();
     refreshTokenCookie.value = null;
     authStore.clearUser();
+    navigateTo('/auth/login');
   };
 
   const refresh = async () => {

@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 name: cv_node
 
 services:
@@ -9,9 +9,11 @@ services:
     env_file:
       - .env.cv_postgres
     ports:
-      - "127.0.0.1:5432:5432"
+      - '127.0.0.1:5432:5432'
     volumes:
       - cv_postgres:/var/lib/postgresql/data
+    networks:
+      - cv_net
 
   cv_node:
     image: thornpear/cv_node
@@ -21,8 +23,18 @@ services:
     env_file:
       - .env.cv_node
     ports:
-      - "3001:3001"
+      - '3001:3001'
+    networks:
+      - cv_net
 
 volumes:
   cv_postgres:
     external: false
+
+# Add this section to force a specific IP range
+networks:
+  cv_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.100.0.0/24

@@ -52,13 +52,12 @@ const menuItems = [
         :prepend-icon="item.icon"
         :title="$t(item.titleKey)"
         :value="item.value"
-        color="primary"
         variant="text"
         density="default"
-        active-class="bg-primary-lighten-4 font-weight-bold"
+        active-class="bg-secondary font-weight-bold"
         :class="[
           'mb-2 transition-all duration-200',
-          isRail ? 'rounded-full' : '!rounded-r-[100px] !rounded-l-none',
+          isRail ? 'rounded-full' : 'rounded-r-full rounded-l-0',
         ]"
       ></v-list-item>
     </v-list>
@@ -76,7 +75,7 @@ const menuItems = [
             isRail ? 'px-0' : 'px-4',
             'text-none rounded-lg transition-all duration-200',
           ]"
-          to="/profile"
+          :to="`/users/${authStore.userId}/profile`"
         >
           <template #prepend>
             <v-avatar color="primary" size="40">

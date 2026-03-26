@@ -14,6 +14,27 @@
   "createAccount": "Create account",
   "haveAccount": "I have account",
   "noDataAvailable": "No data available",
+  "common": {
+    "update": "Update",
+    "logout": "Logout"
+  },
+  "profile": {
+    "title": "Profile",
+    "skills": "Skills",
+    "languages": "Languages",
+    "update_success": "Profile updated successfully",
+    "member_since": "A member since",
+    "edit": "Edit profile",
+    "see": "See profile",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "department": "Department",
+    "position": "Position",
+    "upload_avatar_title": "Upload avatar image",
+    "avatar_upload_desc": ".png, .jpg or .gif no more than 0.5 MB",
+    "upload_error_size": "File size must be less than 0.5 MB",
+    "upload_error_type": "Only .png, .jpg and .gif files are allowed"
+  },
   "dashboard": "Dashboard",
   "sidebarUsers": "Employees",
   "sidebarSkills": "Skills",
@@ -28,6 +49,7 @@
   "fieldRequired": "Field is required",
   "invalidEmail": "Invalid email",
   "$vuetify": {
+    "No data available": "No data available",
     "dataIterator": {
       "loadingText": "Loading items..."
     },

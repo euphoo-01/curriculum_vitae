@@ -14,6 +14,27 @@
   "createAccount": "Создать аккаунт",
   "haveAccount": "У меня есть аккаунт",
   "noDataAvailable": "Нет данных",
+  "common": {
+    "update": "Обновить",
+    "logout": "Выйти"
+  },
+  "profile": {
+    "title": "Профиль",
+    "skills": "Навыки",
+    "languages": "Языки",
+    "update_success": "Профиль успешно обновлен",
+    "member_since": "В команде с",
+    "edit": "Редактировать профиль",
+    "see": "Смотреть профиль",
+    "first_name": "Имя",
+    "last_name": "Фамилия",
+    "department": "Отдел",
+    "position": "Должность",
+    "upload_avatar_title": "Загрузить фото профиля",
+    "avatar_upload_desc": ".png, .jpg или .gif не более 0.5 МБ",
+    "upload_error_size": "Размер файла не должен превышать 0.5 МБ",
+    "upload_error_type": "Разрешены только файлы .png, .jpg и .gif"
+  },
   "dashboard": "Панель управления",
   "sidebarUsers": "Сотрудники",
   "sidebarSkills": "Навыки",
@@ -28,6 +49,7 @@
   "fieldRequired": "Поле обязательно для ввода",
   "invalidEmail": "Введен неправильный email",
   "$vuetify": {
+    "No data available": "Нет данных",
     "dataIterator": {
       "loadingText": "Загрузка элементов..."
     },
