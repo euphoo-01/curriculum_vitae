@@ -79,7 +79,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue';
-import type { Department, Position } from '~~/graphql/generated/graphql';
+import type {
+  GetDepartmentsQuery,
+  GetPositionsQuery,
+} from '~~/graphql/generated/graphql';
 
 export interface ProfileFormData {
   first_name: string;
@@ -90,8 +93,8 @@ export interface ProfileFormData {
 
 const props = defineProps<{
   initialData: ProfileFormData;
-  departments: Department[];
-  positions: Position[];
+  departments: GetDepartmentsQuery['departments'];
+  positions: GetPositionsQuery['positions'];
   canEdit: boolean;
   showLogout: boolean;
   updating: boolean;

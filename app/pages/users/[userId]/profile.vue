@@ -67,7 +67,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Department, Position } from '~~/graphql/generated/graphql';
+import type {
+  GetDepartmentsQuery,
+  GetPositionsQuery,
+} from '~~/graphql/generated/graphql';
 
 const route = useRoute();
 const userId = route.params.userId as string;
@@ -89,8 +92,8 @@ const { setBreadcrumbs } = useBreadcrumbs();
 const { t } = useI18n();
 const { formatDate, getInitials } = useFormatters();
 
-const departments = ref<Department[]>([]);
-const positions = ref<Position[]>([]);
+const departments = ref<GetDepartmentsQuery['departments']>([]);
+const positions = ref<GetPositionsQuery['positions']>([]);
 const updating = ref(false);
 const showSuccess = ref(false);
 const uploadError = ref('');
