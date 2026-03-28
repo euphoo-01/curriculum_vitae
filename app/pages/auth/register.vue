@@ -56,6 +56,7 @@ const onSubmit = async () => {
           ref="form"
           data-test-id="register-form"
           class="w-full"
+          validate-on="submit lazy"
           @submit.prevent="onSubmit"
         >
           <div class="text-center mb-6">

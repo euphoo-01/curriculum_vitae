@@ -12,3 +12,24 @@ query Users {
     position_name
   }
 }
+
+mutation DeleteUser($userId: ID!) {
+  deleteUser(userId: $userId) {
+    affected
+  }
+}
+
+mutation CreateUser($user: CreateUserInput!) {
+  createUser(user: $user) {
+    id
+    email
+    profile {
+      first_name
+      last_name
+      full_name
+      avatar
+    }
+    department_name
+    position_name
+  }
+}

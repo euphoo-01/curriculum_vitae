@@ -16,7 +16,10 @@
   "noDataAvailable": "No data available",
   "common": {
     "update": "Update",
-    "logout": "Logout"
+    "logout": "Logout",
+    "delete": "Delete",
+    "create": "Create",
+    "cancel": "Cancel"
   },
   "profile": {
     "title": "Profile",
@@ -25,11 +28,16 @@
     "update_success": "Profile updated successfully",
     "member_since": "A member since",
     "edit": "Edit profile",
+    "delete": "Delete user",
+    "deleteConfirm": "Are you sure you want to delete this user?",
     "see": "See profile",
+    "create": "Create profile",
     "first_name": "First Name",
     "last_name": "Last Name",
     "department": "Department",
     "position": "Position",
+    "role": "Role",
+
     "upload_avatar_title": "Upload avatar image",
     "avatar_upload_desc": ".png, .jpg or .gif no more than 0.5 MB",
     "upload_error_size": "File size must be less than 0.5 MB",

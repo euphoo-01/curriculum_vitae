@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { UsersQuery } from '~~/graphql/generated/graphql';
+import type { AdminAction } from '~/types/users';
 
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -10,6 +11,8 @@ defineProps<{
   items: UserItem[];
   loading?: boolean;
   search?: string;
+  adminActions: AdminAction[];
+  canEdit: boolean;
 }>();
 
 const { t } = useI18n();
@@ -56,7 +59,28 @@ const headers = computed(() => [
 
     <template #[`item.actions`]="{ item }">
       <div class="flex items-center justify-end">
+        <v-menu v-if="canEdit">
+          <template #activator="{ props }">
+            <v-btn
+              icon="mdi-dots-vertical"
+              variant="text"
+              size="small"
+              v-bind="props"
+            ></v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(action, idx) in adminActions"
+              :key="idx"
+              :value="idx"
+              @click="action.action(item.id)"
+            >
+              <v-list-item-title>{{ action.name }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
         <v-btn
+          v-else
           icon="mdi-chevron-right"
           variant="text"
           size="small"

@@ -1,5 +1,12 @@
-import { UsersDocument } from '../../graphql/generated/graphql';
-import type { UsersQuery } from '../../graphql/generated/graphql';
+import {
+  UsersDocument,
+  DeleteUserDocument,
+  CreateUserDocument,
+} from '../../graphql/generated/graphql';
+import type {
+  UsersQuery,
+  CreateUserInput,
+} from '../../graphql/generated/graphql';
 
 export const useUsers = () => {
   const { clients } = useApollo();
@@ -25,10 +32,38 @@ export const useUsers = () => {
     }
   };
 
+  const deleteUser = async (id: string) => {
+    error.value = null;
+    try {
+      await client!.mutate({
+        mutation: DeleteUserDocument,
+        variables: { userId: id },
+      });
+      await fetchUsers();
+    } catch (e) {
+      error.value = e instanceof Error ? e : new Error('Failed to delete user');
+    }
+  };
+
+  const createUser = async (user: CreateUserInput) => {
+    error.value = null;
+    try {
+      await client!.mutate({
+        mutation: CreateUserDocument,
+        variables: { user },
+      });
+      await fetchUsers();
+    } catch (e) {
+      error.value = e instanceof Error ? e : new Error('Failed to create user');
+    }
+  };
+
   return {
     users,
     loading,
     error,
     fetchUsers,
+    deleteUser,
+    createUser,
   };
 };

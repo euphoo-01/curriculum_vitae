@@ -16,7 +16,10 @@
   "noDataAvailable": "Нет данных",
   "common": {
     "update": "Обновить",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "delete": "Удалить",
+    "create": "Создать",
+    "cancel": "Отменить"
   },
   "profile": {
     "title": "Профиль",
@@ -26,10 +29,15 @@
     "member_since": "В команде с",
     "edit": "Редактировать профиль",
     "see": "Смотреть профиль",
+    "delete": "Удалить пользователя",
+    "deleteConfirm": "Вы точно хотите удалить этого пользователя?",
+    "create": "Создать профиль",
     "first_name": "Имя",
     "last_name": "Фамилия",
     "department": "Отдел",
     "position": "Должность",
+    "role": "Роль",
+
     "upload_avatar_title": "Загрузить фото профиля",
     "avatar_upload_desc": ".png, .jpg или .gif не более 0.5 МБ",
     "upload_error_size": "Размер файла не должен превышать 0.5 МБ",

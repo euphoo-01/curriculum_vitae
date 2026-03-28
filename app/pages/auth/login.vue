@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// TODO: Добавить debounce на инпуты или сделать валидацию при сабмите
 import type { VForm } from 'vuetify/components';
 
 definePageMeta({ layout: 'auth' });
@@ -59,6 +58,7 @@ const onSubmit = async () => {
           ref="form"
           data-test-id="login-form"
           class="w-full"
+          validate-on="submit lazy"
           @submit.prevent="onSubmit"
         >
           <div class="text-center mb-6">

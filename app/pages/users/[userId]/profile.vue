@@ -19,7 +19,12 @@
         class="pa-6 mx-auto bg-background rounded-lg shadow-sm"
         style="max-width: 768px"
       >
-        <v-snackbar v-model="showSuccess" color="success" :timeout="3000">
+        <v-snackbar
+          v-model="showSuccess"
+          color="success"
+          location="top"
+          :timeout="3000"
+        >
           {{ $t('profile.update_success') }}
         </v-snackbar>
 
@@ -71,6 +76,7 @@ import type {
   GetDepartmentsQuery,
   GetPositionsQuery,
 } from '~~/graphql/generated/graphql';
+import { UserRole } from '~~/graphql/generated/graphql';
 
 const route = useRoute();
 const userId = route.params.userId as string;
@@ -88,9 +94,9 @@ const {
 } = useProfile();
 
 const { user: currentUser, logout } = useAuth();
-const { setBreadcrumbs } = useBreadcrumbs();
 const { t } = useI18n();
 const { formatDate, getInitials } = useFormatters();
+const { setBreadcrumbs } = useBreadcrumbs();
 
 const departments = ref<GetDepartmentsQuery['departments']>([]);
 const positions = ref<GetPositionsQuery['positions']>([]);
@@ -123,28 +129,24 @@ const profileTabs = computed(() => [
   },
 ]);
 
-const updateBreadcrumbs = () => {
-  setBreadcrumbs([
-    { title: t('sidebarUsers'), to: '/users' },
-    {
-      title: user.value?.profile.full_name || t('profile.title'),
-      disabled: true,
-    },
-  ]);
-};
-
 const canEdit = computed(() => {
   if (!currentUser.value || !user.value) return false;
   return (
-    currentUser.value.id === user.value.id || currentUser.value.role === 'Admin'
+    currentUser.value.id === user.value.id ||
+    currentUser.value.role === UserRole.Admin
   );
 });
 
 onMounted(async () => {
-  updateBreadcrumbs();
   await fetchUser(userId);
-  if (user.value) {
-    updateBreadcrumbs();
+  if (userId) {
+    setBreadcrumbs([
+      { title: t('sidebarUsers'), to: '/users' },
+      {
+        title: user.value?.profile.full_name || t('profile.title'),
+        disabled: true,
+      },
+    ]);
   }
 
   const [deps, pos] = await Promise.all([fetchDepartments(), fetchPositions()]);
@@ -191,7 +193,6 @@ const handleUpdate = async (formData: {
     await Promise.all([updateProfile(profileChanges), updateUser(userChanges)]);
 
     showSuccess.value = true;
-    updateBreadcrumbs();
   } catch (e) {
     console.error('Update failed', e);
   } finally {
