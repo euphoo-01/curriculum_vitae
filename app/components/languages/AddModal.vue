@@ -4,14 +4,22 @@ import type { VForm } from 'vuetify/components';
 interface Props {
   modelValue: boolean;
   loading?: boolean;
-  editData?: { id: string; name: string; native_name?: string | null; iso2: string } | null;
+  editData?: {
+    id: string;
+    name: string;
+    native_name?: string | null;
+    iso2: string;
+  } | null;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (e: 'submit', formData: { id?: string; name: string; native_name?: string; iso2: string }): void;
+  (
+    e: 'submit',
+    formData: { id?: string; name: string; native_name?: string; iso2: string }
+  ): void;
 }>();
 
 const { t } = useI18n();

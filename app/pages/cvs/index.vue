@@ -2,16 +2,15 @@
   <div class="flex-grow-1 d-flex flex-column pb-4 m-0 bg-background h-screen">
     <div class="d-flex flex-column bg-background shadow-sm mb-4 px-4">
       <LayoutBreadcrumbs class="flex-none" />
-      <UsersProfileTabs />
     </div>
 
     <v-snackbar
       v-model="isSnackbar"
       location="top"
-      color="error"
+      :color="snackbarColor"
       :timeout="3000"
     >
-      {{ actionError }}
+      {{ actionMessage }}
     </v-snackbar>
 
     <ConfirmModal
@@ -36,9 +35,9 @@
       class="d-flex flex-column flex-none overflow-scroll min-h-0 mx-4"
     >
       <v-card-text class="pa-0 d-flex flex-column flex-grow-1 min-h-0">
-        <v-row class="justify-between">
+        <v-row class="justify-between px-4 pt-4">
           <v-text-field
-            :model-value="search"
+            v-model="search"
             prepend-inner-icon="mdi-magnify"
             :placeholder="$t('cvs.search')"
             variant="outlined"
@@ -47,10 +46,8 @@
             hide-details
             class="max-w-md"
             style="max-width: 400px"
-            @update:model-value="onSearchInput"
           ></v-text-field>
           <v-btn
-            v-if="canEdit"
             prepend-icon="mdi-plus"
             variant="text"
             color="primary"
@@ -61,8 +58,8 @@
             {{ $t('cvs.add') }}
           </v-btn>
         </v-row>
-        <UsersCvsTable
-          :items="cvs || []"
+        <CvsTable
+          :items="allCvs"
           :loading="loading"
           :search="search"
           :admin-actions="adminActions"
@@ -78,23 +75,17 @@
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
 
-const route = useRoute();
-const userId = route.params.userId as string;
-
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const { user: profileUser, fetchUser } = useProfile();
-
-const { cvs, loading, fetchUserCvs, createCv, updateCv, deleteCv } = useCvs();
+const { allCvs, loading, fetchAllCvs, createCv, updateCv, deleteCv } = useCvs();
 
 const search = ref('');
-let timeout: ReturnType<typeof setTimeout> | null = null;
-
 const isDeleteModal = ref(false);
 const isAddModal = ref(false);
 const isSnackbar = ref(false);
-const actionError = ref('');
+const actionMessage = ref('');
+const snackbarColor = ref('error');
 const loadingAction = ref(false);
 
 const cvToDelete = ref<string>();
@@ -102,13 +93,13 @@ const cvToEdit = ref<{ id: string; name: string; description: string } | null>(
   null
 );
 
-const canEdit = computed(() => {
-  if (!currentUser.value || !profileUser.value) return false;
+const canEdit = (item: { user?: { id: string } | null }) => {
+  if (!currentUser.value) return false;
   return (
-    String(currentUser.value.id) === String(profileUser.value.id) ||
-    currentUser.value.role === UserRole.Admin
+    currentUser.value.role === UserRole.Admin ||
+    String(item.user?.id) === String(currentUser.value.id)
   );
-});
+};
 
 const adminActions: AdminAction[] = [
   {
@@ -119,10 +110,10 @@ const adminActions: AdminAction[] = [
     },
   },
   {
-    name: t('cvs.edit'),
+    name: t('common.update'),
     type: AdminActionsNames.SEE,
     action: (id: string) => {
-      const cv = cvs.value?.find((c) => c.id === id);
+      const cv = allCvs.value.find((c) => c.id === id);
       if (cv) {
         cvToEdit.value = {
           id: cv.id,
@@ -154,7 +145,6 @@ const handleSubmitCv = async (formData: {
   description: string;
 }) => {
   loadingAction.value = true;
-  actionError.value = '';
   try {
     if (formData.id) {
       await updateCv({
@@ -162,17 +152,22 @@ const handleSubmitCv = async (formData: {
         name: formData.name,
         description: formData.description,
       });
+      actionMessage.value = t('common.update');
     } else {
       await createCv({
         name: formData.name,
         description: formData.description,
-        userId: userId,
+        userId: currentUser.value?.id,
       });
+      actionMessage.value = t('common.add');
     }
+    snackbarColor.value = 'success';
+    isSnackbar.value = true;
     isAddModal.value = false;
-    await fetchUserCvs(userId);
+    await fetchAllCvs();
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error';
+    actionMessage.value = e instanceof Error ? e.message : 'Error';
+    snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
     loadingAction.value = false;
@@ -181,40 +176,24 @@ const handleSubmitCv = async (formData: {
 
 const handleDeleteCv = async (id: string) => {
   loadingAction.value = true;
-  actionError.value = '';
   try {
     await deleteCv(id);
+    actionMessage.value = t('common.delete');
+    snackbarColor.value = 'success';
+    isSnackbar.value = true;
     isDeleteModal.value = false;
-    await fetchUserCvs(userId);
+    await fetchAllCvs();
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error';
+    actionMessage.value = e instanceof Error ? e.message : 'Error';
+    snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
     loadingAction.value = false;
   }
 };
 
-const onSearchInput = (value: string) => {
-  if (timeout) clearTimeout(timeout);
-  timeout = setTimeout(() => {
-    search.value = value;
-  }, 300);
-};
-
-await fetchUser(userId);
-await fetchUserCvs(userId);
-
-if (userId) {
-  setBreadcrumbs([
-    { title: t('sidebarUsers'), to: '/users' },
-    {
-      title: profileUser.value?.profile.full_name || t('profile.title'),
-      to: `/users/${userId}/profile`,
-    },
-    {
-      title: t('cvs.title'),
-      disabled: true,
-    },
-  ]);
-}
+onMounted(() => {
+  setBreadcrumbs([{ title: t('sidebarCVs'), disabled: true }]);
+  fetchAllCvs();
+});
 </script>

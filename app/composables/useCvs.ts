@@ -11,6 +11,7 @@ import {
   AddCvProjectDocument,
   UpdateCvProjectDocument,
   RemoveCvProjectDocument,
+  ExportPdfDocument,
 } from '../../graphql/generated/graphql';
 import type {
   GetUserCvsQuery,
@@ -24,6 +25,7 @@ import type {
   AddCvProjectInput,
   UpdateCvProjectInput,
   RemoveCvProjectInput,
+  ExportPdfInput,
 } from '../../graphql/generated/graphql';
 
 export const useCvs = () => {
@@ -156,8 +158,15 @@ export const useCvs = () => {
         mutation: AddCvSkillDocument,
         variables: { skill },
       });
-      if (currentCv.value && currentCv.value.id === skill.cvId) {
-        currentCv.value = { ...currentCv.value, skills: data?.addCvSkill.skills };
+      if (
+        currentCv.value &&
+        currentCv.value.id === skill.cvId &&
+        data?.addCvSkill?.skills
+      ) {
+        currentCv.value = {
+          ...currentCv.value,
+          skills: data.addCvSkill.skills,
+        };
       }
       return data?.addCvSkill;
     } catch (e) {
@@ -171,8 +180,15 @@ export const useCvs = () => {
         mutation: UpdateCvSkillDocument,
         variables: { skill },
       });
-      if (currentCv.value && currentCv.value.id === skill.cvId) {
-        currentCv.value = { ...currentCv.value, skills: data?.updateCvSkill.skills };
+      if (
+        currentCv.value &&
+        currentCv.value.id === skill.cvId &&
+        data?.updateCvSkill?.skills
+      ) {
+        currentCv.value = {
+          ...currentCv.value,
+          skills: data.updateCvSkill.skills,
+        };
       }
       return data?.updateCvSkill;
     } catch (e) {
@@ -186,8 +202,15 @@ export const useCvs = () => {
         mutation: DeleteCvSkillDocument,
         variables: { skill },
       });
-      if (currentCv.value && currentCv.value.id === skill.cvId) {
-        currentCv.value = { ...currentCv.value, skills: data?.deleteCvSkill.skills };
+      if (
+        currentCv.value &&
+        currentCv.value.id === skill.cvId &&
+        data?.deleteCvSkill?.skills
+      ) {
+        currentCv.value = {
+          ...currentCv.value,
+          skills: data.deleteCvSkill.skills,
+        };
       }
       return data?.deleteCvSkill;
     } catch (e) {
@@ -231,6 +254,18 @@ export const useCvs = () => {
     }
   };
 
+  const exportPdf = async (pdfInput: ExportPdfInput) => {
+    try {
+      const { data } = await client!.mutate({
+        mutation: ExportPdfDocument,
+        variables: { pdf: pdfInput },
+      });
+      return data?.exportPdf;
+    } catch (e) {
+      throw e instanceof Error ? e : new Error('Failed to export PDF');
+    }
+  };
+
   return {
     cvs,
     allCvs,
@@ -249,5 +284,6 @@ export const useCvs = () => {
     addCvProject,
     updateCvProject,
     removeCvProject,
+    exportPdf,
   };
 };

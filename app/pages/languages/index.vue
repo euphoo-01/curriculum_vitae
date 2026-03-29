@@ -97,7 +97,12 @@ const snackbarColor = ref('error');
 const loadingAction = ref(false);
 
 const languageToDelete = ref<string>();
-const languageToEdit = ref<{ id: string; name: string; native_name?: string | null; iso2: string } | null>(null);
+const languageToEdit = ref<{
+  id: string;
+  name: string;
+  native_name?: string | null;
+  iso2: string;
+} | null>(null);
 
 const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 
@@ -106,7 +111,7 @@ const adminActions: AdminAction[] = [
     name: t('common.update'),
     type: AdminActionsNames.SEE,
     action: (id: string) => {
-      const lang = languagesList.value.find((l) => l.id === id);
+      const lang = languagesList.value.find((l) => l?.id === id);
       if (lang) {
         languageToEdit.value = {
           id: lang.id,
@@ -187,9 +192,7 @@ const handleDeleteLanguage = async (id: string) => {
 };
 
 onMounted(() => {
-  setBreadcrumbs([
-    { title: t('sidebarLanguages'), disabled: true },
-  ]);
+  setBreadcrumbs([{ title: t('sidebarLanguages'), disabled: true }]);
   fetchLanguages();
 });
 </script>

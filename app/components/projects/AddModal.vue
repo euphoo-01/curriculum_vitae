@@ -39,6 +39,7 @@ const { t } = useI18n();
 
 const formRef = ref<VForm | null>(null);
 const form = ref({
+  id: '',
   name: '',
   internal_name: '',
   domain: '',
@@ -49,32 +50,32 @@ const form = ref({
 });
 
 const rules = {
-  required: (value: any) => !!value || t('fieldRequired'),
+  required: (value: unknown) => !!value || t('fieldRequired'),
 };
 
 watch(
   () => props.modelValue,
   (val) => {
     if (val && props.editData) {
-      form.value = {
-        name: props.editData.name,
-        internal_name: props.editData.internal_name,
-        domain: props.editData.domain,
-        start_date: props.editData.start_date.split('T')[0],
-        end_date: props.editData.end_date ? props.editData.end_date.split('T')[0] : '',
-        description: props.editData.description,
-        environment: [...props.editData.environment],
-      };
+      form.value.name = props.editData.name;
+      form.value.internal_name = props.editData.internal_name;
+      form.value.domain = props.editData.domain;
+      form.value.start_date = (props.editData.start_date || '').split(
+        'T'
+      )[0] as string;
+      form.value.end_date = (props.editData.end_date || '').split(
+        'T'
+      )[0] as string;
+      form.value.description = props.editData.description;
+      form.value.environment = [...props.editData.environment];
     } else if (val && !props.editData) {
-      form.value = {
-        name: '',
-        internal_name: '',
-        domain: '',
-        start_date: '',
-        end_date: '',
-        description: '',
-        environment: [],
-      };
+      form.value.name = '';
+      form.value.internal_name = '';
+      form.value.domain = '';
+      form.value.start_date = '';
+      form.value.end_date = '';
+      form.value.description = '';
+      form.value.environment = [];
       formRef.value?.resetValidation();
     }
   }
@@ -93,7 +94,9 @@ const submit = async () => {
     internal_name: form.value.internal_name,
     domain: form.value.domain,
     start_date: new Date(form.value.start_date).toISOString(),
-    end_date: form.value.end_date ? new Date(form.value.end_date).toISOString() : undefined,
+    end_date: form.value.end_date
+      ? new Date(form.value.end_date).toISOString()
+      : undefined,
     description: form.value.description,
     environment: form.value.environment,
   });

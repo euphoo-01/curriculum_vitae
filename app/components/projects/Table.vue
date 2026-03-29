@@ -12,7 +12,7 @@ defineProps<{
   canEdit: boolean;
 }>();
 
-const { t, d } = useI18n();
+const { t } = useI18n();
 
 const headers = computed(() => [
   { title: 'Name', key: 'name', sortable: true },

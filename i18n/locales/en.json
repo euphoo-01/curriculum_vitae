@@ -21,7 +21,8 @@
     "delete": "Delete",
     "create": "Create",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "tillNow": "Till now"
   },
   "profile": {
     "title": "Profile",
@@ -87,7 +88,11 @@
     "employee": "Employee",
     "noCvs": "No CVs added yet.",
     "search": "Search CVs...",
-    "deleteConfirm": "Are you sure you want to delete this CV?"
+    "deleteConfirm": "Are you sure you want to delete this CV?",
+    "details": "Details",
+    "skills": "Skills",
+    "projects": "Projects",
+    "preview": "Preview"
   },
   "dashboard": "Dashboard",
   "sidebarUsers": "Employees",

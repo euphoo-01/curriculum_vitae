@@ -13,7 +13,10 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (e: 'submit', formData: { id?: string; name: string; categoryId?: string }): void;
+  (
+    e: 'submit',
+    formData: { id?: string; name: string; categoryId?: string }
+  ): void;
 }>();
 
 const { t } = useI18n();

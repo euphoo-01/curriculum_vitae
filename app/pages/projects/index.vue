@@ -97,7 +97,16 @@ const snackbarColor = ref('error');
 const loadingAction = ref(false);
 
 const projectToDelete = ref<string>();
-const projectToEdit = ref<any>(null);
+const projectToEdit = ref<{
+  id: string;
+  name: string;
+  internal_name: string;
+  domain: string;
+  start_date: string;
+  end_date?: string | null;
+  description: string;
+  environment: string[];
+} | null>(null);
 
 const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 
@@ -128,7 +137,16 @@ const openAddModal = () => {
   isAddModal.value = true;
 };
 
-const handleSubmitProject = async (formData: any) => {
+const handleSubmitProject = async (formData: {
+  id?: string;
+  name: string;
+  internal_name: string;
+  domain: string;
+  start_date: string;
+  end_date?: string;
+  description: string;
+  environment: string[];
+}) => {
   loadingAction.value = true;
   try {
     if (formData.id) {
@@ -183,9 +201,7 @@ const handleDeleteProject = async (id: string) => {
 };
 
 onMounted(() => {
-  setBreadcrumbs([
-    { title: t('sidebarProjects'), disabled: true },
-  ]);
+  setBreadcrumbs([{ title: t('sidebarProjects'), disabled: true }]);
   fetchProjects();
 });
 </script>

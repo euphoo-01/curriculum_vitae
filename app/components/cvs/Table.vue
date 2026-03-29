@@ -1,29 +1,35 @@
 <script setup lang="ts">
-// TODO: Сделать переход через троеточие
-import type { GetUserCvsQuery } from '~~/graphql/generated/graphql';
+import type { GetAllCvsQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
 
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-
-type CvItem = NonNullable<NonNullable<GetUserCvsQuery['user']>['cvs']>[number];
+type CvItem = GetAllCvsQuery['cvs'][number];
 
 defineProps<{
   items: CvItem[];
   loading?: boolean;
   search?: string;
   adminActions: AdminAction[];
-  canEdit: boolean;
+  canEdit: boolean | ((item: CvItem) => boolean);
 }>();
 
 const { t } = useI18n();
 
 const headers = computed(() => [
   { title: t('cvs.name'), key: 'name', sortable: true },
-  { title: t('cvs.description'), key: 'description', sortable: false },
-  { title: t('cvs.employee'), key: 'user.email', sortable: true },
-  { title: '', key: 'actions', sortable: false, width: '100px' },
+  { title: t('cvs.description'), key: 'description', sortable: true },
+  { title: t('cvs.employee'), key: 'user.profile.full_name', sortable: true },
+  { title: '', key: 'actions', sortable: false, align: 'end' as const },
 ]);
+
+const getCanEdit = (
+  item: CvItem,
+  canEditProp: boolean | ((item: CvItem) => boolean)
+) => {
+  if (typeof canEditProp === 'function') {
+    return canEditProp(item);
+  }
+  return canEditProp;
+};
 </script>
 
 <template>
@@ -42,9 +48,13 @@ const headers = computed(() => [
   >
     <template #bottom></template>
 
+    <template #[`item.user.profile.full_name`]="{ item }">
+      {{ item.user?.profile?.full_name || item.user?.email }}
+    </template>
+
     <template #[`item.actions`]="{ item }">
       <div class="d-flex justify-end">
-        <v-menu v-if="canEdit">
+        <v-menu v-if="getCanEdit(item, canEdit)">
           <template #activator="{ props }">
             <v-btn
               icon="mdi-dots-vertical"
@@ -66,11 +76,10 @@ const headers = computed(() => [
           </v-list>
         </v-menu>
         <v-btn
-          v-else
           icon="mdi-chevron-right"
           variant="text"
           size="small"
-          :to="`/cvs/${item.id}/details`"
+          :to="`/cvs/${item.id}/preview`"
         ></v-btn>
       </div>
     </template>

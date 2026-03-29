@@ -176,9 +176,7 @@ const handleDeletePosition = async (id: string) => {
 };
 
 onMounted(() => {
-  setBreadcrumbs([
-    { title: t('sidebarPositions'), disabled: true },
-  ]);
+  setBreadcrumbs([{ title: t('sidebarPositions'), disabled: true }]);
   fetchPositions();
 });
 </script>

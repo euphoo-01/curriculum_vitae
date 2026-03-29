@@ -56,7 +56,8 @@ export const useProjects = () => {
       clearNuxtData('projects');
       await fetchProjects();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to create project');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to create project');
       throw e;
     }
   };
@@ -71,7 +72,8 @@ export const useProjects = () => {
       clearNuxtData('projects');
       await fetchProjects();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to update project');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to update project');
       throw e;
     }
   };
@@ -86,7 +88,8 @@ export const useProjects = () => {
       clearNuxtData('projects');
       await fetchProjects();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to delete project');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to delete project');
       throw e;
     }
   };
@@ -99,7 +102,8 @@ export const useProjects = () => {
       });
       return data.project;
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to fetch project');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to fetch project');
       throw e;
     }
   };

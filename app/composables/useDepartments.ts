@@ -55,7 +55,8 @@ export const useDepartments = () => {
       clearNuxtData('departments');
       await fetchDepartments();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to create department');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to create department');
       throw e;
     }
   };
@@ -70,7 +71,8 @@ export const useDepartments = () => {
       clearNuxtData('departments');
       await fetchDepartments();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to update department');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to update department');
       throw e;
     }
   };
@@ -85,7 +87,8 @@ export const useDepartments = () => {
       clearNuxtData('departments');
       await fetchDepartments();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to delete department');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to delete department');
       throw e;
     }
   };

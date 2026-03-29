@@ -55,7 +55,8 @@ export const usePositions = () => {
       clearNuxtData('positions');
       await fetchPositions();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to create position');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to create position');
       throw e;
     }
   };
@@ -70,7 +71,8 @@ export const usePositions = () => {
       clearNuxtData('positions');
       await fetchPositions();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to update position');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to update position');
       throw e;
     }
   };
@@ -85,7 +87,8 @@ export const usePositions = () => {
       clearNuxtData('positions');
       await fetchPositions();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to delete position');
+      error.value =
+        e instanceof Error ? e : new Error('Failed to delete position');
       throw e;
     }
   };

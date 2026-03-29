@@ -72,7 +72,10 @@ export const useLanguages = () => {
     );
 
     if (fetchError.value) {
-      error.value = fetchError.value instanceof Error ? fetchError.value : new Error('Failed to fetch languages');
+      error.value =
+        fetchError.value instanceof Error
+          ? fetchError.value
+          : new Error('Failed to fetch languages');
       loading.value = false;
       return [];
     }

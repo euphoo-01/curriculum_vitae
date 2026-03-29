@@ -100,7 +100,11 @@ const snackbarColor = ref('error');
 const loadingAction = ref(false);
 
 const skillToDelete = ref<string>();
-const skillToEdit = ref<{ id: string; name: string; categoryId?: string | null } | null>(null);
+const skillToEdit = ref<{
+  id: string;
+  name: string;
+  categoryId?: string | null;
+} | null>(null);
 
 const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 
@@ -186,9 +190,7 @@ const handleDeleteSkill = async (id: string) => {
 };
 
 onMounted(() => {
-  setBreadcrumbs([
-    { title: t('sidebarSkills'), disabled: true },
-  ]);
+  setBreadcrumbs([{ title: t('sidebarSkills'), disabled: true }]);
   fetchSkills();
   fetchCategories();
 });

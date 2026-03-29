@@ -54,7 +54,7 @@ const headers = computed(() => [
               v-for="(action, idx) in adminActions"
               :key="idx"
               :value="idx"
-              @click="action.action(item.id)"
+              @click="item && action.action(item.id)"
             >
               <v-list-item-title>{{ action.name }}</v-list-item-title>
             </v-list-item>

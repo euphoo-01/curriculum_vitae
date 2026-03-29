@@ -19,7 +19,9 @@
       :message="$t('profile.deleteConfirm')"
       :confirm-text="$t('common.delete')"
       :cancel-text="$t('common.cancel')"
-      @confirm="departmentToDelete && handleDeleteDepartment(departmentToDelete)"
+      @confirm="
+        departmentToDelete && handleDeleteDepartment(departmentToDelete)
+      "
     />
 
     <DepartmentsAddModal
@@ -176,9 +178,7 @@ const handleDeleteDepartment = async (id: string) => {
 };
 
 onMounted(() => {
-  setBreadcrumbs([
-    { title: t('sidebarDepartments'), disabled: true },
-  ]);
+  setBreadcrumbs([{ title: t('sidebarDepartments'), disabled: true }]);
   fetchDepartments();
 });
 </script>
