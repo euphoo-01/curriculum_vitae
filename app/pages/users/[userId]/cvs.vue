@@ -86,7 +86,7 @@ const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
 const { user: profileUser, fetchUser } = useProfile();
 
-const { cvs, loading, fetchCvs, createCv, updateCv, deleteCv } = useCvs();
+const { cvs, loading, fetchUserCvs, createCv, updateCv, deleteCv } = useCvs();
 
 const search = ref('');
 let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -163,7 +163,7 @@ const handleSubmitCv = async (formData: {
       });
     }
     isAddModal.value = false;
-    await fetchCvs(userId);
+    await fetchUserCvs(userId);
   } catch (e) {
     actionError.value = e instanceof Error ? e.message : 'Error';
     isSnackbar.value = true;
@@ -176,9 +176,9 @@ const handleDeleteCv = async (id: string) => {
   loadingAction.value = true;
   actionError.value = '';
   try {
-    await deleteCv({ cvId: id });
+    await deleteCv(id);
     isDeleteModal.value = false;
-    await fetchCvs(userId);
+    await fetchUserCvs(userId);
   } catch (e) {
     actionError.value = e instanceof Error ? e.message : 'Error';
     isSnackbar.value = true;
@@ -195,7 +195,7 @@ const onSearchInput = (value: string) => {
 };
 
 await fetchUser(userId);
-await fetchCvs(userId);
+await fetchUserCvs(userId);
 
 if (userId) {
   setBreadcrumbs([

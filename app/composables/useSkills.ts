@@ -2,6 +2,9 @@ import {
   GetProfileSkillsDocument,
   GetSkillsDocument,
   GetSkillCategoriesDocument,
+  CreateSkillDocument,
+  UpdateSkillDocument,
+  DeleteSkillDocument,
   AddProfileSkillDocument,
   UpdateProfileSkillDocument,
   DeleteProfileSkillDocument,
@@ -10,6 +13,8 @@ import type {
   GetProfileSkillsQuery,
   GetSkillsQuery,
   GetSkillCategoriesQuery,
+  CreateSkillInput,
+  UpdateSkillInput,
   AddProfileSkillInput,
   UpdateProfileSkillInput,
   DeleteProfileSkillInput,
@@ -55,24 +60,31 @@ export const useSkills = () => {
   };
 
   const fetchSkills = async () => {
+    loading.value = true;
     const { data: fetchedData, error: fetchError } = await useAsyncData(
       'skills',
       async () => {
         const { data } = await client!.query({
           query: GetSkillsDocument,
+          fetchPolicy: 'network-only',
         });
         return data.skills;
       }
     );
 
     if (fetchError.value) {
-      console.error('Failed to fetch skills', fetchError.value);
+      error.value =
+        fetchError.value instanceof Error
+          ? fetchError.value
+          : new Error('Failed to fetch skills');
+      loading.value = false;
       return [];
     }
 
     if (fetchedData.value) {
       skillsList.value = fetchedData.value;
     }
+    loading.value = false;
     return fetchedData.value || [];
   };
 
@@ -82,6 +94,7 @@ export const useSkills = () => {
       async () => {
         const { data } = await client!.query({
           query: GetSkillCategoriesDocument,
+          fetchPolicy: 'network-only',
         });
         return data.skillCategories;
       }
@@ -98,7 +111,46 @@ export const useSkills = () => {
     return fetchedData.value || [];
   };
 
-  const addSkill = async (input: AddProfileSkillInput) => {
+  const createSkill = async (skill: CreateSkillInput) => {
+    try {
+      await client!.mutate({
+        mutation: CreateSkillDocument,
+        variables: { skill },
+      });
+      clearNuxtData('skills');
+      await fetchSkills();
+    } catch (e) {
+      throw e instanceof Error ? e : new Error('Failed to create skill');
+    }
+  };
+
+  const updateSkill = async (skill: UpdateSkillInput) => {
+    try {
+      await client!.mutate({
+        mutation: UpdateSkillDocument,
+        variables: { skill },
+      });
+      clearNuxtData('skills');
+      await fetchSkills();
+    } catch (e) {
+      throw e instanceof Error ? e : new Error('Failed to update skill');
+    }
+  };
+
+  const deleteSkill = async (skillId: string) => {
+    try {
+      await client!.mutate({
+        mutation: DeleteSkillDocument,
+        variables: { skillId },
+      });
+      clearNuxtData('skills');
+      await fetchSkills();
+    } catch (e) {
+      throw e instanceof Error ? e : new Error('Failed to delete skill');
+    }
+  };
+
+  const addProfileSkill = async (input: AddProfileSkillInput) => {
     try {
       const { data } = await client!.mutate({
         mutation: AddProfileSkillDocument,
@@ -113,7 +165,7 @@ export const useSkills = () => {
     }
   };
 
-  const updateSkill = async (input: UpdateProfileSkillInput) => {
+  const updateProfileSkill = async (input: UpdateProfileSkillInput) => {
     try {
       const { data } = await client!.mutate({
         mutation: UpdateProfileSkillDocument,
@@ -130,7 +182,7 @@ export const useSkills = () => {
     }
   };
 
-  const deleteSkill = async (input: DeleteProfileSkillInput) => {
+  const deleteProfileSkill = async (input: DeleteProfileSkillInput) => {
     try {
       const { data } = await client!.mutate({
         mutation: DeleteProfileSkillDocument,
@@ -156,8 +208,11 @@ export const useSkills = () => {
     fetchProfileSkills,
     fetchSkills,
     fetchCategories,
-    addSkill,
+    createSkill,
     updateSkill,
     deleteSkill,
+    addProfileSkill,
+    updateProfileSkill,
+    deleteProfileSkill,
   };
 };

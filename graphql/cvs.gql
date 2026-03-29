@@ -1,4 +1,4 @@
-query getCvs($userId: ID!) {
+query GetUserCvs($userId: ID!) {
   user(userId: $userId) {
     id
     cvs {
@@ -6,13 +6,75 @@ query getCvs($userId: ID!) {
       name
       description
       user {
+        id
         email
+        profile {
+          full_name
+        }
       }
     }
   }
 }
 
-mutation createCv($cv: CreateCvInput!) {
+query GetAllCvs {
+  cvs {
+    id
+    name
+    description
+    user {
+      id
+      email
+      profile {
+        full_name
+      }
+    }
+  }
+}
+
+query GetCv($cvId: ID!) {
+  cv(cvId: $cvId) {
+    id
+    name
+    education
+    description
+    user {
+      id
+      email
+      profile {
+        full_name
+      }
+    }
+    projects {
+      id
+      project {
+        id
+        name
+        internal_name
+        domain
+      }
+      name
+      internal_name
+      description
+      domain
+      start_date
+      end_date
+      environment
+      roles
+      responsibilities
+    }
+    skills {
+      name
+      categoryId
+      mastery
+    }
+    languages {
+      name
+      proficiency
+    }
+  }
+}
+
+mutation CreateCv($cv: CreateCvInput!) {
   createCv(cv: $cv) {
     id
     name
@@ -20,7 +82,7 @@ mutation createCv($cv: CreateCvInput!) {
   }
 }
 
-mutation updateCv($cv: UpdateCvInput!) {
+mutation UpdateCv($cv: UpdateCvInput!) {
   updateCv(cv: $cv) {
     id
     name
@@ -28,8 +90,68 @@ mutation updateCv($cv: UpdateCvInput!) {
   }
 }
 
-mutation deleteCv($cv: DeleteCvInput!) {
-  deleteCv(cv: $cv) {
+mutation DeleteCv($cvId: ID!) {
+  deleteCv(cv: { cvId: $cvId }) {
     affected
+  }
+}
+
+mutation AddCvSkill($skill: AddCvSkillInput!) {
+  addCvSkill(skill: $skill) {
+    id
+    skills {
+      name
+      categoryId
+      mastery
+    }
+  }
+}
+
+mutation UpdateCvSkill($skill: UpdateCvSkillInput!) {
+  updateCvSkill(skill: $skill) {
+    id
+    skills {
+      name
+      categoryId
+      mastery
+    }
+  }
+}
+
+mutation DeleteCvSkill($skill: DeleteCvSkillInput!) {
+  deleteCvSkill(skill: $skill) {
+    id
+    skills {
+      name
+      categoryId
+      mastery
+    }
+  }
+}
+
+mutation AddCvProject($project: AddCvProjectInput!) {
+  addCvProject(project: $project) {
+    id
+    projects {
+      id
+    }
+  }
+}
+
+mutation UpdateCvProject($project: UpdateCvProjectInput!) {
+  updateCvProject(project: $project) {
+    id
+    projects {
+      id
+    }
+  }
+}
+
+mutation RemoveCvProject($project: RemoveCvProjectInput!) {
+  removeCvProject(project: $project) {
+    id
+    projects {
+      id
+    }
   }
 }

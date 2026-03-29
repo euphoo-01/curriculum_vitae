@@ -1,17 +1,3 @@
-query GetDepartments {
-  departments {
-    id
-    name
-  }
-}
-
-query GetPositions {
-  positions {
-    id
-    name
-  }
-}
-
 mutation UpdateUser($user: UpdateUserInput!) {
   updateUser(user: $user) {
     id

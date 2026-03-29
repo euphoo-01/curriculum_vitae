@@ -33,6 +33,34 @@ query GetSkillCategories {
   }
 }
 
+mutation CreateSkill($skill: CreateSkillInput!) {
+  createSkill(skill: $skill) {
+    id
+    name
+    category {
+      id
+      name
+    }
+  }
+}
+
+mutation UpdateSkill($skill: UpdateSkillInput!) {
+  updateSkill(skill: $skill) {
+    id
+    name
+    category {
+      id
+      name
+    }
+  }
+}
+
+mutation DeleteSkill($skillId: ID!) {
+  deleteSkill(skill: { skillId: $skillId }) {
+    affected
+  }
+}
+
 mutation AddProfileSkill($skill: AddProfileSkillInput!) {
   addProfileSkill(skill: $skill) {
     id

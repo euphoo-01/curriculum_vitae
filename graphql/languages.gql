@@ -17,6 +17,30 @@ query GetLanguages {
   }
 }
 
+mutation CreateLanguage($language: CreateLanguageInput!) {
+  createLanguage(language: $language) {
+    id
+    iso2
+    name
+    native_name
+  }
+}
+
+mutation UpdateLanguage($language: UpdateLanguageInput!) {
+  updateLanguage(language: $language) {
+    id
+    iso2
+    name
+    native_name
+  }
+}
+
+mutation DeleteLanguage($languageId: ID!) {
+  deleteLanguage(language: { languageId: $languageId }) {
+    affected
+  }
+}
+
 mutation AddProfileLanguage($language: AddProfileLanguageInput!) {
   addProfileLanguage(language: $language) {
     id

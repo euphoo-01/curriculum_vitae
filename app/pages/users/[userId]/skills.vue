@@ -173,9 +173,9 @@ const {
   fetchProfileSkills,
   fetchSkills,
   fetchCategories,
-  addSkill,
-  updateSkill,
-  deleteSkill,
+  addProfileSkill,
+  updateProfileSkill,
+  deleteProfileSkill,
 } = useSkills();
 
 const { user: currentUser } = useAuth();
@@ -315,7 +315,7 @@ const handleAddSkill = async (data: { name: string; mastery: Mastery }) => {
   try {
     const skillObj = skillsList.value.find((s) => s.name === data.name);
 
-    await addSkill({
+    await addProfileSkill({
       userId,
       name: data.name,
       categoryId: skillObj?.category?.id,
@@ -336,7 +336,7 @@ const handleUpdateSkill = async (data: { name: string; mastery: Mastery }) => {
   updating.value = true;
   actionError.value = '';
   try {
-    await updateSkill({
+    await updateProfileSkill({
       userId,
       name: selectedSkill.value.name,
       categoryId: selectedSkill.value.categoryId,
@@ -370,7 +370,7 @@ const confirmDelete = async () => {
   updating.value = true;
   actionError.value = '';
   try {
-    await deleteSkill({
+    await deleteProfileSkill({
       userId,
       name: Array.from(selectedSkillsToDelete.value),
     });

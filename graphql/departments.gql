@@ -1,0 +1,27 @@
+query GetDepartments {
+  departments {
+    id
+    name
+    created_at
+  }
+}
+
+mutation CreateDepartment($department: CreateDepartmentInput!) {
+  createDepartment(department: $department) {
+    id
+    name
+  }
+}
+
+mutation UpdateDepartment($department: UpdateDepartmentInput!) {
+  updateDepartment(department: $department) {
+    id
+    name
+  }
+}
+
+mutation DeleteDepartment($departmentId: ID!) {
+  deleteDepartment(department: { departmentId: $departmentId }) {
+    affected
+  }
+}

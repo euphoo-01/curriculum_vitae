@@ -166,9 +166,9 @@ const {
   error: languagesError,
   fetchProfileLanguages,
   fetchLanguages,
-  addLanguage,
-  updateLanguage,
-  deleteLanguage,
+  addProfileLanguage,
+  updateProfileLanguage,
+  deleteProfileLanguage,
 } = useLanguages();
 
 const { user: currentUser } = useAuth();
@@ -269,7 +269,7 @@ const handleAddLanguage = async (data: {
   updating.value = true;
   actionError.value = '';
   try {
-    await addLanguage({
+    await addProfileLanguage({
       userId,
       name: data.name,
       proficiency: data.proficiency,
@@ -293,7 +293,7 @@ const handleUpdateLanguage = async (data: {
   updating.value = true;
   actionError.value = '';
   try {
-    await updateLanguage({
+    await updateProfileLanguage({
       userId,
       name: selectedLanguage.value.name,
       proficiency: data.proficiency,
@@ -327,7 +327,7 @@ const confirmDelete = async () => {
   updating.value = true;
   actionError.value = '';
   try {
-    await deleteLanguage({
+    await deleteProfileLanguage({
       userId,
       name: Array.from(selectedLanguagesToDelete.value),
     });

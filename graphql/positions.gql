@@ -1,0 +1,34 @@
+query GetPositions {
+  positions {
+    id
+    name
+    created_at
+  }
+}
+
+query GetPosition($positionId: ID!) {
+  position(id: $positionId) {
+    id
+    name
+  }
+}
+
+mutation CreatePosition($position: CreatePositionInput!) {
+  createPosition(position: $position) {
+    id
+    name
+  }
+}
+
+mutation UpdatePosition($position: UpdatePositionInput!) {
+  updatePosition(position: $position) {
+    id
+    name
+  }
+}
+
+mutation DeletePosition($positionId: ID!) {
+  deletePosition(position: { positionId: $positionId }) {
+    affected
+  }
+}
