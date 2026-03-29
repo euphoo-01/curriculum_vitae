@@ -12,6 +12,34 @@ const menuItems = [
     value: 'users',
   },
   {
+    to: '/projects',
+    icon: 'mdi-briefcase-outline',
+    titleKey: 'sidebarProjects',
+    value: 'projects',
+  },
+  {
+    to: '/cvs',
+    icon: 'mdi-file-account-outline',
+    titleKey: 'sidebarCVs',
+    value: 'cvs',
+  },
+  {
+    divider: true,
+    value: 'divider-1',
+  },
+  {
+    to: '/departments',
+    icon: 'mdi-domain',
+    titleKey: 'sidebarDepartments',
+    value: 'departments',
+  },
+  {
+    to: '/positions',
+    icon: 'mdi-badge-account-horizontal-outline',
+    titleKey: 'sidebarPositions',
+    value: 'positions',
+  },
+  {
     to: '/skills',
     icon: 'mdi-trending-up',
     titleKey: 'sidebarSkills',
@@ -22,12 +50,6 @@ const menuItems = [
     icon: 'mdi-translate',
     titleKey: 'sidebarLanguages',
     value: 'languages',
-  },
-  {
-    to: '/cvs',
-    icon: 'mdi-file-account-outline',
-    titleKey: 'sidebarCVs',
-    value: 'cvs',
   },
 ];
 </script>
@@ -45,21 +67,23 @@ const menuItems = [
       nav
       density="comfortable"
     >
-      <v-list-item
-        v-for="item in menuItems"
-        :key="item.value"
-        :to="item.to"
-        :prepend-icon="item.icon"
-        :title="$t(item.titleKey)"
-        :value="item.value"
-        variant="text"
-        density="default"
-        active-class="bg-secondary font-weight-bold"
-        :class="[
-          'mb-2 transition-all duration-200',
-          isRail ? 'rounded-full' : 'rounded-r-full rounded-l-0',
-        ]"
-      ></v-list-item>
+      <template v-for="item in menuItems" :key="item.value">
+        <v-divider v-if="item.divider" class="my-2"></v-divider>
+        <v-list-item
+          v-else
+          :to="item.to"
+          :prepend-icon="item.icon"
+          :title="item.titleKey ? $t(item.titleKey) : undefined"
+          :value="item.value"
+          variant="text"
+          density="default"
+          active-class="bg-secondary font-weight-bold"
+          :class="[
+            'mb-2 transition-all duration-200',
+            isRail ? 'rounded-full' : 'rounded-r-full rounded-l-0',
+          ]"
+        ></v-list-item>
+      </template>
     </v-list>
 
     <template #append>
