@@ -1,0 +1,35 @@
+query getCvs($userId: ID!) {
+  user(userId: $userId) {
+    id
+    cvs {
+      id
+      name
+      description
+      user {
+        email
+      }
+    }
+  }
+}
+
+mutation createCv($cv: CreateCvInput!) {
+  createCv(cv: $cv) {
+    id
+    name
+    description
+  }
+}
+
+mutation updateCv($cv: UpdateCvInput!) {
+  updateCv(cv: $cv) {
+    id
+    name
+    description
+  }
+}
+
+mutation deleteCv($cv: DeleteCvInput!) {
+  deleteCv(cv: $cv) {
+    affected
+  }
+}

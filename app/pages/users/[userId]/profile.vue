@@ -2,7 +2,7 @@
   <div class="flex-grow-1 d-flex flex-column pb-4 m-0 bg-background h-screen">
     <div class="d-flex flex-column bg-background shadow-sm mb-4 px-4">
       <LayoutBreadcrumbs class="flex-none" />
-      <LayoutTabs :items="profileTabs" class="mt-2" />
+      <UsersProfileTabs />
     </div>
 
     <v-container v-if="loading" class="fill-height d-flex justify-center">
@@ -110,24 +110,6 @@ const initialFormData = computed(() => ({
   departmentId: user.value?.department?.id || null,
   positionId: user.value?.position?.id || null,
 }));
-
-const profileTabs = computed(() => [
-  {
-    title: t('profile.title'),
-    to: `/users/${userId}/profile`,
-    value: 'profile',
-  },
-  {
-    title: t('profile.skills'),
-    to: `/users/${userId}/skills`,
-    value: 'skills',
-  },
-  {
-    title: t('profile.languages'),
-    to: `/users/${userId}/languages`,
-    value: 'languages',
-  },
-]);
 
 const canEdit = computed(() => {
   if (!currentUser.value || !user.value) return false;

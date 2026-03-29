@@ -76,6 +76,17 @@
     "C2": "C2",
     "Native": "Native"
   },
+  "cvs": {
+    "title": "CVs",
+    "add": "Create CV",
+    "edit": "Edit CV",
+    "name": "Name",
+    "description": "Description",
+    "employee": "Employee",
+    "noCvs": "No CVs added yet.",
+    "search": "Search CVs...",
+    "deleteConfirm": "Are you sure you want to delete this CV?"
+  },
   "dashboard": "Dashboard",
   "sidebarUsers": "Employees",
   "sidebarSkills": "Skills",

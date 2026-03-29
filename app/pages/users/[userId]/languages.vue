@@ -2,7 +2,7 @@
   <div class="flex flex-col min-h-screen bg-background pb-0 m-0">
     <div class="flex flex-col shrink-0 bg-background shadow-sm mb-4 px-4">
       <LayoutBreadcrumbs class="shrink-0" />
-      <LayoutTabs :items="profileTabs" class="mt-2" />
+      <UsersProfileTabs />
     </div>
 
     <div
@@ -192,24 +192,6 @@ const selectedLanguage = ref<{
 
 const deleteMode = ref(false);
 const selectedLanguagesToDelete = ref<Set<string>>(new Set());
-
-const profileTabs = computed(() => [
-  {
-    title: t('profile.title'),
-    to: `/users/${userId}/profile`,
-    value: 'profile',
-  },
-  {
-    title: t('profile.skills'),
-    to: `/users/${userId}/skills`,
-    value: 'skills',
-  },
-  {
-    title: t('profile.languages'),
-    to: `/users/${userId}/languages`,
-    value: 'languages',
-  },
-]);
 
 const canEdit = computed(() => {
   if (!currentUser.value || !user.value) return false;
