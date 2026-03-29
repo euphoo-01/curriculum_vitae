@@ -60,6 +60,22 @@
     "Proficient": "Experienced",
     "Expert": "Expert"
   },
+  "languages": {
+    "add": "Add language",
+    "edit": "Edit language",
+    "language": "Language",
+    "proficiency": "Proficiency level",
+    "noLanguages": "No languages added yet."
+  },
+  "proficiency": {
+    "A1": "A1",
+    "A2": "A2",
+    "B1": "B1",
+    "B2": "B2",
+    "C1": "C1",
+    "C2": "C2",
+    "Native": "Native"
+  },
   "dashboard": "Dashboard",
   "sidebarUsers": "Employees",
   "sidebarSkills": "Skills",

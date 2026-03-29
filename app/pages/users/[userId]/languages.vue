@@ -6,18 +6,18 @@
     </div>
 
     <div
-      v-if="loadingUser || loadingSkills"
+      v-if="loadingUser || loadingLanguages"
       class="flex justify-center items-center min-h-[50vh]"
     >
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
 
     <div
-      v-else-if="userError || skillsError"
+      v-else-if="userError || languagesError"
       class="flex justify-center items-center min-h-[50vh]"
     >
       <v-alert type="error">{{
-        userError?.message || skillsError?.message
+        userError?.message || languagesError?.message
       }}</v-alert>
     </div>
 
@@ -44,31 +44,26 @@
           </v-alert>
 
           <div
-            v-if="categoriesWithSkills.length === 0"
+            v-if="profileLanguages.length === 0"
             class="text-center py-8 text-on-surface/50"
           >
-            {{ $t('skills.noSkills') }}
+            {{ $t('languages.noLanguages') }}
           </div>
 
           <div
-            v-for="category in categoriesWithSkills"
-            :key="category.id"
-            class="mb-10"
+            v-else
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10"
           >
-            <div class="text-xl font-bold mb-6 text-on-surface">
-              {{ category.name }}
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <UsersSkillsChip
-                v-for="skill in category.skills"
-                :key="skill.name"
-                :skill="skill"
-                :selected="selectedSkillsToDelete.has(skill.name)"
-                :disabled="!canEdit"
-                @click="handleSkillClick(skill)"
-              />
-            </div>
+            <UsersLanguagesChip
+              v-for="language in profileLanguages"
+              :key="language.name"
+              :language="language"
+              :selected="selectedLanguagesToDelete.has(language.name)"
+              :disabled="!canEdit"
+              @click="handleLanguageClick(language)"
+            />
           </div>
+
           <div v-if="canEdit" class="flex items-center my-6 gap-8">
             <v-btn
               v-if="!deleteMode"
@@ -80,7 +75,7 @@
               :disabled="deleteMode"
               @click="isAddModalOpen = true"
             >
-              {{ $t('skills.add') }}
+              {{ $t('languages.add') }}
             </v-btn>
 
             <v-btn
@@ -117,8 +112,8 @@
               >
                 {{ $t('common.delete') }}
                 {{
-                  selectedSkillsToDelete.size > 0
-                    ? `(${selectedSkillsToDelete.size})`
+                  selectedLanguagesToDelete.size > 0
+                    ? `(${selectedLanguagesToDelete.size})`
                     : ''
                 }}
               </v-btn>
@@ -126,18 +121,18 @@
           </div>
         </div>
 
-        <UsersSkillsAddModal
+        <UsersLanguagesAddModal
           v-model="isAddModalOpen"
-          :skills="availableSkillsToAdd"
+          :languages="availableLanguagesToAdd"
           :loading="updating"
-          @submit="handleAddSkill"
+          @submit="handleAddLanguage"
         />
 
-        <UsersSkillsEditModal
+        <UsersLanguagesEditModal
           v-model="isEditModalOpen"
-          :skill="selectedSkill"
+          :language="selectedLanguage"
           :loading="updating"
-          @submit="handleUpdateSkill"
+          @submit="handleUpdateLanguage"
           @delete="openDeleteModalFromEdit"
         />
 
@@ -153,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Mastery } from '~~/graphql/generated/graphql';
+import type { Proficiency } from '~~/graphql/generated/graphql';
 import { UserRole } from '~~/graphql/generated/graphql';
 
 const route = useRoute();
@@ -167,18 +162,16 @@ const {
 } = useProfile();
 
 const {
-  profileSkills,
-  skillsList,
-  categoriesList,
-  loading: loadingSkills,
-  error: skillsError,
-  fetchProfileSkills,
-  fetchSkills,
-  fetchCategories,
-  addSkill,
-  updateSkill,
-  deleteSkill,
-} = useSkills();
+  profileLanguages,
+  languagesList,
+  loading: loadingLanguages,
+  error: languagesError,
+  fetchProfileLanguages,
+  fetchLanguages,
+  addLanguage,
+  updateLanguage,
+  deleteLanguage,
+} = useLanguages();
 
 const { user: currentUser } = useAuth();
 const { t } = useI18n();
@@ -192,14 +185,13 @@ const actionError = ref('');
 const isAddModalOpen = ref(false);
 const isEditModalOpen = ref(false);
 const isConfirmModalOpen = ref(false);
-const selectedSkill = ref<{
+const selectedLanguage = ref<{
   name: string;
-  mastery: Mastery;
-  categoryId?: string | null;
+  proficiency: Proficiency;
 } | null>(null);
 
 const deleteMode = ref(false);
-const selectedSkillsToDelete = ref<Set<string>>(new Set());
+const selectedLanguagesToDelete = ref<Set<string>>(new Set());
 
 const profileTabs = computed(() => [
   {
@@ -227,58 +219,20 @@ const canEdit = computed(() => {
   );
 });
 
-const availableSkillsToAdd = computed(() => {
-  const profileSkillNames = new Set(profileSkills.value.map((s) => s.name));
-  return skillsList.value.filter((s) => !profileSkillNames.has(s.name));
-});
-
-const categoriesWithSkills = computed(() => {
-  const categoryMap = new Map<
-    string,
-    {
-      id: string;
-      name: string;
-      skills: typeof profileSkills.value;
-      order: number;
-    }
-  >();
-
-  categoriesList.value.forEach((cat) => {
-    categoryMap.set(cat.id, {
-      id: cat.id,
-      name: cat.name,
-      skills: [],
-      order: cat.order,
-    });
-  });
-
-  categoryMap.set('uncategorized', {
-    id: 'uncategorized',
-    name: t('skills.uncategorized'),
-    skills: [],
-    order: 9999,
-  });
-
-  profileSkills.value.forEach((skill) => {
-    const catId = skill.categoryId || 'uncategorized';
-    if (categoryMap.has(catId)) {
-      categoryMap.get(catId)!.skills.push(skill);
-    } else {
-      categoryMap.get('uncategorized')!.skills.push(skill);
-    }
-  });
-
-  return Array.from(categoryMap.values())
-    .filter((c) => c.skills.length > 0)
-    .sort((a, b) => a.order - b.order);
+const availableLanguagesToAdd = computed(() => {
+  const profileLanguageNames = new Set(
+    profileLanguages.value.map((l) => l.name)
+  );
+  return (
+    languagesList.value.filter((l) => l !== null) as { name: string }[]
+  ).filter((l) => !profileLanguageNames.has(l.name));
 });
 
 onMounted(async () => {
   await Promise.all([
     fetchUser(userId),
-    fetchProfileSkills(userId),
-    fetchSkills(),
-    fetchCategories(),
+    fetchProfileLanguages(userId),
+    fetchLanguages(),
   ]);
 
   if (userId) {
@@ -289,7 +243,7 @@ onMounted(async () => {
         to: `/users/${userId}/profile`,
       },
       {
-        title: t('profile.skills'),
+        title: t('profile.languages'),
         disabled: true,
       },
     ]);
@@ -299,9 +253,9 @@ onMounted(async () => {
 const toggleDeleteMode = () => {
   if (!deleteMode.value) {
     deleteMode.value = true;
-    selectedSkillsToDelete.value.clear();
+    selectedLanguagesToDelete.value.clear();
   } else {
-    if (selectedSkillsToDelete.value.size > 0) {
+    if (selectedLanguagesToDelete.value.size > 0) {
       isConfirmModalOpen.value = true;
     } else {
       deleteMode.value = false;
@@ -311,64 +265,67 @@ const toggleDeleteMode = () => {
 
 const cancelDeleteMode = () => {
   deleteMode.value = false;
-  selectedSkillsToDelete.value.clear();
+  selectedLanguagesToDelete.value.clear();
 };
 
-const handleSkillClick = (skill: {
+const handleLanguageClick = (language: {
   name: string;
-  mastery: Mastery;
-  categoryId?: string | null;
+  proficiency: Proficiency;
 }) => {
   if (deleteMode.value) {
-    if (selectedSkillsToDelete.value.has(skill.name)) {
-      selectedSkillsToDelete.value.delete(skill.name);
+    if (selectedLanguagesToDelete.value.has(language.name)) {
+      selectedLanguagesToDelete.value.delete(language.name);
     } else {
-      selectedSkillsToDelete.value.add(skill.name);
+      selectedLanguagesToDelete.value.add(language.name);
     }
   } else {
-    selectedSkill.value = { ...skill };
+    selectedLanguage.value = { ...language };
     isEditModalOpen.value = true;
   }
 };
 
-const handleAddSkill = async (data: { name: string; mastery: Mastery }) => {
+const handleAddLanguage = async (data: {
+  name: string;
+  proficiency: Proficiency;
+}) => {
   updating.value = true;
   actionError.value = '';
   try {
-    const skillObj = skillsList.value.find((s) => s.name === data.name);
-
-    await addSkill({
+    await addLanguage({
       userId,
       name: data.name,
-      categoryId: skillObj?.category?.id,
-      mastery: data.mastery,
+      proficiency: data.proficiency,
     });
     successMessage.value = t('common.save');
     showSuccess.value = true;
     isAddModalOpen.value = false;
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error adding skill';
+    actionError.value =
+      e instanceof Error ? e.message : 'Error adding language';
   } finally {
     updating.value = false;
   }
 };
 
-const handleUpdateSkill = async (data: { name: string; mastery: Mastery }) => {
-  if (!selectedSkill.value) return;
+const handleUpdateLanguage = async (data: {
+  name: string;
+  proficiency: Proficiency;
+}) => {
+  if (!selectedLanguage.value) return;
   updating.value = true;
   actionError.value = '';
   try {
-    await updateSkill({
+    await updateLanguage({
       userId,
-      name: selectedSkill.value.name,
-      categoryId: selectedSkill.value.categoryId,
-      mastery: data.mastery,
+      name: selectedLanguage.value.name,
+      proficiency: data.proficiency,
     });
     successMessage.value = t('common.update');
     showSuccess.value = true;
     isEditModalOpen.value = false;
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error updating skill';
+    actionError.value =
+      e instanceof Error ? e.message : 'Error updating language';
   } finally {
     updating.value = false;
   }
@@ -376,15 +333,15 @@ const handleUpdateSkill = async (data: { name: string; mastery: Mastery }) => {
 
 const openDeleteModalFromEdit = () => {
   isEditModalOpen.value = false;
-  selectedSkillsToDelete.value.clear();
-  if (selectedSkill.value) {
-    selectedSkillsToDelete.value.add(selectedSkill.value.name);
+  selectedLanguagesToDelete.value.clear();
+  if (selectedLanguage.value) {
+    selectedLanguagesToDelete.value.add(selectedLanguage.value.name);
   }
   isConfirmModalOpen.value = true;
 };
 
 const confirmDelete = async () => {
-  if (selectedSkillsToDelete.value.size === 0) {
+  if (selectedLanguagesToDelete.value.size === 0) {
     isConfirmModalOpen.value = false;
     return;
   }
@@ -392,17 +349,18 @@ const confirmDelete = async () => {
   updating.value = true;
   actionError.value = '';
   try {
-    await deleteSkill({
+    await deleteLanguage({
       userId,
-      name: Array.from(selectedSkillsToDelete.value),
+      name: Array.from(selectedLanguagesToDelete.value),
     });
     successMessage.value = t('common.delete');
     showSuccess.value = true;
     isConfirmModalOpen.value = false;
     deleteMode.value = false;
-    selectedSkillsToDelete.value.clear();
+    selectedLanguagesToDelete.value.clear();
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error deleting skill';
+    actionError.value =
+      e instanceof Error ? e.message : 'Error deleting language';
     isConfirmModalOpen.value = false;
   } finally {
     updating.value = false;

@@ -60,6 +60,22 @@
     "Proficient": "Опытный",
     "Expert": "Эксперт"
   },
+  "languages": {
+    "add": "Добавить язык",
+    "edit": "Редактировать язык",
+    "language": "Язык",
+    "proficiency": "Уровень владения",
+    "noLanguages": "Языки пока не добавлены."
+  },
+  "proficiency": {
+    "A1": "A1",
+    "A2": "A2",
+    "B1": "B1",
+    "B2": "B2",
+    "C1": "C1",
+    "C2": "C2",
+    "Native": "Родной"
+  },
   "dashboard": "Панель управления",
   "sidebarUsers": "Сотрудники",
   "sidebarSkills": "Навыки",
