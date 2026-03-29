@@ -57,6 +57,7 @@ const confirm = () => {
           variant="text"
           rounded
           size="x-large"
+          class="px-8"
           :disabled="loading"
           @click="close"
         >
@@ -68,6 +69,7 @@ const confirm = () => {
           :loading="loading"
           variant="flat"
           rounded
+          class="px-8"
           size="x-large"
           @click="confirm"
         >

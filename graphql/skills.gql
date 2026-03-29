@@ -1,0 +1,67 @@
+query GetProfileSkills($userId: ID!) {
+  profile(userId: $userId) {
+    id
+    skills {
+      name
+      categoryId
+      mastery
+    }
+  }
+}
+
+query GetSkills {
+  skills {
+    id
+    name
+    category_name
+    category {
+      id
+      name
+    }
+  }
+}
+
+query GetSkillCategories {
+  skillCategories {
+    id
+    name
+    order
+    parent {
+      id
+      name
+    }
+  }
+}
+
+mutation AddProfileSkill($skill: AddProfileSkillInput!) {
+  addProfileSkill(skill: $skill) {
+    id
+    skills {
+      name
+      categoryId
+      mastery
+    }
+  }
+}
+
+mutation UpdateProfileSkill($skill: UpdateProfileSkillInput!) {
+  updateProfileSkill(skill: $skill) {
+    id
+    skills {
+      name
+      categoryId
+      mastery
+    }
+  }
+}
+
+mutation DeleteProfileSkill($skill: DeleteProfileSkillInput!) {
+  deleteProfileSkill(skill: $skill) {
+    id
+    skills {
+      name
+      categoryId
+      mastery
+    }
+  }
+}

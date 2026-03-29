@@ -107,7 +107,7 @@ onMounted(async () => {
       :roles="roles"
       @submit="handleCreateUser"
     />
-    <LayoutBreadcrumbs class="ml-4 flex-none" />
+    <LayoutBreadcrumbs class="ml-4 bg-background" />
     <v-card flat rounded class="d-flex flex-column flex-none min-h-0">
       <v-card-text class="pa-0 d-flex flex-column flex-grow-1 min-h-0">
         <v-row class="justify-between">

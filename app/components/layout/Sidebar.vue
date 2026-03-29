@@ -35,7 +35,7 @@ const menuItems = [
 <template>
   <v-navigation-drawer
     permanent
-    :width="200"
+    :width="250"
     :rail="isRail"
     class="border-0 bg-surface shadow-sm d-flex flex-column pt-5"
   >
@@ -84,7 +84,7 @@ const menuItems = [
                 :src="authStore.user?.profile?.avatar"
                 alt="Avatar"
               ></v-img>
-              <span v-else class="text-h6 text-white">{{
+              <span v-else class="text-h6 text-on-primary">{{
                 authStore.user?.email?.charAt(0).toUpperCase()
               }}</span>
             </v-avatar>

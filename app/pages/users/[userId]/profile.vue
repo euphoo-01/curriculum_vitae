@@ -132,7 +132,7 @@ const profileTabs = computed(() => [
 const canEdit = computed(() => {
   if (!currentUser.value || !user.value) return false;
   return (
-    currentUser.value.id === user.value.id ||
+    String(currentUser.value.id) === String(user.value.id) ||
     currentUser.value.role === UserRole.Admin
   );
 });

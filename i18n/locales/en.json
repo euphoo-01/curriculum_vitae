@@ -15,11 +15,13 @@
   "haveAccount": "I have account",
   "noDataAvailable": "No data available",
   "common": {
+    "add": "Add",
     "update": "Update",
     "logout": "Logout",
     "delete": "Delete",
     "create": "Create",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "profile": {
     "title": "Profile",
@@ -42,6 +44,21 @@
     "avatar_upload_desc": ".png, .jpg or .gif no more than 0.5 MB",
     "upload_error_size": "File size must be less than 0.5 MB",
     "upload_error_type": "Only .png, .jpg and .gif files are allowed"
+  },
+  "skills": {
+    "add": "Add skill",
+    "edit": "Edit skill",
+    "skill": "Skill",
+    "mastery": "Mastery level",
+    "noSkills": "No skills added yet.",
+    "uncategorized": "Uncategorized"
+  },
+  "mastery": {
+    "Novice": "Novice",
+    "Advanced": "Intermediate",
+    "Competent": "Competent",
+    "Proficient": "Experienced",
+    "Expert": "Expert"
   },
   "dashboard": "Dashboard",
   "sidebarUsers": "Employees",

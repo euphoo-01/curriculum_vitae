@@ -95,6 +95,6 @@ const headers = computed(() => [
 :deep(.v-data-table__td) {
   padding-top: 12px !important;
   padding-bottom: 12px !important;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgb(var(--v-theme-on-surface) / 0.12);
 }
 </style>

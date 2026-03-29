@@ -15,11 +15,13 @@
   "haveAccount": "У меня есть аккаунт",
   "noDataAvailable": "Нет данных",
   "common": {
+    "add": "Добавить",
     "update": "Обновить",
     "logout": "Выйти",
     "delete": "Удалить",
     "create": "Создать",
-    "cancel": "Отменить"
+    "cancel": "Отменить",
+    "save": "Сохранить"
   },
   "profile": {
     "title": "Профиль",
@@ -42,6 +44,21 @@
     "avatar_upload_desc": ".png, .jpg или .gif не более 0.5 МБ",
     "upload_error_size": "Размер файла не должен превышать 0.5 МБ",
     "upload_error_type": "Разрешены только файлы .png, .jpg и .gif"
+  },
+  "skills": {
+    "add": "Добавить навык",
+    "edit": "Редактировать навык",
+    "skill": "Навык",
+    "mastery": "Уровень владения",
+    "noSkills": "Навыки пока не добавлены.",
+    "uncategorized": "Без категории"
+  },
+  "mastery": {
+    "Novice": "Новичок",
+    "Advanced": "Средний",
+    "Competent": "Компетентный",
+    "Proficient": "Опытный",
+    "Expert": "Эксперт"
   },
   "dashboard": "Панель управления",
   "sidebarUsers": "Сотрудники",
