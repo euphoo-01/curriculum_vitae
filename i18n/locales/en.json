@@ -43,7 +43,9 @@
     "upload_avatar_title": "Upload avatar image",
     "avatar_upload_desc": ".png, .jpg or .gif no more than 0.5 MB",
     "upload_error_size": "File size must be less than 0.5 MB",
-    "upload_error_type": "Only .png, .jpg and .gif files are allowed"
+    "upload_error_type": "Only .png, .jpg and .gif files are allowed",
+    "delete_avatar_title": "Delete avatar",
+    "delete_avatar_confirm": "Are you sure you want to delete your avatar?"
   },
   "skills": {
     "add": "Add skill",

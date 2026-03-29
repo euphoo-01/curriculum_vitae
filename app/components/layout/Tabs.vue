@@ -21,6 +21,7 @@ const route = useRoute();
         :value="item.to"
         :to="item.to"
         density="comfortable"
+        class="px-8"
       >
         {{ item.title }}
       </v-tab>

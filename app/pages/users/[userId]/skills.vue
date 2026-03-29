@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-background pb-0 m-0">
+  <div class="flex flex-col h-screen bg-background pb-0 m-0">
     <div class="flex flex-col shrink-0 bg-background shadow-sm mb-4 px-4">
       <LayoutBreadcrumbs class="shrink-0" />
       <UsersProfileTabs />
@@ -21,70 +21,91 @@
       }}</v-alert>
     </div>
 
-    <ClientOnly>
-      <div v-if="user" class="w-full grow">
-        <div class="mx-auto max-w-[1140px] pb-[120px] px-4">
-          <v-snackbar
-            v-model="showSuccess"
-            color="success"
-            location="top"
-            :timeout="3000"
-          >
-            {{ successMessage }}
-          </v-snackbar>
+    <div v-if="user" class="w-full grow overflow-scroll">
+      <div class="mx-auto max-w-[1140px] pb-[120px] px-4">
+        <v-snackbar
+          v-model="showSuccess"
+          color="success"
+          location="top"
+          :timeout="3000"
+        >
+          {{ successMessage }}
+        </v-snackbar>
 
-          <v-alert
-            v-if="actionError"
-            type="error"
-            class="mb-4"
-            closable
-            @click:close="actionError = ''"
-          >
-            {{ actionError }}
-          </v-alert>
+        <v-alert
+          v-if="actionError"
+          type="error"
+          class="mb-4"
+          closable
+          @click:close="actionError = ''"
+        >
+          {{ actionError }}
+        </v-alert>
 
-          <div
-            v-if="categoriesWithSkills.length === 0"
-            class="text-center py-8 text-on-surface/50"
-          >
-            {{ $t('skills.noSkills') }}
+        <div
+          v-if="categoriesWithSkills.length === 0"
+          class="text-center py-8 text-on-surface/50"
+        >
+          {{ $t('skills.noSkills') }}
+        </div>
+
+        <div
+          v-for="category in categoriesWithSkills"
+          :key="category.id"
+          class="mb-10"
+        >
+          <div class="text-xl font-bold mb-6 text-on-surface">
+            {{ category.name }}
           </div>
-
-          <div
-            v-for="category in categoriesWithSkills"
-            :key="category.id"
-            class="mb-10"
-          >
-            <div class="text-xl font-bold mb-6 text-on-surface">
-              {{ category.name }}
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <UsersSkillsChip
-                v-for="skill in category.skills"
-                :key="skill.name"
-                :skill="skill"
-                :selected="selectedSkillsToDelete.has(skill.name)"
-                :disabled="!canEdit"
-                @click="handleSkillClick(skill)"
-              />
-            </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <UsersSkillsChip
+              v-for="skill in category.skills"
+              :key="skill.name"
+              :skill="skill"
+              :selected="selectedSkillsToDelete.has(skill.name)"
+              :disabled="!canEdit"
+              @click="handleSkillClick(skill)"
+            />
           </div>
-          <div v-if="canEdit" class="flex items-center my-6 gap-8">
+        </div>
+        <div v-if="canEdit" class="flex items-center my-6 gap-8">
+          <v-btn
+            v-if="!deleteMode"
+            variant="outlined"
+            prepend-icon="mdi-plus"
+            size="x-large"
+            class="px-8"
+            rounded
+            :disabled="deleteMode"
+            @click="isAddModalOpen = true"
+          >
+            {{ $t('skills.add') }}
+          </v-btn>
+
+          <v-btn
+            v-if="!deleteMode"
+            color="primary"
+            variant="flat"
+            size="x-large"
+            class="px-8"
+            rounded
+            prepend-icon="mdi-delete"
+            @click="toggleDeleteMode"
+          >
+            {{ $t('common.delete') }}
+          </v-btn>
+
+          <template v-else>
             <v-btn
-              v-if="!deleteMode"
               variant="outlined"
-              prepend-icon="mdi-plus"
               size="x-large"
               class="px-8"
               rounded
-              :disabled="deleteMode"
-              @click="isAddModalOpen = true"
+              @click="cancelDeleteMode"
             >
-              {{ $t('skills.add') }}
+              {{ $t('common.cancel') }}
             </v-btn>
-
             <v-btn
-              v-if="!deleteMode"
               color="primary"
               variant="flat"
               size="x-large"
@@ -94,61 +115,38 @@
               @click="toggleDeleteMode"
             >
               {{ $t('common.delete') }}
+              {{
+                selectedSkillsToDelete.size > 0
+                  ? `(${selectedSkillsToDelete.size})`
+                  : ''
+              }}
             </v-btn>
-
-            <template v-else>
-              <v-btn
-                variant="outlined"
-                size="x-large"
-                class="px-8"
-                rounded
-                @click="cancelDeleteMode"
-              >
-                {{ $t('common.cancel') }}
-              </v-btn>
-              <v-btn
-                color="primary"
-                variant="flat"
-                size="x-large"
-                class="px-8"
-                rounded
-                prepend-icon="mdi-delete"
-                @click="toggleDeleteMode"
-              >
-                {{ $t('common.delete') }}
-                {{
-                  selectedSkillsToDelete.size > 0
-                    ? `(${selectedSkillsToDelete.size})`
-                    : ''
-                }}
-              </v-btn>
-            </template>
-          </div>
+          </template>
         </div>
-
-        <UsersSkillsAddModal
-          v-model="isAddModalOpen"
-          :skills="availableSkillsToAdd"
-          :loading="updating"
-          @submit="handleAddSkill"
-        />
-
-        <UsersSkillsEditModal
-          v-model="isEditModalOpen"
-          :skill="selectedSkill"
-          :loading="updating"
-          @submit="handleUpdateSkill"
-          @delete="openDeleteModalFromEdit"
-        />
-
-        <ConfirmModal
-          v-model="isConfirmModalOpen"
-          :loading="updating"
-          :title="$t('profile.deleteConfirm')"
-          @confirm="confirmDelete"
-        />
       </div>
-    </ClientOnly>
+
+      <UsersSkillsAddModal
+        v-model="isAddModalOpen"
+        :skills="availableSkillsToAdd"
+        :loading="updating"
+        @submit="handleAddSkill"
+      />
+
+      <UsersSkillsEditModal
+        v-model="isEditModalOpen"
+        :skill="selectedSkill"
+        :loading="updating"
+        @submit="handleUpdateSkill"
+        @delete="openDeleteModalFromEdit"
+      />
+
+      <ConfirmModal
+        v-model="isConfirmModalOpen"
+        :loading="updating"
+        :title="$t('profile.deleteConfirm')"
+        @confirm="confirmDelete"
+      />
+    </div>
   </div>
 </template>
 
@@ -255,28 +253,26 @@ const categoriesWithSkills = computed(() => {
     .sort((a, b) => a.order - b.order);
 });
 
-onMounted(async () => {
-  await Promise.all([
-    fetchUser(userId),
-    fetchProfileSkills(userId),
-    fetchSkills(),
-    fetchCategories(),
-  ]);
+await Promise.all([
+  fetchUser(userId),
+  fetchProfileSkills(userId),
+  fetchSkills(),
+  fetchCategories(),
+]);
 
-  if (userId) {
-    setBreadcrumbs([
-      { title: t('sidebarUsers'), to: '/users' },
-      {
-        title: user.value?.profile.full_name || t('profile.title'),
-        to: `/users/${userId}/profile`,
-      },
-      {
-        title: t('profile.skills'),
-        disabled: true,
-      },
-    ]);
-  }
-});
+if (userId) {
+  setBreadcrumbs([
+    { title: t('sidebarUsers'), to: '/users' },
+    {
+      title: user.value?.profile.full_name || t('profile.title'),
+      to: `/users/${userId}/profile`,
+    },
+    {
+      title: t('profile.skills'),
+      disabled: true,
+    },
+  ]);
+}
 
 const toggleDeleteMode = () => {
   if (!deleteMode.value) {

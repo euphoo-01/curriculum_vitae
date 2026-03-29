@@ -1,19 +1,21 @@
 <template>
-  <v-row class="mb-6 justify-center items-center" gap="96">
+  <v-row class="mb-6 justify-center items-center" style="gap: 6rem">
     <v-col cols="auto">
       <div
-        class="avatar-upload-container"
+        class="relative transition-transform duration-200 hover:scale-[1.05]"
         :class="{ 'cursor-pointer': canEdit }"
-        @click="canEdit && triggerFileInput()"
+        @click="canEdit && !avatarUrl && triggerFileInput()"
         @dragover.prevent="canEdit && onDragOver($event)"
         @dragleave.prevent="canEdit && (isDragging = false)"
         @drop.prevent="canEdit && onDrop($event)"
       >
         <v-avatar
           size="180"
-          :color="isDragging ? 'primary' : 'secondary'"
-          class="avatar-preview"
-          :class="{ dragging: isDragging }"
+          :color="avatarUrl ? 'transparent' : 'secondary'"
+          class="border-2 border-dashed transition-all duration-300 group"
+          :class="[
+            isDragging ? 'border-primary opacity-80' : 'border-transparent',
+          ]"
         >
           <v-img v-if="avatarUrl" :src="avatarUrl">
             <template #placeholder>
@@ -27,7 +29,22 @@
               </div>
             </template>
           </v-img>
-          <span v-else class="text-h4">{{ initials }}</span>
+          <span v-else class="text-h4 text-on-secondary font-bold">{{
+            initials
+          }}</span>
+
+          <div
+            v-if="canEdit && avatarUrl && !isUploading"
+            class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 z-10 cursor-pointer"
+            @click.prevent.stop="emit('delete')"
+          >
+            <div
+              class="text-white hover:text-primary transition-colors duration-200"
+            >
+              <v-icon icon="mdi-close" size="x-large" color="inherit"></v-icon>
+            </div>
+          </div>
+
           <v-overlay
             v-if="isUploading"
             contained
@@ -92,6 +109,7 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'upload', file: File, base64: string): void;
   (e: 'error', error: string): void;
+  (e: 'delete'): void;
 }>();
 
 const {
@@ -115,21 +133,6 @@ const onDragOver = (event: DragEvent) => {
 </script>
 
 <style scoped>
-.avatar-upload-container {
-  position: relative;
-  transition: transform 0.2s ease;
-}
-.avatar-upload-container:hover {
-  transform: scale(1.05);
-}
-.avatar-preview {
-  border: 2px dashed transparent;
-  transition: all 0.3s ease;
-}
-.avatar-preview.dragging {
-  border-color: rgb(var(--v-theme-primary));
-  opacity: 0.8;
-}
 .hidden {
   display: none;
 }

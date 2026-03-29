@@ -22,18 +22,29 @@ export const useCvs = () => {
   const fetchCvs = async (userId: string) => {
     loading.value = true;
     error.value = null;
-    try {
-      const { data } = await client!.query({
-        query: GetCvsDocument,
-        variables: { userId },
-        fetchPolicy: 'network-only',
-      });
-      cvs.value = data.user?.cvs || [];
-    } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to fetch CVs');
-    } finally {
-      loading.value = false;
+
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      `cvs-${userId}`,
+      async () => {
+        const { data } = await client!.query({
+          query: GetCvsDocument,
+          variables: { userId },
+          fetchPolicy: 'network-only',
+        });
+        return data.user?.cvs || [];
+      }
+    );
+
+    if (fetchError.value) {
+      error.value =
+        fetchError.value instanceof Error
+          ? fetchError.value
+          : new Error('Failed to fetch CVs');
+    } else if (fetchedData.value) {
+      cvs.value = fetchedData.value;
     }
+
+    loading.value = false;
   };
 
   const createCv = async (input: CreateCvInput) => {
@@ -42,6 +53,7 @@ export const useCvs = () => {
         mutation: CreateCvDocument,
         variables: { cv: input },
       });
+      clearNuxtData((k) => k.startsWith('cvs-'));
       return data?.createCv;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to create CV');
@@ -54,6 +66,7 @@ export const useCvs = () => {
         mutation: UpdateCvDocument,
         variables: { cv: input },
       });
+      clearNuxtData((k) => k.startsWith('cvs-'));
       return data?.updateCv;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to update CV');
@@ -66,6 +79,7 @@ export const useCvs = () => {
         mutation: DeleteCvDocument,
         variables: { cv: input },
       });
+      clearNuxtData((k) => k.startsWith('cvs-'));
       return data?.deleteCv;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to delete CV');

@@ -73,16 +73,14 @@ const onSearchInput = (value: string) => {
   }, 300);
 };
 
-onMounted(async () => {
-  await fetchUsers();
-  const [deps, pos] = await Promise.all([fetchDepartments(), fetchPositions()]);
-  departments.value = deps;
-  positions.value = pos;
-});
+await fetchUsers();
+const [deps, pos] = await Promise.all([fetchDepartments(), fetchPositions()]);
+departments.value = deps;
+positions.value = pos;
 </script>
 
 <template>
-  <div class="flex-grow-1 d-flex flex-column pb-4 m-0 bg-background h-screen">
+  <div class="pb-4 m-0 h-auto bg-background">
     <v-snackbar
       v-model="isSnackbar"
       location="top"

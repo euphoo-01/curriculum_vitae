@@ -28,6 +28,14 @@
           {{ $t('profile.update_success') }}
         </v-snackbar>
 
+        <ConfirmModal
+          v-model="showDeleteModal"
+          :title="$t('profile.delete_avatar_title')"
+          :message="$t('profile.delete_avatar_confirm')"
+          :confirm-text="$t('common.delete')"
+          @confirm="handleAvatarDelete"
+        />
+
         <v-alert
           v-if="uploadError"
           type="error"
@@ -41,10 +49,14 @@
         <div class="mb-8">
           <UsersProfileAvatarUpload
             :avatar-url="user.profile.avatar"
-            :initials="getInitials(user.profile.full_name)"
+            :initials="
+              getInitials(user.profile.full_name) ||
+              (user.email ? user.email.charAt(0).toUpperCase() : '')
+            "
             :can-edit="canEdit"
             @upload="handleAvatarUpload"
             @error="(e) => (uploadError = e)"
+            @delete="showDeleteModal = true"
           />
 
           <div class="text-center mt-6">
@@ -91,6 +103,7 @@ const {
   updateUser,
   updateProfile,
   uploadAvatar,
+  deleteAvatar,
 } = useProfile();
 
 const { user: currentUser, logout } = useAuth();
@@ -103,6 +116,7 @@ const positions = ref<GetPositionsQuery['positions']>([]);
 const updating = ref(false);
 const showSuccess = ref(false);
 const uploadError = ref('');
+const showDeleteModal = ref(false);
 
 const initialFormData = computed(() => ({
   first_name: user.value?.profile.first_name || '',
@@ -149,6 +163,17 @@ const handleAvatarUpload = async (file: File, base64: string) => {
     }
   } catch (e) {
     uploadError.value = e instanceof Error ? e.message : t('Upload failed');
+  }
+};
+
+const handleAvatarDelete = async () => {
+  try {
+    if (!user.value) return;
+    await deleteAvatar({ userId: user.value.id });
+    user.value.profile.avatar = null;
+    showSuccess.value = true;
+  } catch (e) {
+    uploadError.value = e instanceof Error ? e.message : t('Delete failed');
   }
 };
 

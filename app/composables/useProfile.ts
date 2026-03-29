@@ -26,43 +26,67 @@ export const useProfile = () => {
   const fetchUser = async (userId: string) => {
     loading.value = true;
     error.value = null;
-    try {
-      const { data } = await client!.query({
-        query: GetUserDocument,
-        variables: { userId },
-        fetchPolicy: 'network-only',
-      });
-      user.value = data.user;
-    } catch (e) {
+
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      `user-${userId}`,
+      async () => {
+        const { data } = await client!.query({
+          query: GetUserDocument,
+          variables: { userId },
+          fetchPolicy: 'network-only',
+        });
+        return data.user;
+      }
+    );
+
+    if (fetchError.value) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch user profile');
-    } finally {
-      loading.value = false;
+        fetchError.value instanceof Error
+          ? fetchError.value
+          : new Error('Failed to fetch user profile');
+    } else if (fetchedData.value) {
+      user.value = fetchedData.value;
     }
+
+    loading.value = false;
   };
 
   const fetchDepartments = async () => {
-    try {
-      const { data } = await client!.query({
-        query: GetDepartmentsDocument,
-      });
-      return data.departments;
-    } catch (e) {
-      console.error('Failed to fetch departments', e);
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      'departments',
+      async () => {
+        const { data } = await client!.query({
+          query: GetDepartmentsDocument,
+        });
+        return data.departments;
+      }
+    );
+
+    if (fetchError.value) {
+      console.error('Failed to fetch departments', fetchError.value);
       return [];
     }
+
+    return fetchedData.value || [];
   };
 
   const fetchPositions = async () => {
-    try {
-      const { data } = await client!.query({
-        query: GetPositionsDocument,
-      });
-      return data.positions;
-    } catch (e) {
-      console.error('Failed to fetch positions', e);
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      'positions',
+      async () => {
+        const { data } = await client!.query({
+          query: GetPositionsDocument,
+        });
+        return data.positions;
+      }
+    );
+
+    if (fetchError.value) {
+      console.error('Failed to fetch positions', fetchError.value);
       return [];
     }
+
+    return fetchedData.value || [];
   };
 
   const updateUser = async (input: UpdateUserInput) => {
@@ -74,6 +98,7 @@ export const useProfile = () => {
       if (data?.updateUser && user.value) {
         user.value = { ...user.value, ...data.updateUser };
       }
+      clearNuxtData((k) => k.startsWith('user-'));
       return data?.updateUser;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to update user');
@@ -92,6 +117,7 @@ export const useProfile = () => {
           profile: { ...user.value.profile, ...data.updateProfile },
         };
       }
+      clearNuxtData((k) => k.startsWith('user-'));
       return data?.updateProfile;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to update profile');
@@ -110,6 +136,7 @@ export const useProfile = () => {
           profile: { ...user.value.profile, avatar: data.uploadAvatar },
         };
       }
+      clearNuxtData((k) => k.startsWith('user-'));
       return data?.uploadAvatar;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to upload avatar');
@@ -128,6 +155,7 @@ export const useProfile = () => {
           profile: { ...user.value.profile, avatar: null },
         };
       }
+      clearNuxtData((k) => k.startsWith('user-'));
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to delete avatar');
     }

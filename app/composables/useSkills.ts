@@ -29,45 +29,73 @@ export const useSkills = () => {
   const fetchProfileSkills = async (userId: string) => {
     loading.value = true;
     error.value = null;
-    try {
-      const { data } = await client!.query({
-        query: GetProfileSkillsDocument,
-        variables: { userId },
-        fetchPolicy: 'network-only',
-      });
-      profileSkills.value = data.profile.skills;
-    } catch (e) {
+
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      `profile-skills-${userId}`,
+      async () => {
+        const { data } = await client!.query({
+          query: GetProfileSkillsDocument,
+          variables: { userId },
+          fetchPolicy: 'network-only',
+        });
+        return data.profile.skills;
+      }
+    );
+
+    if (fetchError.value) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch profile skills');
-    } finally {
-      loading.value = false;
+        fetchError.value instanceof Error
+          ? fetchError.value
+          : new Error('Failed to fetch profile skills');
+    } else if (fetchedData.value) {
+      profileSkills.value = fetchedData.value;
     }
+
+    loading.value = false;
   };
 
   const fetchSkills = async () => {
-    try {
-      const { data } = await client!.query({
-        query: GetSkillsDocument,
-      });
-      skillsList.value = data.skills;
-      return data.skills;
-    } catch (e) {
-      console.error('Failed to fetch skills', e);
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      'skills',
+      async () => {
+        const { data } = await client!.query({
+          query: GetSkillsDocument,
+        });
+        return data.skills;
+      }
+    );
+
+    if (fetchError.value) {
+      console.error('Failed to fetch skills', fetchError.value);
       return [];
     }
+
+    if (fetchedData.value) {
+      skillsList.value = fetchedData.value;
+    }
+    return fetchedData.value || [];
   };
 
   const fetchCategories = async () => {
-    try {
-      const { data } = await client!.query({
-        query: GetSkillCategoriesDocument,
-      });
-      categoriesList.value = data.skillCategories;
-      return data.skillCategories;
-    } catch (e) {
-      console.error('Failed to fetch skill categories', e);
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      'skill-categories',
+      async () => {
+        const { data } = await client!.query({
+          query: GetSkillCategoriesDocument,
+        });
+        return data.skillCategories;
+      }
+    );
+
+    if (fetchError.value) {
+      console.error('Failed to fetch skill categories', fetchError.value);
       return [];
     }
+
+    if (fetchedData.value) {
+      categoriesList.value = fetchedData.value;
+    }
+    return fetchedData.value || [];
   };
 
   const addSkill = async (input: AddProfileSkillInput) => {
@@ -78,6 +106,7 @@ export const useSkills = () => {
       });
       if (data?.addProfileSkill) {
         profileSkills.value = data.addProfileSkill.skills;
+        clearNuxtData((k) => k.startsWith('profile-skills-'));
       }
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to add profile skill');
@@ -92,6 +121,7 @@ export const useSkills = () => {
       });
       if (data?.updateProfileSkill) {
         profileSkills.value = data.updateProfileSkill.skills;
+        clearNuxtData((k) => k.startsWith('profile-skills-'));
       }
     } catch (e) {
       throw e instanceof Error
@@ -108,6 +138,7 @@ export const useSkills = () => {
       });
       if (data?.deleteProfileSkill) {
         profileSkills.value = data.deleteProfileSkill.skills;
+        clearNuxtData((k) => k.startsWith('profile-skills-'));
       }
     } catch (e) {
       throw e instanceof Error

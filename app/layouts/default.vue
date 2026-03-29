@@ -4,7 +4,7 @@
   <v-layout class="bg-background">
     <LayoutSidebar />
 
-    <v-main class="bg-background d-flex flex-column">
+    <v-main class="bg-background w-full h-screen">
       <slot />
     </v-main>
   </v-layout>

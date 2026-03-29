@@ -4,7 +4,10 @@ import {
   UpdateTokenDocument,
   GetUserDocument,
 } from '../../graphql/generated/graphql';
-import type { AuthInput } from '../../graphql/generated/graphql';
+import type {
+  AuthInput,
+  UpdateTokenResult,
+} from '../../graphql/generated/graphql';
 
 // TODO: Исправить выброс из аккаунта когда токен протухает
 
@@ -22,6 +25,8 @@ interface GraphQLValidationError {
 interface ApolloErrorWithGraphQLErrors extends Error {
   graphQLErrors?: GraphQLValidationError[];
 }
+
+let refreshPromise: Promise<UpdateTokenResult> | null = null;
 
 export const useAuth = () => {
   const { onLogin, onLogout, clients } = useApollo();
@@ -124,26 +129,37 @@ export const useAuth = () => {
       throw new Error('No refresh token available');
     }
 
-    try {
-      const { data } = await client!.mutate({
-        mutation: UpdateTokenDocument,
-        context: {
-          headers: {
-            Authorization: `Bearer ${refreshTokenCookie.value}`,
-          },
-        },
-      });
-
-      if (data?.updateToken) {
-        await onLogin(data.updateToken.access_token);
-        refreshTokenCookie.value = data.updateToken.refresh_token;
-        return data.updateToken;
-      }
-      throw new Error('Не удалось обновить токен');
-    } catch (e) {
-      await logout();
-      throw e;
+    if (refreshPromise) {
+      return refreshPromise;
     }
+
+    refreshPromise = (async () => {
+      try {
+        const { data } = await client!.mutate({
+          mutation: UpdateTokenDocument,
+          context: {
+            headers: {
+              Authorization: `Bearer ${refreshTokenCookie.value}`,
+            },
+            isRefresh: true,
+          },
+        });
+
+        if (data?.updateToken) {
+          await onLogin(data.updateToken.access_token);
+          refreshTokenCookie.value = data.updateToken.refresh_token;
+          return data.updateToken;
+        }
+        throw new Error('Не удалось обновить токен');
+      } catch (e) {
+        await logout();
+        throw e;
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+
+    return refreshPromise;
   };
 
   return {

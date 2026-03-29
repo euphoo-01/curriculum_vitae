@@ -30,7 +30,11 @@
       @submit="handleSubmitCv"
     />
 
-    <v-card flat rounded class="d-flex flex-column flex-none min-h-0 mx-4">
+    <v-card
+      flat
+      rounded
+      class="d-flex flex-column flex-none overflow-scroll min-h-0 mx-4"
+    >
       <v-card-text class="pa-0 d-flex flex-column flex-grow-1 min-h-0">
         <v-row class="justify-between">
           <v-text-field
@@ -190,22 +194,20 @@ const onSearchInput = (value: string) => {
   }, 300);
 };
 
-onMounted(async () => {
-  await fetchUser(userId);
-  await fetchCvs(userId);
+await fetchUser(userId);
+await fetchCvs(userId);
 
-  if (userId) {
-    setBreadcrumbs([
-      { title: t('sidebarUsers'), to: '/users' },
-      {
-        title: profileUser.value?.profile.full_name || t('profile.title'),
-        to: `/users/${userId}/profile`,
-      },
-      {
-        title: t('cvs.title'),
-        disabled: true,
-      },
-    ]);
-  }
-});
+if (userId) {
+  setBreadcrumbs([
+    { title: t('sidebarUsers'), to: '/users' },
+    {
+      title: profileUser.value?.profile.full_name || t('profile.title'),
+      to: `/users/${userId}/profile`,
+    },
+    {
+      title: t('cvs.title'),
+      disabled: true,
+    },
+  ]);
+}
 </script>

@@ -43,7 +43,9 @@
     "upload_avatar_title": "Загрузить фото профиля",
     "avatar_upload_desc": ".png, .jpg или .gif не более 0.5 МБ",
     "upload_error_size": "Размер файла не должен превышать 0.5 МБ",
-    "upload_error_type": "Разрешены только файлы .png, .jpg и .gif"
+    "upload_error_type": "Разрешены только файлы .png, .jpg и .gif",
+    "delete_avatar_title": "Удалить фото профиля",
+    "delete_avatar_confirm": "Вы уверены, что хотите удалить фото профиля?"
   },
   "skills": {
     "add": "Добавить навык",

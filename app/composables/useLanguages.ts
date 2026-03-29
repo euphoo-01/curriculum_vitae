@@ -28,32 +28,51 @@ export const useLanguages = () => {
   const fetchProfileLanguages = async (userId: string) => {
     loading.value = true;
     error.value = null;
-    try {
-      const { data } = await client!.query({
-        query: GetProfileLanguagesDocument,
-        variables: { userId },
-        fetchPolicy: 'network-only',
-      });
-      profileLanguages.value = data.profile.languages;
-    } catch (e) {
+
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      `profile-languages-${userId}`,
+      async () => {
+        const { data } = await client!.query({
+          query: GetProfileLanguagesDocument,
+          variables: { userId },
+          fetchPolicy: 'network-only',
+        });
+        return data.profile.languages;
+      }
+    );
+
+    if (fetchError.value) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch profile languages');
-    } finally {
-      loading.value = false;
+        fetchError.value instanceof Error
+          ? fetchError.value
+          : new Error('Failed to fetch profile languages');
+    } else if (fetchedData.value) {
+      profileLanguages.value = fetchedData.value;
     }
+
+    loading.value = false;
   };
 
   const fetchLanguages = async () => {
-    try {
-      const { data } = await client!.query({
-        query: GetLanguagesDocument,
-      });
-      languagesList.value = data.languages;
-      return data.languages;
-    } catch (e) {
-      console.error('Failed to fetch languages', e);
+    const { data: fetchedData, error: fetchError } = await useAsyncData(
+      'languages',
+      async () => {
+        const { data } = await client!.query({
+          query: GetLanguagesDocument,
+        });
+        return data.languages;
+      }
+    );
+
+    if (fetchError.value) {
+      console.error('Failed to fetch languages', fetchError.value);
       return [];
     }
+
+    if (fetchedData.value) {
+      languagesList.value = fetchedData.value;
+    }
+    return fetchedData.value || [];
   };
 
   const addLanguage = async (input: AddProfileLanguageInput) => {
@@ -64,6 +83,7 @@ export const useLanguages = () => {
       });
       if (data?.addProfileLanguage) {
         profileLanguages.value = data.addProfileLanguage.languages;
+        clearNuxtData((k) => k.startsWith('profile-languages-'));
       }
     } catch (e) {
       throw e instanceof Error
@@ -80,6 +100,7 @@ export const useLanguages = () => {
       });
       if (data?.updateProfileLanguage) {
         profileLanguages.value = data.updateProfileLanguage.languages;
+        clearNuxtData((k) => k.startsWith('profile-languages-'));
       }
     } catch (e) {
       throw e instanceof Error
@@ -96,6 +117,7 @@ export const useLanguages = () => {
       });
       if (data?.deleteProfileLanguage) {
         profileLanguages.value = data.deleteProfileLanguage.languages;
+        clearNuxtData((k) => k.startsWith('profile-languages-'));
       }
     } catch (e) {
       throw e instanceof Error

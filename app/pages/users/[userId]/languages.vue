@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-background pb-0 m-0">
+  <div class="flex flex-col h-screen bg-background pb-0 m-0">
     <div class="flex flex-col shrink-0 bg-background shadow-sm mb-4 px-4">
       <LayoutBreadcrumbs class="shrink-0" />
       <UsersProfileTabs />
@@ -21,65 +21,86 @@
       }}</v-alert>
     </div>
 
-    <ClientOnly>
-      <div v-if="user" class="w-full grow">
-        <div class="mx-auto max-w-[1140px] pb-[120px] px-4">
-          <v-snackbar
-            v-model="showSuccess"
-            color="success"
-            location="top"
-            :timeout="3000"
-          >
-            {{ successMessage }}
-          </v-snackbar>
+    <div v-if="user" class="w-full grow overflow-scroll">
+      <div class="mx-auto max-w-[1140px] pb-[120px] px-4">
+        <v-snackbar
+          v-model="showSuccess"
+          color="success"
+          location="top"
+          :timeout="3000"
+        >
+          {{ successMessage }}
+        </v-snackbar>
 
-          <v-alert
-            v-if="actionError"
-            type="error"
-            class="mb-4"
-            closable
-            @click:close="actionError = ''"
-          >
-            {{ actionError }}
-          </v-alert>
+        <v-alert
+          v-if="actionError"
+          type="error"
+          class="mb-4"
+          closable
+          @click:close="actionError = ''"
+        >
+          {{ actionError }}
+        </v-alert>
 
-          <div
-            v-if="profileLanguages.length === 0"
-            class="text-center py-8 text-on-surface/50"
-          >
-            {{ $t('languages.noLanguages') }}
-          </div>
+        <div
+          v-if="profileLanguages.length === 0"
+          class="text-center py-8 text-on-surface/50"
+        >
+          {{ $t('languages.noLanguages') }}
+        </div>
 
-          <div
-            v-else
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10"
-          >
-            <UsersLanguagesChip
-              v-for="language in profileLanguages"
-              :key="language.name"
-              :language="language"
-              :selected="selectedLanguagesToDelete.has(language.name)"
-              :disabled="!canEdit"
-              @click="handleLanguageClick(language)"
-            />
-          </div>
+        <div
+          v-else
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10"
+        >
+          <UsersLanguagesChip
+            v-for="language in profileLanguages"
+            :key="language.name"
+            :language="language"
+            :selected="selectedLanguagesToDelete.has(language.name)"
+            :disabled="!canEdit"
+            @click="handleLanguageClick(language)"
+          />
+        </div>
 
-          <div v-if="canEdit" class="flex items-center my-6 gap-8">
+        <div v-if="canEdit" class="flex items-center my-6 gap-8">
+          <v-btn
+            v-if="!deleteMode"
+            variant="outlined"
+            prepend-icon="mdi-plus"
+            size="x-large"
+            class="px-8"
+            rounded
+            :disabled="deleteMode"
+            @click="isAddModalOpen = true"
+          >
+            {{ $t('languages.add') }}
+          </v-btn>
+
+          <v-btn
+            v-if="!deleteMode"
+            color="primary"
+            variant="flat"
+            size="x-large"
+            class="px-8"
+            rounded
+            prepend-icon="mdi-delete"
+            @click="toggleDeleteMode"
+          >
+            {{ $t('common.delete') }}
+          </v-btn>
+
+          <template v-else>
             <v-btn
-              v-if="!deleteMode"
               variant="outlined"
-              prepend-icon="mdi-plus"
               size="x-large"
               class="px-8"
               rounded
-              :disabled="deleteMode"
-              @click="isAddModalOpen = true"
+              @click="cancelDeleteMode"
             >
-              {{ $t('languages.add') }}
+              {{ $t('common.cancel') }}
             </v-btn>
-
             <v-btn
-              v-if="!deleteMode"
               color="primary"
               variant="flat"
               size="x-large"
@@ -89,61 +110,38 @@
               @click="toggleDeleteMode"
             >
               {{ $t('common.delete') }}
+              {{
+                selectedLanguagesToDelete.size > 0
+                  ? `(${selectedLanguagesToDelete.size})`
+                  : ''
+              }}
             </v-btn>
-
-            <template v-else>
-              <v-btn
-                variant="outlined"
-                size="x-large"
-                class="px-8"
-                rounded
-                @click="cancelDeleteMode"
-              >
-                {{ $t('common.cancel') }}
-              </v-btn>
-              <v-btn
-                color="primary"
-                variant="flat"
-                size="x-large"
-                class="px-8"
-                rounded
-                prepend-icon="mdi-delete"
-                @click="toggleDeleteMode"
-              >
-                {{ $t('common.delete') }}
-                {{
-                  selectedLanguagesToDelete.size > 0
-                    ? `(${selectedLanguagesToDelete.size})`
-                    : ''
-                }}
-              </v-btn>
-            </template>
-          </div>
+          </template>
         </div>
-
-        <UsersLanguagesAddModal
-          v-model="isAddModalOpen"
-          :languages="availableLanguagesToAdd"
-          :loading="updating"
-          @submit="handleAddLanguage"
-        />
-
-        <UsersLanguagesEditModal
-          v-model="isEditModalOpen"
-          :language="selectedLanguage"
-          :loading="updating"
-          @submit="handleUpdateLanguage"
-          @delete="openDeleteModalFromEdit"
-        />
-
-        <ConfirmModal
-          v-model="isConfirmModalOpen"
-          :loading="updating"
-          :title="$t('profile.deleteConfirm')"
-          @confirm="confirmDelete"
-        />
       </div>
-    </ClientOnly>
+
+      <UsersLanguagesAddModal
+        v-model="isAddModalOpen"
+        :languages="availableLanguagesToAdd"
+        :loading="updating"
+        @submit="handleAddLanguage"
+      />
+
+      <UsersLanguagesEditModal
+        v-model="isEditModalOpen"
+        :language="selectedLanguage"
+        :loading="updating"
+        @submit="handleUpdateLanguage"
+        @delete="openDeleteModalFromEdit"
+      />
+
+      <ConfirmModal
+        v-model="isConfirmModalOpen"
+        :loading="updating"
+        :title="$t('profile.deleteConfirm')"
+        @confirm="confirmDelete"
+      />
+    </div>
   </div>
 </template>
 
@@ -210,27 +208,25 @@ const availableLanguagesToAdd = computed(() => {
   ).filter((l) => !profileLanguageNames.has(l.name));
 });
 
-onMounted(async () => {
-  await Promise.all([
-    fetchUser(userId),
-    fetchProfileLanguages(userId),
-    fetchLanguages(),
-  ]);
+await Promise.all([
+  fetchUser(userId),
+  fetchProfileLanguages(userId),
+  fetchLanguages(),
+]);
 
-  if (userId) {
-    setBreadcrumbs([
-      { title: t('sidebarUsers'), to: '/users' },
-      {
-        title: user.value?.profile.full_name || t('profile.title'),
-        to: `/users/${userId}/profile`,
-      },
-      {
-        title: t('profile.languages'),
-        disabled: true,
-      },
-    ]);
-  }
-});
+if (userId) {
+  setBreadcrumbs([
+    { title: t('sidebarUsers'), to: '/users' },
+    {
+      title: user.value?.profile.full_name || t('profile.title'),
+      to: `/users/${userId}/profile`,
+    },
+    {
+      title: t('profile.languages'),
+      disabled: true,
+    },
+  ]);
+}
 
 const toggleDeleteMode = () => {
   if (!deleteMode.value) {
