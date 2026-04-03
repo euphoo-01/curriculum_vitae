@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// TODO: Сделать переход через троеточие
 import type { GetUserCvsQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
 
@@ -34,7 +33,7 @@ const headers = computed(() => [
     :search="search"
     item-value="id"
     density="comfortable"
-    class="bg-transparent d-flex flex-column flex-grow-1 min-h-0"
+    class="bg-transparent flex flex-col flex-grow min-h-0"
     fixed-header
     height="100%"
     :items-per-page="-1"

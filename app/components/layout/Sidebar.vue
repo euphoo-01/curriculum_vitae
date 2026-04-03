@@ -59,7 +59,7 @@ const menuItems = [
     permanent
     :width="250"
     :rail="isRail"
-    class="border-0 bg-surface shadow-sm d-flex flex-column pt-5"
+    class="border-0 bg-surface flex flex-column pt-5 h-screen"
   >
     <v-list
       class="pt-8 transition-all duration-200"

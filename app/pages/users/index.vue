@@ -80,7 +80,9 @@ positions.value = pos;
 </script>
 
 <template>
-  <div class="pb-4 m-0 h-auto bg-background">
+  <div
+    class="flex flex-col h-full w-full min-h-0 overflow-hidden pb-4 bg-background px-4"
+  >
     <v-snackbar
       v-model="isSnackbar"
       location="top"
@@ -89,6 +91,7 @@ positions.value = pos;
     >
       {{ error?.message }}
     </v-snackbar>
+
     <ConfirmModal
       v-model="isDeleteModal"
       :title="t('profile.delete')"
@@ -97,6 +100,7 @@ positions.value = pos;
       :cancel-text="t('common.cancel')"
       @confirm="userToDelete && deleteUser(userToDelete)"
     />
+
     <UsersAddModal
       v-model="isAddModal"
       :loading="loading"
@@ -105,10 +109,14 @@ positions.value = pos;
       :roles="roles"
       @submit="handleCreateUser"
     />
-    <LayoutBreadcrumbs class="ml-4 bg-background" />
-    <v-card flat rounded class="d-flex flex-column flex-none min-h-0">
-      <v-card-text class="pa-0 d-flex flex-column flex-grow-1 min-h-0">
-        <v-row class="justify-between">
+
+    <div class="flex flex-col bg-background shadow-sm mb-4 flex-none">
+      <LayoutBreadcrumbs class="flex-none" />
+    </div>
+
+    <v-card flat rounded class="flex flex-col flex-grow min-h-0 w-full mb-4">
+      <v-card-text class="p-0 flex flex-col flex-grow min-h-0">
+        <v-row class="m-0 justify-between items-center p-4 flex-none">
           <v-text-field
             :model-value="search"
             prepend-inner-icon="mdi-magnify"
@@ -121,6 +129,7 @@ positions.value = pos;
             style="max-width: 400px"
             @update:model-value="onSearchInput"
           ></v-text-field>
+
           <v-btn
             prepend-icon="mdi-plus"
             variant="text"
@@ -128,17 +137,20 @@ positions.value = pos;
             size="large"
             rounded
             @click="isAddModal = true"
-            >{{ t('profile.create') }}</v-btn
           >
+            {{ t('profile.create') }}
+          </v-btn>
         </v-row>
-        <UsersTable
-          :items="users"
-          :loading
-          :search
-          :admin-actions
-          :can-edit
-          class="h-screen"
-        />
+
+        <div class="flex-grow overflow-y-auto">
+          <UsersTable
+            :items="users"
+            :loading="loading"
+            :search="search"
+            :admin-actions="adminActions"
+            :can-edit="canEdit"
+          />
+        </div>
       </v-card-text>
     </v-card>
   </div>

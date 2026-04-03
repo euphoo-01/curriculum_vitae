@@ -76,7 +76,7 @@ export default defineNuxtConfig({
               background: '#F5F5F7',
               surface: '#F5F5F7',
               primary: '#C63031',
-              secondary: '#CCCCCC',
+              secondary: '#ebebeb',
               'on-background': '#2E2E2E',
               'on-surface': '#2E2E2E',
             },

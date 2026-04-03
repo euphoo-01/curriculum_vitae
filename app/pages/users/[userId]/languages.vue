@@ -1,27 +1,29 @@
 <template>
-  <div class="flex flex-col h-screen bg-background pb-0 m-0">
-    <div class="flex flex-col shrink-0 bg-background shadow-sm mb-4 px-4">
-      <LayoutBreadcrumbs class="shrink-0" />
+  <div
+    class="flex flex-col h-full w-full min-h-0 overflow-hidden pb-4 bg-background px-4"
+  >
+    <div class="flex flex-col bg-background shadow-sm mb-4 flex-none">
+      <LayoutBreadcrumbs class="flex-none" />
       <UsersProfileTabs />
     </div>
 
     <div
       v-if="loadingUser || loadingLanguages"
-      class="flex justify-center items-center min-h-[50vh]"
+      class="flex justify-center items-center flex-grow"
     >
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
 
     <div
       v-else-if="userError || languagesError"
-      class="flex justify-center items-center min-h-[50vh]"
+      class="flex justify-center items-center flex-grow"
     >
       <v-alert type="error">{{
         userError?.message || languagesError?.message
       }}</v-alert>
     </div>
 
-    <div v-if="user" class="w-full grow overflow-scroll">
+    <div v-if="user" class="w-full flex-grow min-h-0 overflow-y-auto">
       <div class="mx-auto max-w-[1140px] pb-[120px] px-4">
         <v-snackbar
           v-model="showSuccess"

@@ -39,7 +39,7 @@ const formatDate = (dateString: string | null | undefined) => {
     :search="search"
     item-value="project.id"
     density="comfortable"
-    class="bg-transparent d-flex flex-column flex-grow-1 min-h-0"
+    class="bg-transparent flex flex-col flex-grow min-h-0"
     fixed-header
     height="100%"
     :items-per-page="-1"

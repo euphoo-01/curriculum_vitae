@@ -40,6 +40,8 @@ query GetCv($cvId: ID!) {
     user {
       id
       email
+      department_name
+      position_name
       profile {
         full_name
       }

@@ -1,18 +1,20 @@
 <template>
-  <div class="flex-grow-1 d-flex flex-column pb-4 m-0 bg-background h-screen">
-    <div class="d-flex flex-column bg-background shadow-sm mb-4 px-4">
+  <div
+    class="flex flex-col h-full w-full min-h-0 overflow-hidden pb-4 bg-background px-4"
+  >
+    <div class="flex flex-col bg-background shadow-sm mb-4 flex-none">
       <LayoutBreadcrumbs class="flex-none" />
       <CvsTabs />
     </div>
 
     <div
       v-if="loadingCv || loadingSkills"
-      class="d-flex justify-center align-center flex-grow-1"
+      class="flex justify-center items-center flex-grow"
     >
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
 
-    <div v-else-if="currentCv" class="w-full grow overflow-scroll">
+    <div v-else-if="currentCv" class="w-full flex-grow min-h-0 overflow-y-auto">
       <div class="mx-auto max-w-[1140px] pb-[120px] px-4">
         <v-snackbar
           v-model="showSuccess"

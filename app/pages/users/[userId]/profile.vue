@@ -1,22 +1,29 @@
 <template>
-  <div class="flex-grow-1 d-flex flex-column pb-4 m-0 bg-background h-screen">
-    <div class="d-flex flex-column bg-background shadow-sm mb-4 px-4">
+  <div
+    class="flex flex-col h-full w-full min-h-0 overflow-hidden pb-4 bg-background px-4"
+  >
+    <div class="flex flex-col bg-background shadow-sm mb-4 flex-none">
       <LayoutBreadcrumbs class="flex-none" />
       <UsersProfileTabs />
     </div>
 
-    <v-container v-if="loading" class="fill-height d-flex justify-center">
+    <v-container
+      v-if="loading"
+      class="fill-height flex justify-center items-center"
+    >
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </v-container>
 
-    <v-container v-else-if="error" class="fill-height d-flex justify-center">
+    <v-container
+      v-else-if="error"
+      class="fill-height flex justify-center items-center"
+    >
       <v-alert type="error">{{ error.message }}</v-alert>
     </v-container>
 
-    <ClientOnly>
+    <div v-if="user" class="w-full flex-grow min-h-0 overflow-y-auto">
       <v-container
-        v-if="user"
-        class="pa-6 mx-auto bg-background rounded-lg shadow-sm"
+        class="p-6 mx-auto bg-background rounded-lg shadow-sm"
         style="max-width: 768px"
       >
         <v-snackbar
@@ -79,7 +86,7 @@
           @logout="logout"
         />
       </v-container>
-    </ClientOnly>
+    </div>
   </div>
 </template>
 

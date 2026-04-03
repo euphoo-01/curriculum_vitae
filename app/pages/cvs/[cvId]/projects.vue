@@ -1,6 +1,8 @@
 <template>
-  <div class="flex-grow-1 d-flex flex-column pb-4 m-0 bg-background h-screen">
-    <div class="d-flex flex-column bg-background shadow-sm mb-4 px-4">
+  <div
+    class="flex flex-col h-full w-full min-h-0 overflow-hidden pb-4 bg-background px-4"
+  >
+    <div class="flex flex-col bg-background shadow-sm mb-4 flex-none">
       <LayoutBreadcrumbs class="flex-none" />
       <CvsTabs />
     </div>
@@ -33,7 +35,7 @@
 
     <div
       v-if="loadingCv || loadingProjects"
-      class="d-flex justify-center align-center flex-grow-1"
+      class="flex justify-center items-center flex-grow"
     >
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
@@ -42,10 +44,10 @@
       v-else-if="currentCv"
       flat
       rounded
-      class="d-flex flex-column flex-none overflow-scroll min-h-0 mx-4"
+      class="flex flex-col flex-grow min-h-0 w-full"
     >
-      <v-card-text class="pa-0 d-flex flex-column flex-grow-1 min-h-0">
-        <v-row class="justify-between px-4 pt-4">
+      <v-card-text class="p-0 flex flex-col flex-grow min-h-0">
+        <v-row class="m-0 justify-between px-4 pt-4 flex-none">
           <v-text-field
             v-model="search"
             prepend-inner-icon="mdi-magnify"
@@ -75,7 +77,7 @@
           :search="search"
           :admin-actions="adminActions"
           :can-edit="canEdit"
-          class="h-screen mt-4"
+          class="overflow-y-auto mt-4"
         />
       </v-card-text>
     </v-card>
