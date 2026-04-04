@@ -1,92 +1,116 @@
 {
-  "welcome": "Добро пожаловать",
-  "login": "Войти",
-  "create": "Создать",
-  "email": "Почта",
-  "password": "Пароль",
-
-  "loginScreenTitle": "С возвращением",
-  "loginScreenGreeting": "Рады вас видеть! Войдите, чтобы продолжить",
-  "forgotPassword": "Забыли пароль?",
-
-  "regScreenTitle": "Зарегистрируйтесь",
-  "regScreenGreeting": "Добро пожаловать! Создайте аккаунт, чтобы продолжить",
-  "createAccount": "Создать аккаунт",
-  "haveAccount": "У меня есть аккаунт",
-  "noDataAvailable": "Нет данных",
-  "Нет данных": "Нет данных",
-  "Резюме пока не добавлены.": "Резюме пока не добавлены.",
-  "Навыки пока не добавлены.": "Навыки пока не добавлены.",
-  "Языки пока не добавлены.": "Языки пока не добавлены.",
   "common": {
-    "see": "Смотреть",
-    "add": "Добавить",
-    "update": "Обновить",
-    "logout": "Выйти",
-    "delete": "Удалить",
-    "create": "Создать",
-    "cancel": "Отменить",
-    "save": "Сохранить",
-    "tillNow": "По настоящее время"
+    "noData": "Нет данных",
+    "fields": {
+      "email": "Почта",
+      "password": "Пароль",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "department": "Отдел",
+      "position": "Должность"
+    },
+    "actions": {
+      "see": "Смотреть",
+      "add": "Добавить",
+      "update": "Обновить",
+      "logout": "Выйти",
+      "delete": "Удалить",
+      "cancel": "Отменить",
+      "save": "Сохранить",
+      "create": "Создать",
+      "login": "Войти",
+      "register": "Зарегистрироваться"
+    },
+    "placeholders": {
+      "search": "Поиск..."
+    },
+    "validation": {
+      "required": "Поле обязательно для ввода",
+      "email": "Введен неправильный email"
+    },
+    "time": {
+      "tillNow": "По настоящее время"
+    },
+    "responses": {
+      "success": "Операция выполнена успешно",
+      "error": "Произошла ошибка",
+      "addSuccess": "Успешно добавлено",
+      "updateSuccess": "Успешно обновлено",
+      "deleteSuccess": "Успешно удалено",
+      "exportSuccess": "Успешно экспортировано"
+    }
+  },
+  "auth": {
+    "welcome": "Добро пожаловать",
+    "login": {
+      "title": "С возвращением",
+      "greeting": "Рады вас видеть! Войдите, чтобы продолжить",
+      "forgotPassword": "Забыли пароль?",
+      "error": "Ошибка авторизации"
+    },
+    "register": {
+      "title": "Зарегистрируйтесь",
+      "greeting": "Добро пожаловать! Создайте аккаунт, чтобы продолжить",
+      "submit": "Создать аккаунт",
+      "haveAccount": "У меня есть аккаунт",
+      "error": "Ошибка регистрации"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Панель управления",
+    "employees": "Сотрудники",
+    "projects": "Проекты",
+    "cvs": "Резюме",
+    "departments": "Отделы",
+    "positions": "Должности",
+    "skills": "Навыки",
+    "languages": "Языки"
+  },
+  "employees": {
+    "title": "Сотрудники",
+    "search": "Поиск сотрудников..."
   },
   "profile": {
     "title": "Профиль",
     "skills": "Навыки",
     "languages": "Языки",
-    "update_success": "Профиль успешно обновлен",
-    "member_since": "В команде с",
+    "updateSuccess": "Профиль успешно обновлен",
+    "memberSince": "В команде с",
     "edit": "Редактировать профиль",
-    "see": "Смотреть профиль",
     "delete": "Удалить пользователя",
     "deleteConfirm": "Вы точно хотите удалить этого пользователя?",
+    "see": "Смотреть профиль",
     "create": "Создать профиль",
-    "first_name": "Имя",
-    "last_name": "Фамилия",
-    "department": "Отдел",
-    "position": "Должность",
     "role": "Роль",
-
-    "upload_avatar_title": "Загрузить фото профиля",
-    "avatar_upload_desc": ".png, .jpg или .gif не более 0.5 МБ",
-    "upload_error_size": "Размер файла не должен превышать 0.5 МБ",
-    "upload_error_type": "Разрешены только файлы .png, .jpg и .gif",
-    "delete_avatar_title": "Удалить фото профиля",
-    "delete_avatar_confirm": "Вы уверены, что хотите удалить фото профиля?"
+    "avatar": {
+      "uploadTitle": "Загрузить фото профиля",
+      "uploadDesc": ".png, .jpg или .gif не более 0.5 МБ",
+      "errorSize": "Размер файла не должен превышать 0.5 МБ",
+      "errorType": "Разрешены только файлы .png, .jpg и .gif",
+      "deleteTitle": "Удалить фото профиля",
+      "deleteConfirm": "Вы уверены, что хотите удалить фото профиля?"
+    }
   },
   "skills": {
+    "title": "Навыки",
     "add": "Добавить навык",
     "edit": "Редактировать навык",
-    "skill": "Навык",
+    "name": "Навык",
     "mastery": "Уровень владения",
     "noSkills": "Навыки пока не добавлены.",
     "uncategorized": "Без категории"
   },
-  "mastery": {
-    "Novice": "Новичок",
-    "Advanced": "Средний",
-    "Competent": "Компетентный",
-    "Proficient": "Опытный",
-    "Expert": "Эксперт"
-  },
   "languages": {
+    "title": "Языки",
     "add": "Добавить язык",
     "edit": "Редактировать язык",
-    "language": "Язык",
+    "name": "Язык",
     "proficiency": "Уровень владения",
     "noLanguages": "Языки пока не добавлены."
   },
-  "proficiency": {
-    "A1": "A1",
-    "A2": "A2",
-    "B1": "B1",
-    "B2": "B2",
-    "C1": "C1",
-    "C2": "C2",
-    "Native": "Родной"
-  },
   "cvs": {
     "title": "Резюме",
-    "add": "Создать резюме",
+    "add": "Создать",
     "edit": "Редактировать",
     "see": "Посмотреть",
     "name": "Название",
@@ -95,14 +119,23 @@
     "noCvs": "Резюме пока не добавлены.",
     "search": "Поиск резюме...",
     "deleteConfirm": "Вы точно хотите удалить это резюме?",
-    "details": "Детали",
-    "skills": "Навыки",
-    "projects": "Проекты",
-    "preview": "Предпросмотр"
+    "tabs": {
+      "details": "Детали",
+      "skills": "Навыки",
+      "projects": "Проекты",
+      "preview": "Предпросмотр"
+    }
   },
   "cvPreview": {
-    "downloadPdf": "Скачать PDF",
+    "exportPdf": "Экспорт в PDF",
     "education": "Образование",
+    "languages": "Языки",
+    "skills": "Навыки",
+    "projects": "Проекты",
+    "roles": "Роли",
+    "responsibilities": "Обязанности",
+    "environment": "Окружение",
+    "downloadPdf": "Скачать PDF",
     "languageProficiency": "Владение языками",
     "domains": "Предметные области",
     "programmingLanguages": "Языки программирования",
@@ -118,22 +151,22 @@
     "experienceInYears": "Опыт в годах",
     "lastUsed": "Последнее использование"
   },
-  "dashboard": "Панель управления",
-  "sidebarUsers": "Сотрудники",
-  "sidebarProjects": "Проекты",
-  "sidebarCVs": "Резюме",
-  "sidebarDepartments": "Отделы",
-  "sidebarPositions": "Должности",
-  "sidebarSkills": "Навыки",
-  "sidebarLanguages": "Языки",
-  "usersTitle": "Сотрудники",
-  "searchUsers": "Поиск...",
-  "firstName": "Имя",
-  "lastName": "Фамилия",
-  "department": "Отдел",
-  "position": "Должность",
-  "fieldRequired": "Поле обязательно для ввода",
-  "invalidEmail": "Введен неправильный email",
+  "mastery": {
+    "Novice": "Новичок",
+    "Advanced": "Средний",
+    "Competent": "Компетентный",
+    "Proficient": "Опытный",
+    "Expert": "Эксперт"
+  },
+  "proficiency": {
+    "A1": "A1",
+    "A2": "A2",
+    "B1": "B1",
+    "B2": "B2",
+    "C1": "C1",
+    "C2": "C2",
+    "Native": "Родной"
+  },
   "$vuetify": {
     "No data available": "Нет данных",
     "dataIterator": {

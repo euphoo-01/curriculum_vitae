@@ -1,88 +1,112 @@
 {
-  "welcome": "Welcome",
-  "login": "Login",
-  "create": "Create",
-  "email": "Email",
-  "password": "Password",
-
-  "loginScreenTitle": "Welcome back",
-  "loginScreenGreeting": "Glad to see you! Login to proceed",
-  "forgotPassword": "Forgot password?",
-
-  "regScreenTitle": "Register",
-  "regScreenGreeting": "Welcome! Create an account to proceed",
-  "createAccount": "Create account",
-  "haveAccount": "I have account",
-  "noDataAvailable": "No data available",
-  "No data available": "No data available",
-  "No CVs added yet.": "No CVs added yet.",
-  "No skills added yet.": "No skills added yet.",
-  "No languages added yet.": "No languages added yet.",
   "common": {
-    "see": "See",
-    "add": "Add",
-    "update": "Update",
-    "logout": "Logout",
-    "delete": "Delete",
-    "create": "Create",
-    "cancel": "Cancel",
-    "save": "Save",
-    "tillNow": "Till now"
+    "noData": "No data available",
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "department": "Department",
+      "position": "Position"
+    },
+    "actions": {
+      "see": "See",
+      "add": "Add",
+      "update": "Update",
+      "logout": "Logout",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "create": "Create",
+      "login": "Login",
+      "register": "Register"
+    },
+    "placeholders": {
+      "search": "Search..."
+    },
+    "validation": {
+      "required": "Field is required",
+      "email": "Invalid email"
+    },
+    "time": {
+      "tillNow": "Till now"
+    },
+    "responses": {
+      "success": "Operation completed successfully",
+      "error": "An error occurred",
+      "addSuccess": "Successfully added",
+      "updateSuccess": "Successfully updated",
+      "deleteSuccess": "Successfully deleted",
+      "exportSuccess": "Successfully exported"
+    }
+  },
+  "auth": {
+    "welcome": "Welcome",
+    "login": {
+      "title": "Welcome back",
+      "greeting": "Glad to see you! Login to proceed",
+      "forgotPassword": "Forgot password?",
+      "error": "Authentication error"
+    },
+    "register": {
+      "title": "Register",
+      "greeting": "Welcome! Create an account to proceed",
+      "submit": "Create account",
+      "haveAccount": "I have account",
+      "error": "Registration error"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "employees": "Employees",
+    "projects": "Projects",
+    "cvs": "CVs",
+    "departments": "Departments",
+    "positions": "Positions",
+    "skills": "Skills",
+    "languages": "Languages"
+  },
+  "employees": {
+    "title": "Employees",
+    "search": "Search employees..."
   },
   "profile": {
     "title": "Profile",
     "skills": "Skills",
     "languages": "Languages",
-    "update_success": "Profile updated successfully",
-    "member_since": "A member since",
+    "updateSuccess": "Profile updated successfully",
+    "memberSince": "A member since",
     "edit": "Edit profile",
     "delete": "Delete user",
     "deleteConfirm": "Are you sure you want to delete this user?",
     "see": "See profile",
     "create": "Create profile",
-    "first_name": "First Name",
-    "last_name": "Last Name",
-    "department": "Department",
-    "position": "Position",
     "role": "Role",
-
-    "upload_avatar_title": "Upload avatar image",
-    "avatar_upload_desc": ".png, .jpg or .gif no more than 0.5 MB",
-    "upload_error_size": "File size must be less than 0.5 MB",
-    "upload_error_type": "Only .png, .jpg and .gif files are allowed",
-    "delete_avatar_title": "Delete avatar",
-    "delete_avatar_confirm": "Are you sure you want to delete your avatar?"
+    "avatar": {
+      "uploadTitle": "Upload avatar image",
+      "uploadDesc": ".png, .jpg or .gif no more than 0.5 MB",
+      "errorSize": "File size must be less than 0.5 MB",
+      "errorType": "Only .png, .jpg and .gif files are allowed",
+      "deleteTitle": "Delete avatar",
+      "deleteConfirm": "Are you sure you want to delete your avatar?"
+    }
   },
   "skills": {
+    "title": "Skills",
     "add": "Add skill",
     "edit": "Edit skill",
-    "skill": "Skill",
+    "name": "Skill",
     "mastery": "Mastery level",
     "noSkills": "No skills added yet.",
     "uncategorized": "Uncategorized"
   },
-  "mastery": {
-    "Novice": "Novice",
-    "Advanced": "Intermediate",
-    "Competent": "Competent",
-    "Proficient": "Experienced",
-    "Expert": "Expert"
-  },
   "languages": {
+    "title": "Languages",
     "add": "Add language",
     "edit": "Edit language",
-    "language": "Language",
+    "name": "Language",
     "proficiency": "Proficiency level",
     "noLanguages": "No languages added yet."
-  },
-  "proficiency": {
-    "A1": "A1",
-    "A2": "A2",
-    "B1": "B1",
-    "B2": "B2",
-    "C1": "C1",
-    "C2": "C2",
-    "Native": "Native"
   },
   "cvs": {
     "title": "CVs",
@@ -95,14 +119,23 @@
     "noCvs": "No CVs added yet.",
     "search": "Search CVs...",
     "deleteConfirm": "Are you sure you want to delete this CV?",
-    "details": "Details",
-    "skills": "Skills",
-    "projects": "Projects",
-    "preview": "Preview"
+    "tabs": {
+      "details": "Details",
+      "skills": "Skills",
+      "projects": "Projects",
+      "preview": "Preview"
+    }
   },
   "cvPreview": {
-    "downloadPdf": "Download PDF",
+    "exportPdf": "Export to PDF",
     "education": "Education",
+    "languages": "Languages",
+    "skills": "Skills",
+    "projects": "Projects",
+    "roles": "Roles",
+    "responsibilities": "Responsibilities",
+    "environment": "Environment",
+    "downloadPdf": "Download PDF",
     "languageProficiency": "Language proficiency",
     "domains": "Domains",
     "programmingLanguages": "Programming languages",
@@ -118,22 +151,22 @@
     "experienceInYears": "Experience in years",
     "lastUsed": "Last used"
   },
-  "dashboard": "Dashboard",
-  "sidebarUsers": "Employees",
-  "sidebarProjects": "Projects",
-  "sidebarCVs": "CVs",
-  "sidebarDepartments": "Departments",
-  "sidebarPositions": "Positions",
-  "sidebarSkills": "Skills",
-  "sidebarLanguages": "Languages",
-  "usersTitle": "Employees",
-  "searchUsers": "Search...",
-  "firstName": "First Name",
-  "lastName": "Last Name",
-  "department": "Department",
-  "position": "Position",
-  "fieldRequired": "Field is required",
-  "invalidEmail": "Invalid email",
+  "mastery": {
+    "Novice": "Novice",
+    "Advanced": "Intermediate",
+    "Competent": "Competent",
+    "Proficient": "Experienced",
+    "Expert": "Expert"
+  },
+  "proficiency": {
+    "A1": "A1",
+    "A2": "A2",
+    "B1": "B1",
+    "B2": "B2",
+    "C1": "C1",
+    "C2": "C2",
+    "Native": "Native"
+  },
   "$vuetify": {
     "No data available": "No data available",
     "dataIterator": {
