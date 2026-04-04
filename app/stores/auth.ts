@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const userIdCookie = useCookie<string | null>('auth_user_id', {
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: 60 * 60 * 24 * 30,
     path: '/',
     sameSite: 'lax',
   });
@@ -158,26 +158,14 @@ export const useAuthStore = defineStore('auth', () => {
 
     refreshPromise = (async () => {
       try {
-        const config = useRuntimeConfig();
-        const response = await $fetch<{
-          data?: { updateToken: UpdateTokenResult };
-        }>(config.public.graphqlUrl as string, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${refreshTokenCookie.value}`,
-          },
-          body: {
-            query: UpdateTokenDocument,
-          },
-        });
+        const { data } = await client.mutate({ mutation: UpdateTokenDocument });
 
-        if (response.data?.updateToken) {
-          await onLogin(response.data.updateToken.access_token);
-          refreshTokenCookie.value = response.data.updateToken.refresh_token;
-          return response.data.updateToken;
+        if (data?.updateToken) {
+          await onLogin(data.updateToken.access_token);
+          refreshTokenCookie.value = data.updateToken.refresh_token;
+          return data.updateToken;
         }
-        throw new Error('Не удалось обновить токен');
+        throw new Error('Refresh tokens failed');
       } catch (e) {
         await logout();
         throw e;

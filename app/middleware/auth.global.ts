@@ -1,14 +1,14 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const authStore = useAuthStore();
   const { getToken } = useApollo();
-  const token = await getToken();
   const refreshTokenCookie = useCookie('auth_refresh_token');
 
   const isAuthPage = to.path.startsWith('/auth');
 
-  let validToken = !!token;
+  const token = await getToken();
+  let validToken = !!token || !!authStore.user;
 
-  if (!token && refreshTokenCookie.value) {
+  if (!validToken && refreshTokenCookie.value) {
     try {
       await authStore.refresh();
       validToken = true;

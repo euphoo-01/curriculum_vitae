@@ -21,7 +21,7 @@ const mocks = vi.hoisted(() => ({
   cookie: { value: null as string | null },
 }));
 
-mockNuxtImport('useAuthStore', () => () => mocks.store);
+mockNuxtImport('useAuthStore', () => () => ({ ...mocks.store, ...mocks.auth }));
 mockNuxtImport('useApollo', () => () => mocks.apollo);
 mockNuxtImport('useCookie', () => () => mocks.cookie);
 mockNuxtImport('navigateTo', () => mocks.navigateTo);
@@ -114,5 +114,20 @@ describe('Auth Global Middleware', () => {
     );
 
     expect(mocks.navigateTo).toHaveBeenCalledWith('/users');
+  });
+
+  it('does not refresh if token is null but user is already in store', async () => {
+    mocks.apollo.getToken.mockResolvedValue(null);
+    mocks.store.user = { id: '1' };
+    mocks.cookie.value = 'refresh-123';
+
+    const middleware = authMiddleware as RouteMiddleware;
+    await middleware(
+      { path: '/users' } as RouteLocationNormalized,
+      { path: '/other' } as RouteLocationNormalized
+    );
+
+    expect(mocks.auth.refresh).not.toHaveBeenCalled();
+    expect(mocks.navigateTo).not.toHaveBeenCalled();
   });
 });
