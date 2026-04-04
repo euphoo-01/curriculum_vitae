@@ -74,13 +74,14 @@
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const dictionariesStore = useDictionariesStore();
+const { positions, loading } = storeToRefs(dictionariesStore);
+const { fetchPositions, createPosition, updatePosition, deletePosition } =
+  dictionariesStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const positionsStoreInstance = usePositionsStore();
-const { positions, loading } = storeToRefs(positionsStoreInstance);
-const { fetchPositions, createPosition, updatePosition, deletePosition } =
-  positionsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

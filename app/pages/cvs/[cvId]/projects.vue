@@ -88,22 +88,20 @@
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const cvsStore = useCvsStore();
+const { currentCv, loading: loadingCv } = storeToRefs(cvsStore);
+const { fetchCv, addCvProject, updateCvProject, removeCvProject } = cvsStore;
+const projectsStore = useProjectsStore();
+const { fetchProjects } = projectsStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;
 
 const { user: currentUser } = useAuth();
-const cvsStoreInstance = useCvsStore();
-const { currentCv, loading: loadingCv } = storeToRefs(cvsStoreInstance);
-const { fetchCv, addCvProject, updateCvProject, removeCvProject } =
-  cvsStoreInstance;
 
-const projectsStoreInstance = useProjectsStore();
-const { projects, loading: loadingProjects } = storeToRefs(
-  projectsStoreInstance
-);
-const { fetchProjects } = projectsStoreInstance;
+const { projects, loading: loadingProjects } = storeToRefs(projectsStore);
 
 const search = ref('');
 const isDeleteModal = ref(false);

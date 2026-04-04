@@ -97,20 +97,15 @@ import type {
 } from '~~/graphql/generated/graphql';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const dictionariesStore = useDictionariesStore();
+const { fetchDepartments, fetchPositions } = dictionariesStore;
+const employeesStore = useEmployeesStore();
+const { user, loading, error } = storeToRefs(employeesStore);
+const { fetchUser, updateUser, updateProfile, uploadAvatar, deleteAvatar } =
+  employeesStore;
+
 const route = useRoute();
 const userId = route.params.userId as string;
-
-const profileStoreInstance = useProfileStore();
-const { user, loading, error } = storeToRefs(profileStoreInstance);
-const {
-  fetchUser,
-  fetchDepartments,
-  fetchPositions,
-  updateUser,
-  updateProfile,
-  uploadAvatar,
-  deleteAvatar,
-} = profileStoreInstance;
 
 const { user: currentUser, logout } = useAuth();
 const { t } = useI18n();

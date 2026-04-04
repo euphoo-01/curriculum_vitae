@@ -88,15 +88,16 @@
 import type { VForm } from 'vuetify/components';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const cvsStore = useCvsStore();
+const { currentCv, loading } = storeToRefs(cvsStore);
+const { fetchCv, updateCv } = cvsStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;
 
 const { user: currentUser } = useAuth();
-const cvsStoreInstance = useCvsStore();
-const { currentCv, loading } = storeToRefs(cvsStoreInstance);
-const { fetchCv, updateCv } = cvsStoreInstance;
 
 const formRef = ref<VForm | null>(null);
 const form = ref({

@@ -196,17 +196,17 @@
 </template>
 
 <script setup lang="ts">
+const dictionariesStore = useDictionariesStore();
+const { categoriesList } = storeToRefs(dictionariesStore);
+const { fetchCategories } = dictionariesStore;
+const cvsStore = useCvsStore();
+const { currentCv, loading: loadingCv } = storeToRefs(cvsStore);
+const { fetchCv, exportPdf } = cvsStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;
-
-const cvsStoreInstance = useCvsStore();
-const { currentCv, loading: loadingCv } = storeToRefs(cvsStoreInstance);
-const { fetchCv, exportPdf } = cvsStoreInstance;
-const skillsStoreInstance = useSkillsStore();
-const { categoriesList } = storeToRefs(skillsStoreInstance);
-const { fetchCategories } = skillsStoreInstance;
 
 const exporting = ref(false);
 const previewRef = ref<HTMLElement | null>(null);

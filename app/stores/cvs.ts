@@ -30,9 +30,6 @@ import type {
 } from '../../graphql/generated/graphql';
 
 export const useCvsStore = defineStore('cvs', () => {
-  const { clients } = useApollo();
-  const client = clients?.default;
-
   const cvs = ref<GetUserCvsQuery['user']['cvs']>([]);
   const allCvs = ref<GetAllCvsQuery['cvs']>([]);
   const currentCv = ref<GetCvQuery['cv'] | null>(null);
@@ -44,7 +41,8 @@ export const useCvsStore = defineStore('cvs', () => {
     error.value = null;
 
     try {
-      const { data } = await client!.query({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.query({
         query: GetUserCvsDocument,
         variables: { userId },
         fetchPolicy: 'network-only',
@@ -63,7 +61,8 @@ export const useCvsStore = defineStore('cvs', () => {
     error.value = null;
 
     try {
-      const { data } = await client!.query({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.query({
         query: GetAllCvsDocument,
         fetchPolicy: 'network-only',
       });
@@ -81,7 +80,8 @@ export const useCvsStore = defineStore('cvs', () => {
     error.value = null;
 
     try {
-      const { data } = await client!.query({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.query({
         query: GetCvDocument,
         variables: { cvId },
         fetchPolicy: 'network-only',
@@ -98,7 +98,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const createCv = async (input: CreateCvInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: CreateCvDocument,
         variables: { cv: input },
       });
@@ -110,7 +111,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const updateCv = async (input: UpdateCvInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: UpdateCvDocument,
         variables: { cv: input },
       });
@@ -122,7 +124,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const deleteCv = async (cvId: string) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: DeleteCvDocument,
         variables: { cvId },
       });
@@ -134,7 +137,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const addCvSkill = async (skill: AddCvSkillInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: AddCvSkillDocument,
         variables: { skill },
       });
@@ -156,7 +160,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const updateCvSkill = async (skill: UpdateCvSkillInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: UpdateCvSkillDocument,
         variables: { skill },
       });
@@ -178,7 +183,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const deleteCvSkill = async (skill: DeleteCvSkillInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: DeleteCvSkillDocument,
         variables: { skill },
       });
@@ -200,7 +206,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const addCvProject = async (project: AddCvProjectInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: AddCvProjectDocument,
         variables: { project },
       });
@@ -212,7 +219,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const updateCvProject = async (project: UpdateCvProjectInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: UpdateCvProjectDocument,
         variables: { project },
       });
@@ -224,7 +232,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const removeCvProject = async (project: RemoveCvProjectInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: RemoveCvProjectDocument,
         variables: { project },
       });
@@ -236,7 +245,8 @@ export const useCvsStore = defineStore('cvs', () => {
 
   const exportPdf = async (pdfInput: ExportPdfInput) => {
     try {
-      const { data } = await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.mutate({
         mutation: ExportPdfDocument,
         variables: { pdf: pdfInput },
       });

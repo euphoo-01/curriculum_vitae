@@ -151,31 +151,28 @@
 import type { Proficiency } from '~~/graphql/generated/graphql';
 import { UserRole } from '~~/graphql/generated/graphql';
 
-const route = useRoute();
-const userId = route.params.userId as string;
-
-const profileStoreInstance = useProfileStore();
+const dictionariesStore = useDictionariesStore();
+const { languagesList } = storeToRefs(dictionariesStore);
+const { fetchLanguages } = dictionariesStore;
+const employeesStore = useEmployeesStore();
 const {
   user,
   loading: loadingUser,
   error: userError,
-} = storeToRefs(profileStoreInstance);
-const { fetchUser } = profileStoreInstance;
-
-const languagesStoreInstance = useLanguagesStore();
-const {
   profileLanguages,
-  languagesList,
   loading: loadingLanguages,
   error: languagesError,
-} = storeToRefs(languagesStoreInstance);
+} = storeToRefs(employeesStore);
 const {
+  fetchUser,
   fetchProfileLanguages,
-  fetchLanguages,
   addProfileLanguage,
   updateProfileLanguage,
   deleteProfileLanguage,
-} = languagesStoreInstance;
+} = employeesStore;
+
+const route = useRoute();
+const userId = route.params.userId as string;
 
 const { user: currentUser } = useAuth();
 const { t } = useI18n();

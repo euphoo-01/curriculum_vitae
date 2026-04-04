@@ -6,6 +6,12 @@ import {
   type GetPositionsQuery,
   type CreateUserInput,
 } from '~~/graphql/generated/graphql';
+
+const dictionariesStore = useDictionariesStore();
+const { fetchDepartments, fetchPositions } = dictionariesStore;
+const employeesStore = useEmployeesStore();
+const { users, loading, error } = storeToRefs(employeesStore);
+const { fetchUsers, deleteUser, createUser } = employeesStore;
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 
@@ -17,11 +23,6 @@ setBreadcrumbs([
   },
 ]);
 
-const usersStoreInstance = useUsersStore();
-const { users, loading, error } = storeToRefs(usersStoreInstance);
-const { fetchUsers, deleteUser, createUser } = usersStoreInstance;
-const profileStoreInstance = useProfileStore();
-const { fetchDepartments, fetchPositions } = profileStoreInstance;
 const router = useRouter();
 
 const { user } = storeToRefs(useAuthStore());

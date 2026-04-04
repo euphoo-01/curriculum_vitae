@@ -75,14 +75,14 @@
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const dictionariesStore = useDictionariesStore();
+const { skillsList, categoriesList, loading } = storeToRefs(dictionariesStore);
+const { fetchSkills, fetchCategories, createSkill, updateSkill, deleteSkill } =
+  dictionariesStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const skillsStoreInstance = useSkillsStore();
-const { skillsList, categoriesList, loading } =
-  storeToRefs(skillsStoreInstance);
-const { fetchSkills, fetchCategories, createSkill, updateSkill, deleteSkill } =
-  skillsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

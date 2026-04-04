@@ -73,12 +73,13 @@
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const cvsStore = useCvsStore();
+const { allCvs, loading } = storeToRefs(cvsStore);
+const { fetchAllCvs, createCv, updateCv, deleteCv } = cvsStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const cvsStoreInstance = useCvsStore();
-const { allCvs, loading } = storeToRefs(cvsStoreInstance);
-const { fetchAllCvs, createCv, updateCv, deleteCv } = cvsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

@@ -13,9 +13,6 @@ import type {
 } from '../../graphql/generated/graphql';
 
 export const useProjectsStore = defineStore('projects', () => {
-  const { clients } = useApollo();
-  const client = clients?.default;
-
   const projects = ref<GetProjectsQuery['projects']>([]);
   const loading = ref(false);
   const error = ref<Error | null>(null);
@@ -25,7 +22,8 @@ export const useProjectsStore = defineStore('projects', () => {
     error.value = null;
 
     try {
-      const { data } = await client!.query({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.query({
         query: GetProjectsDocument,
         fetchPolicy: 'network-only',
       });
@@ -41,7 +39,8 @@ export const useProjectsStore = defineStore('projects', () => {
   const createProject = async (project: CreateProjectInput) => {
     error.value = null;
     try {
-      await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      await $apollo.defaultClient.mutate({
         mutation: CreateProjectDocument,
         variables: { project },
       });
@@ -56,7 +55,8 @@ export const useProjectsStore = defineStore('projects', () => {
   const updateProject = async (project: UpdateProjectInput) => {
     error.value = null;
     try {
-      await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      await $apollo.defaultClient.mutate({
         mutation: UpdateProjectDocument,
         variables: { project },
       });
@@ -71,7 +71,8 @@ export const useProjectsStore = defineStore('projects', () => {
   const deleteProject = async (projectId: string) => {
     error.value = null;
     try {
-      await client!.mutate({
+      const { $apollo } = useNuxtApp();
+      await $apollo.defaultClient.mutate({
         mutation: DeleteProjectDocument,
         variables: { projectId },
       });
@@ -85,7 +86,8 @@ export const useProjectsStore = defineStore('projects', () => {
 
   const fetchProject = async (projectId: string) => {
     try {
-      const { data } = await client!.query({
+      const { $apollo } = useNuxtApp();
+      const { data } = await $apollo.defaultClient.query({
         query: GetProjectDocument,
         variables: { projectId },
         fetchPolicy: 'network-only',

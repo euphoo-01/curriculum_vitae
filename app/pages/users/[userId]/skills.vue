@@ -156,33 +156,28 @@
 import type { Mastery } from '~~/graphql/generated/graphql';
 import { UserRole } from '~~/graphql/generated/graphql';
 
-const route = useRoute();
-const userId = route.params.userId as string;
-
-const profileStoreInstance = useProfileStore();
+const dictionariesStore = useDictionariesStore();
+const { skillsList, categoriesList } = storeToRefs(dictionariesStore);
+const { fetchSkills, fetchCategories } = dictionariesStore;
+const employeesStore = useEmployeesStore();
 const {
   user,
   loading: loadingUser,
   error: userError,
-} = storeToRefs(profileStoreInstance);
-const { fetchUser } = profileStoreInstance;
-
-const skillsStoreInstance = useSkillsStore();
-const {
   profileSkills,
-  skillsList,
-  categoriesList,
   loading: loadingSkills,
   error: skillsError,
-} = storeToRefs(skillsStoreInstance);
+} = storeToRefs(employeesStore);
 const {
+  fetchUser,
   fetchProfileSkills,
-  fetchSkills,
-  fetchCategories,
   addProfileSkill,
   updateProfileSkill,
   deleteProfileSkill,
-} = skillsStoreInstance;
+} = employeesStore;
+
+const route = useRoute();
+const userId = route.params.userId as string;
 
 const { user: currentUser } = useAuth();
 const { t } = useI18n();

@@ -74,13 +74,14 @@
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const dictionariesStore = useDictionariesStore();
+const { languagesList, loading } = storeToRefs(dictionariesStore);
+const { fetchLanguages, createLanguage, updateLanguage, deleteLanguage } =
+  dictionariesStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const languagesStoreInstance = useLanguagesStore();
-const { languagesList, loading } = storeToRefs(languagesStoreInstance);
-const { fetchLanguages, createLanguage, updateLanguage, deleteLanguage } =
-  languagesStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

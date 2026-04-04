@@ -74,13 +74,14 @@
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const projectsStore = useProjectsStore();
+const { projects, loading } = storeToRefs(projectsStore);
+const { fetchProjects, createProject, updateProject, deleteProject } =
+  projectsStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const projectsStoreInstance = useProjectsStore();
-const { projects, loading } = storeToRefs(projectsStoreInstance);
-const { fetchProjects, createProject, updateProject, deleteProject } =
-  projectsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

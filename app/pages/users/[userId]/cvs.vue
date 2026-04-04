@@ -76,19 +76,19 @@
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const employeesStore = useEmployeesStore();
+const { user: profileUser, loading } = storeToRefs(employeesStore);
+const { fetchUser } = employeesStore;
+const cvsStore = useCvsStore();
+const { cvs } = storeToRefs(cvsStore);
+const { fetchUserCvs, createCv, updateCv, deleteCv } = cvsStore;
+
 const route = useRoute();
 const userId = route.params.userId as string;
 
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const profileStoreInstance = useProfileStore();
-const { user: profileUser } = storeToRefs(profileStoreInstance);
-const { fetchUser } = profileStoreInstance;
-
-const cvsStoreInstance = useCvsStore();
-const { cvs, loading } = storeToRefs(cvsStoreInstance);
-const { fetchUserCvs, createCv, updateCv, deleteCv } = cvsStoreInstance;
 
 const search = ref('');
 let timeout: ReturnType<typeof setTimeout> | null = null;

@@ -147,23 +147,23 @@
 import type { Mastery } from '~~/graphql/generated/graphql';
 import { UserRole } from '~~/graphql/generated/graphql';
 
+const dictionariesStore = useDictionariesStore();
+const { skillsList, categoriesList } = storeToRefs(dictionariesStore);
+const { fetchSkills, fetchCategories } = dictionariesStore;
+const cvsStore = useCvsStore();
+const {
+  currentCv,
+  loading: loadingCv,
+  loading: loadingSkills,
+} = storeToRefs(cvsStore);
+const { fetchCv, addCvSkill, updateCvSkill, deleteCvSkill } = cvsStore;
+
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;
 
 const { user: currentUser } = useAuth();
-const cvsStoreInstance = useCvsStore();
-const { currentCv, loading: loadingCv } = storeToRefs(cvsStoreInstance);
-const { fetchCv, addCvSkill, updateCvSkill, deleteCvSkill } = cvsStoreInstance;
-
-const skillsStoreInstance = useSkillsStore();
-const {
-  skillsList,
-  categoriesList,
-  loading: loadingSkills,
-} = storeToRefs(skillsStoreInstance);
-const { fetchSkills, fetchCategories } = skillsStoreInstance;
 
 const updating = ref(false);
 const showSuccess = ref(false);
