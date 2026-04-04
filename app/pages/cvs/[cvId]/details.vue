@@ -46,7 +46,7 @@
 
               <v-text-field
                 v-model="form.education"
-                label="Education"
+                :label="t('cvPreview.education')"
                 variant="outlined"
                 density="compact"
                 :readonly="!canEdit"
@@ -76,7 +76,7 @@
             class="px-8"
             :loading="loadingAction"
           >
-            {{ t('common.save') }}
+            {{ t('common.actions.save') }}
           </v-btn>
         </v-card-actions>
       </v-form>
@@ -112,7 +112,7 @@ const snackbarColor = ref('error');
 const loadingAction = ref(false);
 
 const rules = {
-  required: (value: unknown) => !!value || t('fieldRequired'),
+  required: (value: unknown) => !!value || t('common.validation.required'),
 };
 
 const canEdit = computed(() => {
@@ -136,11 +136,11 @@ const handleSubmit = async () => {
       education: form.value.education,
       description: form.value.description,
     });
-    actionMessage.value = t('common.update');
+    actionMessage.value = t('common.responses.updateSuccess');
     snackbarColor.value = 'success';
     isSnackbar.value = true;
   } catch (e) {
-    actionMessage.value = e instanceof Error ? e.message : 'Error';
+    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
@@ -158,7 +158,7 @@ onMounted(async () => {
     };
 
     setBreadcrumbs([
-      { title: t('sidebarCVs'), to: '/cvs' },
+      { title: t('sidebar.cvs'), to: '/cvs' },
       { title: cv.name, disabled: true },
     ]);
   }

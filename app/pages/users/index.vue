@@ -17,7 +17,7 @@ const { setBreadcrumbs } = useBreadcrumbs();
 
 setBreadcrumbs([
   {
-    title: t('usersTitle'),
+    title: t('employees.title'),
     disabled: true,
     to: '/users',
   },
@@ -33,6 +33,8 @@ const userToDelete = ref<string>();
 const isDeleteModal = ref<boolean>(false);
 const isAddModal = ref<boolean>(false);
 const isSnackbar = ref<boolean>(false);
+const snackbarMessage = ref('');
+const snackbarColor = ref('success');
 
 const departments = ref<GetDepartmentsQuery['departments']>([]);
 const positions = ref<GetPositionsQuery['positions']>([]);
@@ -61,11 +63,43 @@ const adminActions: AdminAction[] = [
 ];
 
 const handleCreateUser = async (payload: CreateUserInput) => {
-  await createUser(payload);
-  if (error.value) {
+  try {
+    await createUser(payload);
+    if (error.value) {
+      snackbarMessage.value = `${t('common.responses.error')}: ${error.value}`;
+      snackbarColor.value = 'error';
+      isSnackbar.value = true;
+    } else {
+      snackbarMessage.value = t('common.responses.addSuccess');
+      snackbarColor.value = 'success';
+      isSnackbar.value = true;
+      isAddModal.value = false;
+    }
+  } catch (e) {
+    snackbarMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
+    snackbarColor.value = 'error';
     isSnackbar.value = true;
-  } else {
-    isAddModal.value = false;
+  }
+};
+
+const handleDeleteUser = async () => {
+  if (!userToDelete.value) return;
+  try {
+    await deleteUser(userToDelete.value);
+    if (error.value) {
+      snackbarMessage.value = `${t('common.responses.error')}: ${error.value}`;
+      snackbarColor.value = 'error';
+      isSnackbar.value = true;
+    } else {
+      snackbarMessage.value = t('common.responses.deleteSuccess');
+      snackbarColor.value = 'success';
+      isSnackbar.value = true;
+      isDeleteModal.value = false;
+    }
+  } catch (e) {
+    snackbarMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
+    snackbarColor.value = 'error';
+    isSnackbar.value = true;
   }
 };
 
@@ -89,19 +123,19 @@ positions.value = pos;
     <v-snackbar
       v-model="isSnackbar"
       location="top"
-      color="error"
+      :color="snackbarColor"
       :timeout="3000"
     >
-      {{ error }}
+      {{ snackbarMessage }}
     </v-snackbar>
 
     <ConfirmModal
       v-model="isDeleteModal"
       :title="t('profile.delete')"
       :message="t('profile.deleteConfirm')"
-      :confirm-text="t('common.delete')"
-      :cancel-text="t('common.cancel')"
-      @confirm="userToDelete && deleteUser(userToDelete)"
+      :confirm-text="t('common.actions.delete')"
+      :cancel-text="t('common.actions.cancel')"
+      @confirm="handleDeleteUser"
     />
 
     <UsersAddModal
@@ -123,7 +157,7 @@ positions.value = pos;
           <v-text-field
             :model-value="search"
             prepend-inner-icon="mdi-magnify"
-            :placeholder="$t('searchUsers')"
+            :placeholder="$t('employees.search')"
             variant="outlined"
             density="compact"
             rounded

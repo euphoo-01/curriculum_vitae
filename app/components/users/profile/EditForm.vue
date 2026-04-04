@@ -4,7 +4,7 @@
       <v-col cols="12" sm="6">
         <v-text-field
           v-model="formData.first_name"
-          :label="$t('profile.first_name')"
+          :label="$t('common.fields.firstName')"
           :readonly="!canEdit"
           variant="outlined"
           density="comfortable"
@@ -13,7 +13,7 @@
       <v-col cols="12" sm="6">
         <v-text-field
           v-model="formData.last_name"
-          :label="$t('profile.last_name')"
+          :label="$t('common.fields.lastName')"
           :readonly="!canEdit"
           variant="outlined"
           density="comfortable"
@@ -28,7 +28,7 @@
           :items="departments"
           item-title="name"
           item-value="id"
-          :label="$t('profile.department')"
+          :label="$t('common.fields.department')"
           :readonly="!canEdit"
           variant="outlined"
           density="comfortable"
@@ -40,7 +40,7 @@
           :items="positions"
           item-title="name"
           item-value="id"
-          :label="$t('profile.position')"
+          :label="$t('common.fields.position')"
           :readonly="!canEdit"
           variant="outlined"
           density="comfortable"
@@ -57,7 +57,7 @@
           size="x-large"
           @click="$emit('logout')"
         >
-          {{ $t('common.logout') }}
+          {{ $t('common.actions.logout') }}
         </v-btn>
       </v-col>
       <v-col cols="auto" class="pt-6">
@@ -70,7 +70,7 @@
           class="px-8 rounded-full"
           size="x-large"
         >
-          {{ $t('common.update') }}
+          {{ $t('common.actions.update') }}
         </v-btn>
       </v-col>
     </v-row>

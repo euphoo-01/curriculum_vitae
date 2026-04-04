@@ -7,22 +7,22 @@ const cvId = route.params.cvId as string;
 
 const cvTabs = computed(() => [
   {
-    title: t('cvs.details'),
+    title: t('cvs.tabs.details'),
     to: `/cvs/${cvId}/details`,
     value: 'details',
   },
   {
-    title: t('cvs.skills'),
+    title: t('cvs.tabs.skills'),
     to: `/cvs/${cvId}/skills`,
     value: 'skills',
   },
   {
-    title: t('cvs.projects'),
+    title: t('cvs.tabs.projects'),
     to: `/cvs/${cvId}/projects`,
     value: 'projects',
   },
   {
-    title: t('cvs.preview'),
+    title: t('cvs.tabs.preview'),
     to: `/cvs/${cvId}/preview`,
     value: 'preview',
   },

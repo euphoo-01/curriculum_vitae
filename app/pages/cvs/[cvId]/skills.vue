@@ -85,7 +85,7 @@
             prepend-icon="mdi-delete"
             @click="toggleDeleteMode"
           >
-            {{ $t('common.delete') }}
+            {{ $t('common.actions.delete') }}
           </v-btn>
 
           <template v-else>
@@ -96,7 +96,7 @@
               rounded
               @click="cancelDeleteMode"
             >
-              {{ $t('common.cancel') }}
+              {{ $t('common.actions.cancel') }}
             </v-btn>
             <v-btn
               color="primary"
@@ -107,7 +107,7 @@
               prepend-icon="mdi-delete"
               @click="toggleDeleteMode"
             >
-              {{ $t('common.delete') }}
+              {{ $t('common.actions.delete') }}
               {{
                 selectedSkillsToDelete.size > 0
                   ? `(${selectedSkillsToDelete.size})`
@@ -247,7 +247,7 @@ onMounted(async () => {
 
   if (cv) {
     setBreadcrumbs([
-      { title: t('sidebarCVs'), to: '/cvs' },
+      { title: t('sidebar.cvs'), to: '/cvs' },
       { title: cv.name, to: `/cvs/${cvId}/details` },
       { title: t('profile.skills'), disabled: true },
     ]);
@@ -301,11 +301,11 @@ const handleAddSkill = async (data: { name: string; mastery: Mastery }) => {
       categoryId: skillObj?.category?.id,
       mastery: data.mastery,
     });
-    successMessage.value = t('common.save');
+    successMessage.value = t('common.responses.success');
     showSuccess.value = true;
     isAddModalOpen.value = false;
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error adding skill';
+    actionError.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
   } finally {
     updating.value = false;
   }
@@ -322,11 +322,11 @@ const handleUpdateSkill = async (data: { name: string; mastery: Mastery }) => {
       categoryId: selectedSkill.value.categoryId,
       mastery: data.mastery,
     });
-    successMessage.value = t('common.update');
+    successMessage.value = t('common.responses.updateSuccess');
     showSuccess.value = true;
     isEditModalOpen.value = false;
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error updating skill';
+    actionError.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
   } finally {
     updating.value = false;
   }
@@ -354,13 +354,13 @@ const confirmDelete = async () => {
       cvId,
       name: Array.from(selectedSkillsToDelete.value),
     });
-    successMessage.value = t('common.delete');
+    successMessage.value = t('common.responses.deleteSuccess');
     showSuccess.value = true;
     isConfirmModalOpen.value = false;
     deleteMode.value = false;
     selectedSkillsToDelete.value.clear();
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error deleting skill';
+    actionError.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     isConfirmModalOpen.value = false;
   } finally {
     updating.value = false;

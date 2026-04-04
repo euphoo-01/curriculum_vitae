@@ -86,10 +86,10 @@
         >
           <p class="text-lg font-bold text-center">
             <v-icon icon="mdi-upload" color="text" size="x-large"></v-icon>
-            {{ $t('profile.upload_avatar_title') }}
+            {{ $t('profile.avatar.uploadTitle') }}
           </p>
           <p class="text-md text-center">
-            {{ $t('profile.avatar_upload_desc') }}
+            {{ $t('profile.avatar.uploadDesc') }}
           </p>
         </div>
       </div>

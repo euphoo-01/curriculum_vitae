@@ -1,10 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { useFormatters } from '../../app/composables/useFormatters';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    locale: { value: 'en-US' },
-  }),
+mockNuxtImport('useI18n', () => () => ({
+  locale: { value: 'en-US' },
 }));
 
 describe('useFormatters Composable', () => {

@@ -43,6 +43,8 @@ describe('UsersTable Component', () => {
     const wrapper = await mountSuspended(UsersTable, {
       props: {
         items: [],
+        adminActions: [],
+        canEdit: false,
       },
     });
 
@@ -53,6 +55,8 @@ describe('UsersTable Component', () => {
     const wrapper = await mountSuspended(UsersTable, {
       props: {
         items: mockItems,
+        adminActions: [],
+        canEdit: false,
       },
     });
 
@@ -76,6 +80,8 @@ describe('UsersTable Component', () => {
       props: {
         items: [],
         loading: true,
+        adminActions: [],
+        canEdit: false,
       },
     });
 

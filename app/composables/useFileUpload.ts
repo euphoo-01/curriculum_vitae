@@ -29,12 +29,12 @@ export const useFileUpload = (options: UseFileUploadOptions) => {
 
   const processFile = async (file: File) => {
     if (!allowedTypes.includes(file.type)) {
-      options.onError?.(t('profile.upload_error_type'));
+      options.onError?.(t('profile.avatar.errorType'));
       return;
     }
 
     if (file.size > maxSize) {
-      options.onError?.(t('profile.upload_error_size'));
+      options.onError?.(t('profile.avatar.errorSize'));
       return;
     }
 

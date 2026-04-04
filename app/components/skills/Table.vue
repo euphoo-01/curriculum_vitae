@@ -15,7 +15,7 @@ defineProps<{
 const { t } = useI18n();
 
 const headers = computed(() => [
-  { title: t('skills.skill'), key: 'name', sortable: true },
+  { title: t('skills.name'), key: 'name', sortable: true },
   { title: 'Category', key: 'category_name', sortable: true },
   { title: '', key: 'actions', sortable: false, align: 'end' as const },
 ]);
@@ -32,7 +32,7 @@ const headers = computed(() => [
     class="bg-transparent h-full flex flex-col"
     fixed-header
     :items-per-page="10"
-    :no-data-text="$t('noDataAvailable')"
+    :no-data-text="$t('common.noData')"
   >
     <template #[`item.actions`]="{ item }">
       <div class="flex items-center justify-end">

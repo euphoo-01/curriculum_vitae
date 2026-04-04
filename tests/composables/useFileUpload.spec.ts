@@ -1,11 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { flushPromises } from '@vue/test-utils';
 import { useFileUpload } from '../../app/composables/useFileUpload';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
 
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    t: (key: string) => key,
-  }),
+mockNuxtImport('useI18n', () => () => ({
+  t: (key: string) => key,
 }));
 
 describe('useFileUpload Composable', () => {
@@ -36,7 +35,7 @@ describe('useFileUpload Composable', () => {
     onFileSelected(event);
     await flushPromises();
 
-    expect(onError).toHaveBeenCalledWith('profile.upload_error_type');
+    expect(onError).toHaveBeenCalledWith('profile.avatar.errorType');
     expect(onUpload).not.toHaveBeenCalled();
   });
 
@@ -59,7 +58,7 @@ describe('useFileUpload Composable', () => {
     onFileSelected(event);
     await flushPromises();
 
-    expect(onError).toHaveBeenCalledWith('profile.upload_error_size');
+    expect(onError).toHaveBeenCalledWith('profile.avatar.errorSize');
     expect(onUpload).not.toHaveBeenCalled();
   });
 

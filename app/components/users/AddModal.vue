@@ -35,11 +35,12 @@ const form = ref<CreateUserInput>({
 });
 
 const rules = {
-  required: (value: string | null | undefined) => !!value || t('fieldRequired'),
+  required: (value: string | null | undefined) =>
+    !!value || t('common.validation.required'),
   email: (value: string) => {
     const pattern =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return pattern.test(value) || t('invalidEmail');
+    return pattern.test(value) || t('common.validation.email');
   },
 };
 
@@ -84,7 +85,7 @@ const submit = async () => {
     max-width="600"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <v-card class="pa-4">
+    <v-card class="p-4">
       <v-card-title class="px-4 text-h5">{{
         t('profile.create')
       }}</v-card-title>
@@ -95,7 +96,7 @@ const submit = async () => {
             <v-col cols="12" md="6">
               <v-text-field
                 v-model="form.auth.email"
-                :label="t('email')"
+                :label="t('common.fields.email')"
                 variant="outlined"
                 density="compact"
                 type="email"
@@ -105,7 +106,7 @@ const submit = async () => {
 
               <v-text-field
                 v-model="form.profile.first_name"
-                :label="t('profile.first_name')"
+                :label="t('common.fields.firstName')"
                 variant="outlined"
                 density="compact"
                 :rules="[rules.required]"
@@ -117,7 +118,7 @@ const submit = async () => {
                 :items="departments"
                 item-title="name"
                 item-value="id"
-                :label="t('profile.department')"
+                :label="t('common.fields.department')"
                 variant="outlined"
                 density="compact"
                 clearable
@@ -136,7 +137,7 @@ const submit = async () => {
             <v-col cols="12" md="6">
               <v-text-field
                 v-model="form.auth.password"
-                :label="t('password')"
+                :label="t('common.fields.password')"
                 variant="outlined"
                 density="compact"
                 type="password"
@@ -146,7 +147,7 @@ const submit = async () => {
 
               <v-text-field
                 v-model="form.profile.last_name"
-                :label="t('profile.last_name')"
+                :label="t('common.fields.lastName')"
                 variant="outlined"
                 density="compact"
                 :rules="[rules.required]"
@@ -158,7 +159,7 @@ const submit = async () => {
                 :items="positions"
                 item-title="name"
                 item-value="id"
-                :label="t('profile.position')"
+                :label="t('common.fields.position')"
                 variant="outlined"
                 density="compact"
                 clearable
@@ -177,7 +178,7 @@ const submit = async () => {
             :disabled="loading"
             @click="close"
           >
-            {{ t('common.cancel') }}
+            {{ t('common.actions.cancel') }}
           </v-btn>
           <v-btn
             color="primary"
@@ -188,7 +189,7 @@ const submit = async () => {
             class="px-8"
             :loading="loading"
           >
-            {{ t('common.create') }}
+            {{ t('common.actions.create') }}
           </v-btn>
         </v-card-actions>
       </v-form>

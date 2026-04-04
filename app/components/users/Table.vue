@@ -19,11 +19,23 @@ const { t } = useI18n();
 
 const headers = computed(() => [
   { title: '', key: 'avatar', sortable: false, width: '60px' },
-  { title: t('firstName'), key: 'profile.first_name', sortable: true },
-  { title: t('lastName'), key: 'profile.last_name', sortable: true },
-  { title: t('email'), key: 'email', sortable: true },
-  { title: t('department'), key: 'department_name', sortable: true },
-  { title: t('position'), key: 'position_name', sortable: true },
+  {
+    title: t('common.fields.firstName'),
+    key: 'profile.first_name',
+    sortable: true,
+  },
+  {
+    title: t('common.fields.lastName'),
+    key: 'profile.last_name',
+    sortable: true,
+  },
+  { title: t('common.fields.email'), key: 'email', sortable: true },
+  {
+    title: t('common.fields.department'),
+    key: 'department_name',
+    sortable: true,
+  },
+  { title: t('common.fields.position'), key: 'position_name', sortable: true },
   { title: '', key: 'actions', sortable: false },
 ]);
 </script>
@@ -38,7 +50,7 @@ const headers = computed(() => [
     density="comfortable"
     class="bg-transparent h-full flex flex-col"
     :items-per-page="10"
-    :no-data-text="$t('noDataAvailable')"
+    :no-data-text="$t('common.noData')"
     fixed-header
   >
     <template #[`item.avatar`]="{ item }">

@@ -25,7 +25,7 @@
           :loading="exporting"
           @click="handleExportPdf"
         >
-          Export to PDF
+          {{ t('cvPreview.exportPdf') }}
         </v-btn>
       </v-row>
 
@@ -79,7 +79,7 @@
               margin-bottom: 10px;
             "
           >
-            Education
+            {{ t('cvPreview.education') }}
           </h3>
           <p style="margin: 0">{{ currentCv.education }}</p>
         </div>
@@ -95,7 +95,7 @@
               margin-bottom: 10px;
             "
           >
-            Languages
+            {{ t('cvPreview.languages') }}
           </h3>
           <ul style="margin: 0; padding-left: 20px">
             <li v-for="lang in currentCv.languages" :key="lang.name">
@@ -115,7 +115,7 @@
               margin-bottom: 10px;
             "
           >
-            Skills
+            {{ t('cvPreview.skills') }}
           </h3>
           <div
             v-for="category in categoriesWithSkills"
@@ -153,7 +153,7 @@
               margin-bottom: 10px;
             "
           >
-            Projects
+            {{ t('cvPreview.projects') }}
           </h3>
           <div
             v-for="proj in currentCv.projects"
@@ -172,13 +172,13 @@
               v-if="proj.roles.length > 0"
               style="font-size: 13px; margin-bottom: 5px"
             >
-              <strong>Roles:</strong> {{ proj.roles.join(', ') }}
+              <strong>{{ t('cvPreview.roles') }}:</strong> {{ proj.roles.join(', ') }}
             </div>
             <div
               v-if="proj.responsibilities.length > 0"
               style="font-size: 13px; margin-bottom: 5px"
             >
-              <strong>Responsibilities:</strong>
+              <strong>{{ t('cvPreview.responsibilities') }}:</strong>
               <ul style="margin: 0; padding-left: 20px">
                 <li v-for="resp in proj.responsibilities" :key="resp">
                   {{ resp }}
@@ -186,7 +186,7 @@
               </ul>
             </div>
             <div v-if="proj.environment.length > 0" style="font-size: 13px">
-              <strong>Environment:</strong> {{ proj.environment.join(', ') }}
+              <strong>{{ t('cvPreview.environment') }}:</strong> {{ proj.environment.join(', ') }}
             </div>
           </div>
         </div>
@@ -258,7 +258,7 @@ const categoriesWithSkills = computed(() => {
 });
 
 const formatDate = (dateString: string | null | undefined) => {
-  if (!dateString) return t('common.tillNow', 'Till now');
+  if (!dateString) return t('common.time.tillNow', 'Till now');
   return new Date(dateString).toLocaleDateString();
 };
 
@@ -310,13 +310,12 @@ const handleExportPdf = async () => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      actionMessage.value = 'PDF exported successfully';
+      actionMessage.value = t('common.responses.exportSuccess');
       snackbarColor.value = 'success';
       isSnackbar.value = true;
     }
   } catch (e) {
-    actionMessage.value =
-      e instanceof Error ? e.message : 'Error exporting PDF';
+    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
@@ -329,9 +328,9 @@ onMounted(async () => {
 
   if (cv) {
     setBreadcrumbs([
-      { title: t('sidebarCVs'), to: '/cvs' },
+      { title: t('sidebar.cvs'), to: '/cvs' },
       { title: cv.name, to: `/cvs/${cvId}/details` },
-      { title: t('cvs.preview'), disabled: true },
+      { title: t('cvs.tabs.preview'), disabled: true },
     ]);
   }
 });

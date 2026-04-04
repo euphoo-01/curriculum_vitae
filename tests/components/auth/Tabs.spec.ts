@@ -31,10 +31,10 @@ describe('Auth Tabs Component', () => {
 
     const loginTab = wrapper.find('[data-test-id="login-tab"]');
     expect(loginTab.exists()).toBe(true);
-    expect(loginTab.text()).toContain('login');
+    expect(loginTab.text()).toContain('common.actions.login');
 
     const registerTab = wrapper.find('[data-test-id="register-tab"]');
     expect(registerTab.exists()).toBe(true);
-    expect(registerTab.text()).toContain('create');
+    expect(registerTab.text()).toContain('common.actions.create');
   });
 });

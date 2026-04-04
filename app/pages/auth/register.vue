@@ -14,11 +14,11 @@ const loading = ref(false);
 const form = ref<VForm | null>(null);
 
 const rules = {
-  required: (value: string) => !!value || t('fieldRequired'),
+  required: (value: string) => !!value || t('common.validation.required'),
   email: (value: string) => {
     const pattern =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return pattern.test(value) || t('invalidEmail');
+    return pattern.test(value) || t('common.validation.email');
   },
 };
 
@@ -36,7 +36,7 @@ const onSubmit = async () => {
     if (err instanceof Error) {
       errorMsg.value = err.message;
     } else {
-      errorMsg.value = t('regError');
+      errorMsg.value = t('auth.register.error');
     }
   } finally {
     loading.value = false;
@@ -60,9 +60,9 @@ const onSubmit = async () => {
           @submit.prevent="onSubmit"
         >
           <div class="text-center mb-6">
-            <h1 align="center">{{ $t('regScreenTitle') }}</h1>
+            <h1 align="center">{{ $t('auth.register.title') }}</h1>
             <p align="center" class="mb-8">
-              {{ $t('regScreenGreeting') }}
+              {{ $t('auth.register.greeting') }}
             </p>
           </div>
           <v-alert
@@ -78,7 +78,7 @@ const onSubmit = async () => {
           <v-text-field
             v-model="email"
             variant="outlined"
-            :label="$t('email')"
+            :label="$t('common.fields.email')"
             density="compact"
             rounded="0"
             width="100%"
@@ -92,7 +92,7 @@ const onSubmit = async () => {
             v-model="password"
             :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
             :type="passwordVisible ? 'text' : 'password'"
-            :label="$t('password')"
+            :label="$t('common.fields.password')"
             rounded="0"
             density="compact"
             variant="outlined"
@@ -113,7 +113,7 @@ const onSubmit = async () => {
               size="x-large"
               class="pa-4 min-w-[15rem]"
               data-test-id="submit-button"
-              >{{ $t('createAccount') }}</v-btn
+              >{{ $t('auth.register.submit') }}</v-btn
             >
           </div>
           <div class="text-center">
@@ -123,7 +123,7 @@ const onSubmit = async () => {
               size="small"
               @click="router.push('/auth/login')"
             >
-              {{ $t('haveAccount') }}
+              {{ $t('auth.register.haveAccount') }}
             </v-btn>
           </div>
         </v-form>

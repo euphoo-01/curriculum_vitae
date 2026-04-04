@@ -1,11 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
-import { mountSuspended } from '@nuxt/test-utils/runtime';
+import { describe, it, expect } from 'vitest';
+import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import AvatarUpload from '../../../app/components/users/profile/AvatarUpload.vue';
 
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    t: (key: string) => key,
-  }),
+mockNuxtImport('useI18n', () => () => ({
+  t: (key: string) => key,
 }));
 
 describe('AvatarUpload Component', () => {
@@ -33,6 +31,6 @@ describe('AvatarUpload Component', () => {
     });
 
     expect(wrapper.text()).toContain('JD');
-    expect(wrapper.text()).toContain('profile.upload_avatar_title');
+    expect(wrapper.text()).toContain('profile.avatar.uploadTitle');
   });
 });

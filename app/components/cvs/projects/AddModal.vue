@@ -43,7 +43,7 @@ const form = ref({
 });
 
 const rules = {
-  required: (value: unknown) => !!value || t('fieldRequired'),
+  required: (value: unknown) => !!value || t('common.validation.required'),
 };
 
 watch(
@@ -95,9 +95,9 @@ const submit = async () => {
     max-width="700"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <v-card class="pa-4">
+    <v-card class="p-4">
       <v-card-title class="px-4 text-h5">{{
-        editData ? t('common.update') : t('common.add')
+        editData ? t('common.actions.update') : t('common.actions.add')
       }}</v-card-title>
 
       <v-form ref="formRef" validate-on="submit lazy" @submit.prevent="submit">
@@ -179,7 +179,7 @@ const submit = async () => {
             :disabled="loading"
             @click="close"
           >
-            {{ t('common.cancel') }}
+            {{ t('common.actions.cancel') }}
           </v-btn>
           <v-btn
             color="primary"
@@ -190,7 +190,9 @@ const submit = async () => {
             class="px-8"
             :loading="loading"
           >
-            {{ editData ? t('common.save') : t('common.create') }}
+            {{
+              editData ? t('common.actions.save') : t('common.actions.create')
+            }}
           </v-btn>
         </v-card-actions>
       </v-form>

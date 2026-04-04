@@ -11,7 +11,7 @@
         <div class="p-4">
           <v-text-field
             :model-value="skill?.name"
-            :label="t('skills.skill')"
+            :label="t('skills.name')"
             variant="outlined"
             density="compact"
             disabled
@@ -39,7 +39,7 @@
             :loading="loading"
             @click="handleDelete"
           >
-            {{ t('common.delete') }}
+            {{ t('common.actions.delete') }}
           </v-btn>
           <div class="grow"></div>
           <v-btn
@@ -50,7 +50,7 @@
             :disabled="loading"
             @click="close"
           >
-            {{ t('common.cancel') }}
+            {{ t('common.actions.cancel') }}
           </v-btn>
           <v-btn
             color="primary"
@@ -61,7 +61,7 @@
             class="px-8"
             :loading="loading"
           >
-            {{ t('common.save') }}
+            {{ t('common.actions.save') }}
           </v-btn>
         </v-card-actions>
       </v-form>
@@ -97,7 +97,7 @@ const form = ref<{ mastery: Mastery | null }>({
 });
 
 const rules = {
-  required: (value: unknown) => !!value || t('fieldRequired'),
+  required: (value: unknown) => !!value || t('common.validation.required'),
 };
 
 const masteryOptions = computed(() => [

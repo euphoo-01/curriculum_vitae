@@ -17,10 +17,10 @@
 
     <ConfirmModal
       v-model="isDeleteModal"
-      :title="$t('common.delete')"
+      :title="$t('common.actions.delete')"
       :message="$t('cvs.deleteConfirm')"
-      :confirm-text="$t('common.delete')"
-      :cancel-text="$t('common.cancel')"
+      :confirm-text="$t('common.actions.delete')"
+      :cancel-text="$t('common.actions.cancel')"
       @confirm="cvToDelete && handleDeleteCv(cvToDelete)"
     />
 
@@ -104,14 +104,14 @@ const canEdit = (item: { user?: { id: string } | null }) => {
 
 const adminActions: AdminAction[] = [
   {
-    name: t('common.see'),
+    name: t('common.actions.see'),
     type: AdminActionsNames.SEE,
     action: (id: string) => {
       navigateTo(`/cvs/${id}/details`);
     },
   },
   {
-    name: t('common.update'),
+    name: t('common.actions.update'),
     type: AdminActionsNames.SEE,
     action: (id: string) => {
       const cv = allCvs.value.find((c) => c.id === id);
@@ -126,7 +126,7 @@ const adminActions: AdminAction[] = [
     },
   },
   {
-    name: t('common.delete'),
+    name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
       cvToDelete.value = id;
@@ -153,21 +153,21 @@ const handleSubmitCv = async (formData: {
         name: formData.name,
         description: formData.description,
       });
-      actionMessage.value = t('common.update');
+      actionMessage.value = t('common.responses.updateSuccess');
     } else {
       await createCv({
         name: formData.name,
         description: formData.description,
         userId: currentUser.value?.id,
       });
-      actionMessage.value = t('common.add');
+      actionMessage.value = t('common.responses.addSuccess');
     }
     snackbarColor.value = 'success';
     isSnackbar.value = true;
     isAddModal.value = false;
     await fetchAllCvs();
   } catch (e) {
-    actionMessage.value = e instanceof Error ? e.message : 'Error';
+    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
@@ -179,13 +179,13 @@ const handleDeleteCv = async (id: string) => {
   loadingAction.value = true;
   try {
     await deleteCv(id);
-    actionMessage.value = t('common.delete');
+    actionMessage.value = t('common.responses.deleteSuccess');
     snackbarColor.value = 'success';
     isSnackbar.value = true;
     isDeleteModal.value = false;
     await fetchAllCvs();
   } catch (e) {
-    actionMessage.value = e instanceof Error ? e.message : 'Error';
+    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
@@ -193,6 +193,6 @@ const handleDeleteCv = async (id: string) => {
   }
 };
 
-setBreadcrumbs([{ title: t('sidebarCVs'), disabled: true }]);
+setBreadcrumbs([{ title: t('sidebar.cvs'), disabled: true }]);
 await fetchAllCvs();
 </script>

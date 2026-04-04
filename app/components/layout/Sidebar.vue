@@ -8,19 +8,19 @@ const menuItems = [
   {
     to: '/users',
     icon: 'mdi-account-multiple',
-    titleKey: 'sidebarUsers',
+    titleKey: 'sidebar.employees',
     value: 'users',
   },
   {
     to: '/projects',
     icon: 'mdi-briefcase-outline',
-    titleKey: 'sidebarProjects',
+    titleKey: 'sidebar.projects',
     value: 'projects',
   },
   {
     to: '/cvs',
     icon: 'mdi-file-account-outline',
-    titleKey: 'sidebarCVs',
+    titleKey: 'sidebar.cvs',
     value: 'cvs',
   },
   {
@@ -30,25 +30,25 @@ const menuItems = [
   {
     to: '/departments',
     icon: 'mdi-domain',
-    titleKey: 'sidebarDepartments',
+    titleKey: 'sidebar.departments',
     value: 'departments',
   },
   {
     to: '/positions',
     icon: 'mdi-badge-account-horizontal-outline',
-    titleKey: 'sidebarPositions',
+    titleKey: 'sidebar.positions',
     value: 'positions',
   },
   {
     to: '/skills',
     icon: 'mdi-trending-up',
-    titleKey: 'sidebarSkills',
+    titleKey: 'sidebar.skills',
     value: 'skills',
   },
   {
     to: '/languages',
     icon: 'mdi-translate',
-    titleKey: 'sidebarLanguages',
+    titleKey: 'sidebar.languages',
     value: 'languages',
   },
 ];

@@ -15,7 +15,7 @@ defineProps<{
 const { t } = useI18n();
 
 const headers = computed(() => [
-  { title: t('department'), key: 'name', sortable: true },
+  { title: t('common.fields.department'), key: 'name', sortable: true },
   { title: '', key: 'actions', sortable: false, align: 'end' as const },
 ]);
 </script>
@@ -31,7 +31,7 @@ const headers = computed(() => [
     class="bg-transparent h-full flex flex-col"
     fixed-header
     :items-per-page="10"
-    :no-data-text="$t('noDataAvailable')"
+    :no-data-text="$t('common.noData')"
   >
     <template #[`item.actions`]="{ item }">
       <div class="flex items-center justify-end">

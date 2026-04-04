@@ -14,7 +14,7 @@
             :items="languages"
             item-title="name"
             item-value="name"
-            :label="t('languages.language')"
+            :label="t('languages.name')"
             variant="outlined"
             density="compact"
             :rules="[rules.required]"
@@ -42,7 +42,7 @@
             :disabled="loading"
             @click="close"
           >
-            {{ t('common.cancel') }}
+            {{ t('common.actions.cancel') }}
           </v-btn>
           <v-btn
             color="primary"
@@ -53,7 +53,7 @@
             class="px-8"
             :loading="loading"
           >
-            {{ t('common.add') }}
+            {{ t('common.actions.add') }}
           </v-btn>
         </v-card-actions>
       </v-form>
@@ -89,7 +89,7 @@ const form = ref<{ name: string; proficiency: Proficiency | null }>({
 });
 
 const rules = {
-  required: (value: unknown) => !!value || t('fieldRequired'),
+  required: (value: unknown) => !!value || t('common.validation.required'),
 };
 
 const proficiencyOptions = computed(() => [

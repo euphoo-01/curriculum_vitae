@@ -24,7 +24,7 @@ const headers = computed(() => [
 ]);
 
 const formatDate = (dateString: string | null | undefined) => {
-  if (!dateString) return t('common.tillNow', 'Till now');
+  if (!dateString) return t('common.time.tillNow', 'Till now');
   return new Date(dateString).toLocaleDateString();
 };
 </script>
@@ -40,7 +40,7 @@ const formatDate = (dateString: string | null | undefined) => {
     class="bg-transparent h-full flex flex-col"
     fixed-header
     :items-per-page="10"
-    :no-data-text="$t('noDataAvailable')"
+    :no-data-text="$t('common.noData')"
   >
     <template #[`item.start_date`]="{ item }">
       {{ formatDate(item.start_date) }}

@@ -17,10 +17,10 @@
 
     <ConfirmModal
       v-model="isDeleteModal"
-      :title="$t('common.delete')"
+      :title="$t('common.actions.delete')"
       :message="$t('profile.deleteConfirm')"
-      :confirm-text="$t('common.delete')"
-      :cancel-text="$t('common.cancel')"
+      :confirm-text="$t('common.actions.delete')"
+      :cancel-text="$t('common.actions.cancel')"
       @confirm="positionToDelete && handleDeletePosition(positionToDelete)"
     />
 
@@ -37,7 +37,7 @@
           <v-text-field
             v-model="search"
             prepend-inner-icon="mdi-magnify"
-            :placeholder="$t('searchUsers')"
+            :placeholder="$t('employees.search')"
             variant="outlined"
             density="compact"
             rounded
@@ -54,7 +54,7 @@
             rounded
             @click="openAddModal"
           >
-            {{ $t('common.add') }}
+            {{ $t('common.actions.add') }}
           </v-btn>
         </v-row>
         <PositionsTable
@@ -98,7 +98,7 @@ const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 
 const adminActions: AdminAction[] = [
   {
-    name: t('common.update'),
+    name: t('common.actions.update'),
     type: AdminActionsNames.SEE,
     action: (id: string) => {
       const pos = positions.value.find((p) => p.id === id);
@@ -109,7 +109,7 @@ const adminActions: AdminAction[] = [
     },
   },
   {
-    name: t('common.delete'),
+    name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
       positionToDelete.value = id;
@@ -134,18 +134,18 @@ const handleSubmitPosition = async (formData: {
         positionId: formData.id,
         name: formData.name,
       });
-      actionMessage.value = t('common.update');
+      actionMessage.value = t('common.responses.updateSuccess');
     } else {
       await createPosition({
         name: formData.name,
       });
-      actionMessage.value = t('common.add');
+      actionMessage.value = t('common.responses.addSuccess');
     }
     snackbarColor.value = 'success';
     isSnackbar.value = true;
     isAddModal.value = false;
   } catch (e) {
-    actionMessage.value = e instanceof Error ? e.message : 'Error';
+    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
@@ -157,12 +157,12 @@ const handleDeletePosition = async (id: string) => {
   loadingAction.value = true;
   try {
     await deletePosition(id);
-    actionMessage.value = t('common.delete');
+    actionMessage.value = t('common.responses.deleteSuccess');
     snackbarColor.value = 'success';
     isSnackbar.value = true;
     isDeleteModal.value = false;
   } catch (e) {
-    actionMessage.value = e instanceof Error ? e.message : 'Error';
+    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
@@ -171,7 +171,7 @@ const handleDeletePosition = async (id: string) => {
 };
 
 onMounted(() => {
-  setBreadcrumbs([{ title: t('sidebarPositions'), disabled: true }]);
+  setBreadcrumbs([{ title: t('sidebar.positions'), disabled: true }]);
   fetchPositions();
 });
 </script>

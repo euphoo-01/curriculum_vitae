@@ -18,10 +18,10 @@
 
     <ConfirmModal
       v-model="isDeleteModal"
-      :title="$t('common.delete')"
+      :title="$t('common.actions.delete')"
       :message="$t('cvs.deleteConfirm')"
-      :confirm-text="$t('common.delete')"
-      :cancel-text="$t('common.cancel')"
+      :confirm-text="$t('common.actions.delete')"
+      :cancel-text="$t('common.actions.cancel')"
       @confirm="cvToDelete && handleDeleteCv(cvToDelete)"
     />
 
@@ -136,7 +136,7 @@ const adminActions: AdminAction[] = [
     },
   },
   {
-    name: t('common.delete'),
+    name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
       cvToDelete.value = id;
@@ -174,7 +174,7 @@ const handleSubmitCv = async (formData: {
     isAddModal.value = false;
     await fetchUserCvs(userId);
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error';
+    actionError.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     isSnackbar.value = true;
   } finally {
     loadingAction.value = false;
@@ -189,7 +189,7 @@ const handleDeleteCv = async (id: string) => {
     isDeleteModal.value = false;
     await fetchUserCvs(userId);
   } catch (e) {
-    actionError.value = e instanceof Error ? e.message : 'Error';
+    actionError.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
     isSnackbar.value = true;
   } finally {
     loadingAction.value = false;
@@ -208,7 +208,7 @@ await fetchUserCvs(userId);
 
 if (userId) {
   setBreadcrumbs([
-    { title: t('sidebarUsers'), to: '/users' },
+    { title: t('sidebar.employees'), to: '/users' },
     {
       title: profileUser.value?.profile.full_name || t('profile.title'),
       to: `/users/${userId}/profile`,

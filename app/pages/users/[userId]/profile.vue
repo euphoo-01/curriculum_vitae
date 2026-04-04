@@ -32,14 +32,23 @@
           location="top"
           :timeout="3000"
         >
-          {{ $t('profile.update_success') }}
+          {{ successMessage }}
+        </v-snackbar>
+
+        <v-snackbar
+          v-model="showError"
+          color="error"
+          location="top"
+          :timeout="5000"
+        >
+          {{ errorMessage }}
         </v-snackbar>
 
         <ConfirmModal
           v-model="showDeleteModal"
-          :title="$t('profile.delete_avatar_title')"
-          :message="$t('profile.delete_avatar_confirm')"
-          :confirm-text="$t('common.delete')"
+          :title="$t('profile.avatar.deleteTitle')"
+          :message="$t('profile.avatar.deleteConfirm')"
+          :confirm-text="$t('common.actions.delete')"
           @confirm="handleAvatarDelete"
         />
 
@@ -70,7 +79,7 @@
             <h1 class="text-h5 font-bold mb-1">{{ user.profile.full_name }}</h1>
             <p class="text-body-1 text-grey-darken-1 mb-1">{{ user.email }}</p>
             <p class="text-caption text-grey">
-              {{ $t('profile.member_since') }} {{ formatDate(user.created_at) }}
+              {{ $t('profile.memberSince') }} {{ formatDate(user.created_at) }}
             </p>
           </div>
         </div>
@@ -118,6 +127,9 @@ const departments = ref<GetDepartmentsQuery['departments']>([]);
 const positions = ref<GetPositionsQuery['positions']>([]);
 const updating = ref(false);
 const showSuccess = ref(false);
+const showError = ref(false);
+const successMessage = ref('');
+const errorMessage = ref('');
 const uploadError = ref('');
 const showDeleteModal = ref(false);
 
@@ -140,7 +152,7 @@ onMounted(async () => {
   await fetchUser(userId);
   if (userId) {
     setBreadcrumbs([
-      { title: t('sidebarUsers'), to: '/users' },
+      { title: t('sidebar.employees'), to: '/users' },
       {
         title: user.value?.profile.full_name || t('profile.title'),
         disabled: true,
@@ -164,8 +176,11 @@ const handleAvatarUpload = async (file: File, base64: string) => {
     if (user.value) {
       user.value.profile.avatar = base64;
     }
+    successMessage.value = t('common.responses.updateSuccess');
+    showSuccess.value = true;
   } catch (e) {
-    uploadError.value = e instanceof Error ? e.message : t('Upload failed');
+    errorMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
+    showError.value = true;
   }
 };
 
@@ -174,9 +189,11 @@ const handleAvatarDelete = async () => {
     if (!user.value) return;
     await deleteAvatar({ userId: user.value.id });
     user.value.profile.avatar = null;
+    successMessage.value = t('common.responses.deleteSuccess');
     showSuccess.value = true;
   } catch (e) {
-    uploadError.value = e instanceof Error ? e.message : t('Delete failed');
+    errorMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
+    showError.value = true;
   }
 };
 
@@ -202,9 +219,11 @@ const handleUpdate = async (formData: {
 
     await Promise.all([updateProfile(profileChanges), updateUser(userChanges)]);
 
+    successMessage.value = t('common.responses.updateSuccess');
     showSuccess.value = true;
   } catch (e) {
-    console.error('Update failed', e);
+    errorMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
+    showError.value = true;
   } finally {
     updating.value = false;
   }
