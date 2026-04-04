@@ -34,7 +34,7 @@ export const useCvsStore = defineStore('cvs', () => {
   const allCvs = ref<GetAllCvsQuery['cvs']>([]);
   const currentCv = ref<GetCvQuery['cv'] | null>(null);
   const loading = ref(false);
-  const error = ref<Error | null>(null);
+  const error = ref<string | null>(null);
 
   const fetchUserCvs = async (userId: string) => {
     loading.value = true;
@@ -49,8 +49,7 @@ export const useCvsStore = defineStore('cvs', () => {
       });
       cvs.value = data.user?.cvs || [];
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error('Failed to fetch user CVs');
+      error.value = e instanceof Error ? e.message : 'Failed to fetch user CVs';
     } finally {
       loading.value = false;
     }
@@ -68,8 +67,7 @@ export const useCvsStore = defineStore('cvs', () => {
       });
       allCvs.value = data.cvs;
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error('Failed to fetch all CVs');
+      error.value = e instanceof Error ? e.message : 'Failed to fetch all CVs';
     } finally {
       loading.value = false;
     }
@@ -89,7 +87,7 @@ export const useCvsStore = defineStore('cvs', () => {
       currentCv.value = data.cv;
       return data.cv;
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to fetch CV');
+      error.value = e instanceof Error ? e.message : 'Failed to fetch CV';
       throw e;
     } finally {
       loading.value = false;

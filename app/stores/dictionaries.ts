@@ -42,7 +42,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
   const categoriesList = ref<GetSkillCategoriesQuery['skillCategories']>([]);
 
   const loading = ref(false);
-  const error = ref<Error | null>(null);
+  const error = ref<string | null>(null);
 
   const fetchDepartments = async () => {
     loading.value = true;
@@ -57,7 +57,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       return data.departments;
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch departments');
+        e instanceof Error ? e.message : 'Failed to fetch departments';
       return [];
     } finally {
       loading.value = false;
@@ -75,7 +75,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       await fetchDepartments();
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to create department');
+        e instanceof Error ? e.message : 'Failed to create department';
       throw e;
     }
   };
@@ -91,7 +91,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       await fetchDepartments();
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to update department');
+        e instanceof Error ? e.message : 'Failed to update department';
       throw e;
     }
   };
@@ -107,7 +107,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       await fetchDepartments();
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to delete department');
+        e instanceof Error ? e.message : 'Failed to delete department';
       throw e;
     }
   };
@@ -125,7 +125,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       return data.positions;
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch positions');
+        e instanceof Error ? e.message : 'Failed to fetch positions';
       return [];
     } finally {
       loading.value = false;
@@ -143,7 +143,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       await fetchPositions();
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to create position');
+        e instanceof Error ? e.message : 'Failed to create position';
       throw e;
     }
   };
@@ -159,7 +159,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       await fetchPositions();
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to update position');
+        e instanceof Error ? e.message : 'Failed to update position';
       throw e;
     }
   };
@@ -175,7 +175,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       await fetchPositions();
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to delete position');
+        e instanceof Error ? e.message : 'Failed to delete position';
       throw e;
     }
   };
@@ -193,7 +193,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       return data.languages;
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch languages');
+        e instanceof Error ? e.message : 'Failed to fetch languages';
       return [];
     } finally {
       loading.value = false;
@@ -251,8 +251,7 @@ export const useDictionariesStore = defineStore('dictionaries', () => {
       skillsList.value = data.skills;
       return data.skills;
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error('Failed to fetch skills');
+      error.value = e instanceof Error ? e.message : 'Failed to fetch skills';
       return [];
     } finally {
       loading.value = false;

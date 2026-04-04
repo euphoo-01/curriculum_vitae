@@ -1,5 +1,4 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  const auth = useAuth();
   const authStore = useAuthStore();
   const { getToken } = useApollo();
   const token = await getToken();
@@ -11,7 +10,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   if (!token && refreshTokenCookie.value) {
     try {
-      await auth.refresh();
+      await authStore.refresh();
       validToken = true;
     } catch {
       validToken = false;
@@ -20,18 +19,18 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   if (validToken && !authStore.user && authStore.userId) {
     try {
-      await auth.getUser(authStore.userId);
+      await authStore.getUser(authStore.userId);
     } catch {
       if (refreshTokenCookie.value) {
         try {
-          await auth.refresh();
-          await auth.getUser(authStore.userId);
+          await authStore.refresh();
+          await authStore.getUser(authStore.userId);
         } catch {
-          await auth.logout();
+          await authStore.logout();
           validToken = false;
         }
       } else {
-        await auth.logout();
+        await authStore.logout();
         validToken = false;
       }
     }

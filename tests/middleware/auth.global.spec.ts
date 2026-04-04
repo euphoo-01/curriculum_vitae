@@ -21,7 +21,6 @@ const mocks = vi.hoisted(() => ({
   cookie: { value: null as string | null },
 }));
 
-mockNuxtImport('useAuth', () => () => mocks.auth);
 mockNuxtImport('useAuthStore', () => () => mocks.store);
 mockNuxtImport('useApollo', () => () => mocks.apollo);
 mockNuxtImport('useCookie', () => () => mocks.cookie);

@@ -81,7 +81,7 @@ const { fetchLanguages, createLanguage, updateLanguage, deleteLanguage } =
 
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
-const { user: currentUser } = useAuth();
+const { user: currentUser } = storeToRefs(useAuthStore());
 
 const search = ref('');
 const isDeleteModal = ref(false);

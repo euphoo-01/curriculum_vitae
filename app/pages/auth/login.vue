@@ -5,7 +5,7 @@ definePageMeta({ layout: 'auth' });
 
 const { t } = useI18n();
 const router = useRouter();
-const auth = useAuth();
+const auth = useAuthStore();
 
 const passwordVisible = ref<boolean>(false);
 const email = ref('');

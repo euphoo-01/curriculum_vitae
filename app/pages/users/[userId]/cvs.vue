@@ -88,7 +88,7 @@ const userId = route.params.userId as string;
 
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
-const { user: currentUser } = useAuth();
+const { user: currentUser } = storeToRefs(useAuthStore());
 
 const search = ref('');
 let timeout: ReturnType<typeof setTimeout> | null = null;

@@ -99,7 +99,7 @@ const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;
 
-const { user: currentUser } = useAuth();
+const { user: currentUser } = storeToRefs(useAuthStore());
 
 const { projects, loading: loadingProjects } = storeToRefs(projectsStore);
 

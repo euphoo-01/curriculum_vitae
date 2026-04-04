@@ -15,7 +15,7 @@ import type {
 export const useProjectsStore = defineStore('projects', () => {
   const projects = ref<GetProjectsQuery['projects']>([]);
   const loading = ref(false);
-  const error = ref<Error | null>(null);
+  const error = ref<string | null>(null);
 
   const fetchProjects = async () => {
     loading.value = true;
@@ -29,8 +29,7 @@ export const useProjectsStore = defineStore('projects', () => {
       });
       projects.value = data.projects;
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error('Failed to fetch projects');
+      error.value = e instanceof Error ? e.message : 'Failed to fetch projects';
     } finally {
       loading.value = false;
     }
@@ -46,8 +45,7 @@ export const useProjectsStore = defineStore('projects', () => {
       });
       await fetchProjects();
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error('Failed to create project');
+      error.value = e instanceof Error ? e.message : 'Failed to create project';
       throw e;
     }
   };
@@ -62,8 +60,7 @@ export const useProjectsStore = defineStore('projects', () => {
       });
       await fetchProjects();
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error('Failed to update project');
+      error.value = e instanceof Error ? e.message : 'Failed to update project';
       throw e;
     }
   };
@@ -78,8 +75,7 @@ export const useProjectsStore = defineStore('projects', () => {
       });
       await fetchProjects();
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error('Failed to delete project');
+      error.value = e instanceof Error ? e.message : 'Failed to delete project';
       throw e;
     }
   };
@@ -94,8 +90,7 @@ export const useProjectsStore = defineStore('projects', () => {
       });
       return data.project;
     } catch (e) {
-      error.value =
-        e instanceof Error ? e : new Error('Failed to fetch project');
+      error.value = e instanceof Error ? e.message : 'Failed to fetch project';
       throw e;
     }
   };

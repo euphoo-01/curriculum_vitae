@@ -21,13 +21,6 @@ query GetAllCvs {
     id
     name
     description
-    user {
-      id
-      email
-      profile {
-        full_name
-      }
-    }
   }
 }
 
@@ -161,4 +154,3 @@ mutation RemoveCvProject($project: RemoveCvProjectInput!) {
 mutation ExportPdf($pdf: ExportPdfInput!) {
   exportPdf(pdf: $pdf)
 }
-

@@ -92,7 +92,7 @@ positions.value = pos;
       color="error"
       :timeout="3000"
     >
-      {{ error?.message }}
+      {{ error }}
     </v-snackbar>
 
     <ConfirmModal
@@ -134,6 +134,7 @@ positions.value = pos;
           ></v-text-field>
 
           <v-btn
+            v-if="canEdit"
             prepend-icon="mdi-plus"
             variant="text"
             color="primary"

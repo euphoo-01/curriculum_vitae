@@ -79,7 +79,7 @@ const { fetchAllCvs, createCv, updateCv, deleteCv } = cvsStore;
 
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
-const { user: currentUser } = useAuth();
+const { user: currentUser } = storeToRefs(useAuthStore());
 
 const search = ref('');
 const isDeleteModal = ref(false);
@@ -104,7 +104,7 @@ const canEdit = (item: { user?: { id: string } | null }) => {
 
 const adminActions: AdminAction[] = [
   {
-    name: 'See CV',
+    name: t('common.see'),
     type: AdminActionsNames.SEE,
     action: (id: string) => {
       navigateTo(`/cvs/${id}/details`);
@@ -193,8 +193,6 @@ const handleDeleteCv = async (id: string) => {
   }
 };
 
-onMounted(() => {
-  setBreadcrumbs([{ title: t('sidebarCVs'), disabled: true }]);
-  fetchAllCvs();
-});
+setBreadcrumbs([{ title: t('sidebarCVs'), disabled: true }]);
+await fetchAllCvs();
 </script>

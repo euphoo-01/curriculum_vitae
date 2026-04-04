@@ -1,6 +1,5 @@
 import { defineNuxtPlugin } from '#app';
 import { useApollo } from '#imports';
-import { useAuth } from '~/composables/useAuth';
 import type { ApolloError } from '@apollo/client/core';
 
 interface GraphQLResponseError {
@@ -42,7 +41,7 @@ export default defineNuxtPlugin(() => {
       ) || apolloError.message?.toLowerCase().includes('unauthorized');
 
     if (isUnauthorized) {
-      const auth = useAuth();
+      const auth = useAuthStore();
       try {
         await auth.refresh();
         return await retryFn();

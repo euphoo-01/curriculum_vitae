@@ -18,9 +18,7 @@
       v-else-if="userError || skillsError"
       class="flex justify-center items-center flex-grow"
     >
-      <v-alert type="error">{{
-        userError?.message || skillsError?.message
-      }}</v-alert>
+      <v-alert type="error">{{ userError || skillsError }}</v-alert>
     </div>
 
     <div v-if="user" class="w-full flex-grow min-h-0 overflow-y-auto">
@@ -179,7 +177,7 @@ const {
 const route = useRoute();
 const userId = route.params.userId as string;
 
-const { user: currentUser } = useAuth();
+const { user: currentUser } = storeToRefs(useAuthStore());
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 

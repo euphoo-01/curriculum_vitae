@@ -3,7 +3,7 @@ import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
 import Register from '../../../app/pages/auth/register.vue';
 
 const mockRegister = vi.fn();
-mockNuxtImport('useAuth', () => {
+mockNuxtImport('useAuthStore', () => {
   return () => ({
     register: mockRegister,
   });

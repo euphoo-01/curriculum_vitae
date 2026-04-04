@@ -45,7 +45,7 @@ export const useEmployeesStore = defineStore('employees', () => {
   const profileSkills = ref<GetProfileSkillsQuery['profile']['skills']>([]);
 
   const loading = ref(false);
-  const error = ref<Error | null>(null);
+  const error = ref<string | null>(null);
 
   const fetchUsers = async () => {
     loading.value = true;
@@ -58,7 +58,7 @@ export const useEmployeesStore = defineStore('employees', () => {
       });
       users.value = data.users;
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to fetch users');
+      error.value = e instanceof Error ? e.message : 'Failed to fetch users';
     } finally {
       loading.value = false;
     }
@@ -74,7 +74,7 @@ export const useEmployeesStore = defineStore('employees', () => {
       });
       await fetchUsers();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to delete user');
+      error.value = e instanceof Error ? e.message : 'Failed to delete user';
     }
   };
 
@@ -88,7 +88,7 @@ export const useEmployeesStore = defineStore('employees', () => {
       });
       await fetchUsers();
     } catch (e) {
-      error.value = e instanceof Error ? e : new Error('Failed to create user');
+      error.value = e instanceof Error ? e.message : 'Failed to create user';
     }
   };
 
@@ -105,7 +105,7 @@ export const useEmployeesStore = defineStore('employees', () => {
       user.value = data.user;
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch user profile');
+        e instanceof Error ? e.message : 'Failed to fetch user profile';
     } finally {
       loading.value = false;
     }
@@ -196,7 +196,7 @@ export const useEmployeesStore = defineStore('employees', () => {
       profileLanguages.value = data.profile.languages;
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch profile languages');
+        e instanceof Error ? e.message : 'Failed to fetch profile languages';
     } finally {
       loading.value = false;
     }
@@ -266,7 +266,7 @@ export const useEmployeesStore = defineStore('employees', () => {
       profileSkills.value = data.profile.skills;
     } catch (e) {
       error.value =
-        e instanceof Error ? e : new Error('Failed to fetch profile skills');
+        e instanceof Error ? e.message : 'Failed to fetch profile skills';
     } finally {
       loading.value = false;
     }

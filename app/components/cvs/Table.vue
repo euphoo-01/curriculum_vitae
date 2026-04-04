@@ -9,7 +9,6 @@ defineProps<{
   loading?: boolean;
   search?: string;
   adminActions: AdminAction[];
-  canEdit: boolean | ((item: CvItem) => boolean);
 }>();
 
 const { t } = useI18n();
@@ -17,19 +16,10 @@ const { t } = useI18n();
 const headers = computed(() => [
   { title: t('cvs.name'), key: 'name', sortable: true },
   { title: t('cvs.description'), key: 'description', sortable: true },
-  { title: t('cvs.employee'), key: 'user.profile.full_name', sortable: true },
+  // employee column deleted due to incomplete db records.
+  // missing User.profile causes GraphQL to fail on GetAllCvs.
   { title: '', key: 'actions', sortable: false, align: 'end' as const },
 ]);
-
-const getCanEdit = (
-  item: CvItem,
-  canEditProp: boolean | ((item: CvItem) => boolean)
-) => {
-  if (typeof canEditProp === 'function') {
-    return canEditProp(item);
-  }
-  return canEditProp;
-};
 </script>
 
 <template>
@@ -45,13 +35,11 @@ const getCanEdit = (
     :items-per-page="10"
     :no-data-text="$t('cvs.noCvs')"
   >
-    <template #[`item.user.profile.full_name`]="{ item }">
-      {{ item.user?.profile?.full_name || item.user?.email }}
-    </template>
-
     <template #[`item.actions`]="{ item }">
       <div class="d-flex justify-end">
-        <v-menu v-if="getCanEdit(item, canEdit)">
+        <!-- backend returns not all cvs in the project, but only
+       cvs, that pinned to current user (if not admin) -->
+        <v-menu>
           <template #activator="{ props }">
             <v-btn
               icon="mdi-dots-vertical"
@@ -72,12 +60,6 @@ const getCanEdit = (
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn
-          icon="mdi-chevron-right"
-          variant="text"
-          size="small"
-          :to="`/cvs/${item.id}/preview`"
-        ></v-btn>
       </div>
     </template>
   </v-data-table>

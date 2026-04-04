@@ -18,7 +18,7 @@
       v-else-if="error"
       class="fill-height flex justify-center items-center"
     >
-      <v-alert type="error">{{ error.message }}</v-alert>
+      <v-alert type="error">{{ error }}</v-alert>
     </v-container>
 
     <div v-if="user" class="w-full flex-grow min-h-0 overflow-y-auto">
@@ -107,7 +107,9 @@ const { fetchUser, updateUser, updateProfile, uploadAvatar, deleteAvatar } =
 const route = useRoute();
 const userId = route.params.userId as string;
 
-const { user: currentUser, logout } = useAuth();
+const authStore = useAuthStore();
+const { user: currentUser } = storeToRefs(authStore);
+const logout = () => authStore.logout();
 const { t } = useI18n();
 const { formatDate, getInitials } = useFormatters();
 const { setBreadcrumbs } = useBreadcrumbs();
