@@ -78,16 +78,11 @@ import { UserRole } from '~~/graphql/generated/graphql';
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const {
-  skillsList,
-  categoriesList,
-  loading,
-  fetchSkills,
-  fetchCategories,
-  createSkill,
-  updateSkill,
-  deleteSkill,
-} = useSkills();
+const skillsStoreInstance = useSkillsStore();
+const { skillsList, categoriesList, loading } =
+  storeToRefs(skillsStoreInstance);
+const { fetchSkills, fetchCategories, createSkill, updateSkill, deleteSkill } =
+  skillsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

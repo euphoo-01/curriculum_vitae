@@ -77,14 +77,10 @@ import { UserRole } from '~~/graphql/generated/graphql';
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const {
-  languagesList,
-  loading,
-  fetchLanguages,
-  createLanguage,
-  updateLanguage,
-  deleteLanguage,
-} = useLanguages();
+const languagesStoreInstance = useLanguagesStore();
+const { languagesList, loading } = storeToRefs(languagesStoreInstance);
+const { fetchLanguages, createLanguage, updateLanguage, deleteLanguage } =
+  languagesStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

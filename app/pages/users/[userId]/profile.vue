@@ -100,10 +100,9 @@ import { UserRole } from '~~/graphql/generated/graphql';
 const route = useRoute();
 const userId = route.params.userId as string;
 
+const profileStoreInstance = useProfileStore();
+const { user, loading, error } = storeToRefs(profileStoreInstance);
 const {
-  user,
-  loading,
-  error,
   fetchUser,
   fetchDepartments,
   fetchPositions,
@@ -111,7 +110,7 @@ const {
   updateProfile,
   uploadAvatar,
   deleteAvatar,
-} = useProfile();
+} = profileStoreInstance;
 
 const { user: currentUser, logout } = useAuth();
 const { t } = useI18n();

@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import {
   GetProfileSkillsDocument,
   GetSkillsDocument,
@@ -20,7 +21,7 @@ import type {
   DeleteProfileSkillInput,
 } from '../../graphql/generated/graphql';
 
-export const useSkills = () => {
+export const useSkillsStore = defineStore('skills', () => {
   const { clients } = useApollo();
   const client = clients?.default;
 
@@ -35,80 +36,53 @@ export const useSkills = () => {
     loading.value = true;
     error.value = null;
 
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      `profile-skills-${userId}`,
-      async () => {
-        const { data } = await client!.query({
-          query: GetProfileSkillsDocument,
-          variables: { userId },
-          fetchPolicy: 'network-only',
-        });
-        return data.profile.skills;
-      }
-    );
-
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetProfileSkillsDocument,
+        variables: { userId },
+        fetchPolicy: 'network-only',
+      });
+      profileSkills.value = data.profile.skills;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch profile skills');
-    } else if (fetchedData.value) {
-      profileSkills.value = fetchedData.value;
+        e instanceof Error ? e : new Error('Failed to fetch profile skills');
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   };
 
   const fetchSkills = async () => {
     loading.value = true;
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'skills',
-      async () => {
-        const { data } = await client!.query({
-          query: GetSkillsDocument,
-          fetchPolicy: 'network-only',
-        });
-        return data.skills;
-      }
-    );
+    error.value = null;
 
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetSkillsDocument,
+        fetchPolicy: 'network-only',
+      });
+      skillsList.value = data.skills;
+      return data.skills;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch skills');
-      loading.value = false;
+        e instanceof Error ? e : new Error('Failed to fetch skills');
       return [];
+    } finally {
+      loading.value = false;
     }
-
-    if (fetchedData.value) {
-      skillsList.value = fetchedData.value;
-    }
-    loading.value = false;
-    return fetchedData.value || [];
   };
 
   const fetchCategories = async () => {
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'skill-categories',
-      async () => {
-        const { data } = await client!.query({
-          query: GetSkillCategoriesDocument,
-          fetchPolicy: 'network-only',
-        });
-        return data.skillCategories;
-      }
-    );
-
-    if (fetchError.value) {
-      console.error('Failed to fetch skill categories', fetchError.value);
+    try {
+      const { data } = await client!.query({
+        query: GetSkillCategoriesDocument,
+        fetchPolicy: 'network-only',
+      });
+      categoriesList.value = data.skillCategories;
+      return data.skillCategories;
+    } catch (e) {
+      console.error('Failed to fetch skill categories', e);
       return [];
     }
-
-    if (fetchedData.value) {
-      categoriesList.value = fetchedData.value;
-    }
-    return fetchedData.value || [];
   };
 
   const createSkill = async (skill: CreateSkillInput) => {
@@ -117,7 +91,6 @@ export const useSkills = () => {
         mutation: CreateSkillDocument,
         variables: { skill },
       });
-      clearNuxtData('skills');
       await fetchSkills();
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to create skill');
@@ -130,7 +103,6 @@ export const useSkills = () => {
         mutation: UpdateSkillDocument,
         variables: { skill },
       });
-      clearNuxtData('skills');
       await fetchSkills();
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to update skill');
@@ -143,7 +115,6 @@ export const useSkills = () => {
         mutation: DeleteSkillDocument,
         variables: { skillId },
       });
-      clearNuxtData('skills');
       await fetchSkills();
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to delete skill');
@@ -158,7 +129,6 @@ export const useSkills = () => {
       });
       if (data?.addProfileSkill) {
         profileSkills.value = data.addProfileSkill.skills;
-        clearNuxtData((k) => k.startsWith('profile-skills-'));
       }
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to add profile skill');
@@ -173,7 +143,6 @@ export const useSkills = () => {
       });
       if (data?.updateProfileSkill) {
         profileSkills.value = data.updateProfileSkill.skills;
-        clearNuxtData((k) => k.startsWith('profile-skills-'));
       }
     } catch (e) {
       throw e instanceof Error
@@ -190,7 +159,6 @@ export const useSkills = () => {
       });
       if (data?.deleteProfileSkill) {
         profileSkills.value = data.deleteProfileSkill.skills;
-        clearNuxtData((k) => k.startsWith('profile-skills-'));
       }
     } catch (e) {
       throw e instanceof Error
@@ -215,4 +183,4 @@ export const useSkills = () => {
     updateProfileSkill,
     deleteProfileSkill,
   };
-};
+});

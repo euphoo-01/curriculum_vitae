@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import {
   GetDepartmentsDocument,
   CreateDepartmentDocument,
@@ -10,7 +11,7 @@ import type {
   UpdateDepartmentInput,
 } from '../../graphql/generated/graphql';
 
-export const useDepartments = () => {
+export const useDepartmentsStore = defineStore('departments', () => {
   const { clients } = useApollo();
   const client = clients?.default;
 
@@ -22,27 +23,18 @@ export const useDepartments = () => {
     loading.value = true;
     error.value = null;
 
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'departments',
-      async () => {
-        const { data } = await client!.query({
-          query: GetDepartmentsDocument,
-          fetchPolicy: 'network-only',
-        });
-        return data.departments;
-      }
-    );
-
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetDepartmentsDocument,
+        fetchPolicy: 'network-only',
+      });
+      departments.value = data.departments;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch departments');
-    } else if (fetchedData.value) {
-      departments.value = fetchedData.value;
+        e instanceof Error ? e : new Error('Failed to fetch departments');
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   };
 
   const createDepartment = async (department: CreateDepartmentInput) => {
@@ -52,7 +44,6 @@ export const useDepartments = () => {
         mutation: CreateDepartmentDocument,
         variables: { department },
       });
-      clearNuxtData('departments');
       await fetchDepartments();
     } catch (e) {
       error.value =
@@ -68,7 +59,6 @@ export const useDepartments = () => {
         mutation: UpdateDepartmentDocument,
         variables: { department },
       });
-      clearNuxtData('departments');
       await fetchDepartments();
     } catch (e) {
       error.value =
@@ -84,7 +74,6 @@ export const useDepartments = () => {
         mutation: DeleteDepartmentDocument,
         variables: { departmentId },
       });
-      clearNuxtData('departments');
       await fetchDepartments();
     } catch (e) {
       error.value =
@@ -102,4 +91,4 @@ export const useDepartments = () => {
     updateDepartment,
     deleteDepartment,
   };
-};
+});

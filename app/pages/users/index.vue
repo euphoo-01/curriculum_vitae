@@ -17,9 +17,11 @@ setBreadcrumbs([
   },
 ]);
 
-const { users, loading, error, fetchUsers, deleteUser, createUser } =
-  useUsers();
-const { fetchDepartments, fetchPositions } = useProfile();
+const usersStoreInstance = useUsersStore();
+const { users, loading, error } = storeToRefs(usersStoreInstance);
+const { fetchUsers, deleteUser, createUser } = usersStoreInstance;
+const profileStoreInstance = useProfileStore();
+const { fetchDepartments, fetchPositions } = profileStoreInstance;
 const router = useRouter();
 
 const { user } = storeToRefs(useAuthStore());

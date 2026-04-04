@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import {
   GetUserDocument,
   GetDepartmentsDocument,
@@ -15,7 +16,7 @@ import type {
   DeleteAvatarInput,
 } from '../../graphql/generated/graphql';
 
-export const useProfile = () => {
+export const useProfileStore = defineStore('profile', () => {
   const { clients } = useApollo();
   const client = clients?.default;
 
@@ -27,66 +28,45 @@ export const useProfile = () => {
     loading.value = true;
     error.value = null;
 
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      `user-${userId}`,
-      async () => {
-        const { data } = await client!.query({
-          query: GetUserDocument,
-          variables: { userId },
-          fetchPolicy: 'network-only',
-        });
-        return data.user;
-      }
-    );
-
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetUserDocument,
+        variables: { userId },
+        fetchPolicy: 'network-only',
+      });
+      user.value = data.user;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch user profile');
-    } else if (fetchedData.value) {
-      user.value = fetchedData.value;
+        e instanceof Error ? e : new Error('Failed to fetch user profile');
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   };
 
   const fetchDepartments = async () => {
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'departments',
-      async () => {
-        const { data } = await client!.query({
-          query: GetDepartmentsDocument,
-        });
-        return data.departments;
-      }
-    );
-
-    if (fetchError.value) {
-      console.error('Failed to fetch departments', fetchError.value);
+    try {
+      const { data } = await client!.query({
+        query: GetDepartmentsDocument,
+        fetchPolicy: 'network-only',
+      });
+      return data.departments;
+    } catch (e) {
+      console.error('Failed to fetch departments', e);
       return [];
     }
-
-    return fetchedData.value || [];
   };
 
   const fetchPositions = async () => {
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'positions',
-      async () => {
-        const { data } = await client!.query({
-          query: GetPositionsDocument,
-        });
-        return data.positions;
-      }
-    );
-
-    if (fetchError.value) {
-      console.error('Failed to fetch positions', fetchError.value);
+    try {
+      const { data } = await client!.query({
+        query: GetPositionsDocument,
+        fetchPolicy: 'network-only',
+      });
+      return data.positions;
+    } catch (e) {
+      console.error('Failed to fetch positions', e);
       return [];
     }
-
-    return fetchedData.value || [];
   };
 
   const updateUser = async (input: UpdateUserInput) => {
@@ -98,7 +78,6 @@ export const useProfile = () => {
       if (data?.updateUser && user.value) {
         user.value = { ...user.value, ...data.updateUser };
       }
-      clearNuxtData((k) => k.startsWith('user-'));
       return data?.updateUser;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to update user');
@@ -117,7 +96,6 @@ export const useProfile = () => {
           profile: { ...user.value.profile, ...data.updateProfile },
         };
       }
-      clearNuxtData((k) => k.startsWith('user-'));
       return data?.updateProfile;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to update profile');
@@ -136,7 +114,6 @@ export const useProfile = () => {
           profile: { ...user.value.profile, avatar: data.uploadAvatar },
         };
       }
-      clearNuxtData((k) => k.startsWith('user-'));
       return data?.uploadAvatar;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to upload avatar');
@@ -155,7 +132,6 @@ export const useProfile = () => {
           profile: { ...user.value.profile, avatar: null },
         };
       }
-      clearNuxtData((k) => k.startsWith('user-'));
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to delete avatar');
     }
@@ -173,4 +149,4 @@ export const useProfile = () => {
     uploadAvatar,
     deleteAvatar,
   };
-};
+});

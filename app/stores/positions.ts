@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import {
   GetPositionsDocument,
   CreatePositionDocument,
@@ -10,7 +11,7 @@ import type {
   UpdatePositionInput,
 } from '../../graphql/generated/graphql';
 
-export const usePositions = () => {
+export const usePositionsStore = defineStore('positions', () => {
   const { clients } = useApollo();
   const client = clients?.default;
 
@@ -22,27 +23,18 @@ export const usePositions = () => {
     loading.value = true;
     error.value = null;
 
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'positions',
-      async () => {
-        const { data } = await client!.query({
-          query: GetPositionsDocument,
-          fetchPolicy: 'network-only',
-        });
-        return data.positions;
-      }
-    );
-
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetPositionsDocument,
+        fetchPolicy: 'network-only',
+      });
+      positions.value = data.positions;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch positions');
-    } else if (fetchedData.value) {
-      positions.value = fetchedData.value;
+        e instanceof Error ? e : new Error('Failed to fetch positions');
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   };
 
   const createPosition = async (position: CreatePositionInput) => {
@@ -52,7 +44,6 @@ export const usePositions = () => {
         mutation: CreatePositionDocument,
         variables: { position },
       });
-      clearNuxtData('positions');
       await fetchPositions();
     } catch (e) {
       error.value =
@@ -68,7 +59,6 @@ export const usePositions = () => {
         mutation: UpdatePositionDocument,
         variables: { position },
       });
-      clearNuxtData('positions');
       await fetchPositions();
     } catch (e) {
       error.value =
@@ -84,7 +74,6 @@ export const usePositions = () => {
         mutation: DeletePositionDocument,
         variables: { positionId },
       });
-      clearNuxtData('positions');
       await fetchPositions();
     } catch (e) {
       error.value =
@@ -102,4 +91,4 @@ export const usePositions = () => {
     updatePosition,
     deletePosition,
   };
-};
+});

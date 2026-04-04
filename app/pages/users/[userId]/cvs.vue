@@ -82,9 +82,13 @@ const userId = route.params.userId as string;
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const { user: profileUser, fetchUser } = useProfile();
+const profileStoreInstance = useProfileStore();
+const { user: profileUser } = storeToRefs(profileStoreInstance);
+const { fetchUser } = profileStoreInstance;
 
-const { cvs, loading, fetchUserCvs, createCv, updateCv, deleteCv } = useCvs();
+const cvsStoreInstance = useCvsStore();
+const { cvs, loading } = storeToRefs(cvsStoreInstance);
+const { fetchUserCvs, createCv, updateCv, deleteCv } = cvsStoreInstance;
 
 const search = ref('');
 let timeout: ReturnType<typeof setTimeout> | null = null;

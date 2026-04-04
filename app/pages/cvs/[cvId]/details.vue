@@ -94,7 +94,9 @@ const route = useRoute();
 const cvId = route.params.cvId as string;
 
 const { user: currentUser } = useAuth();
-const { currentCv, loading, fetchCv, updateCv } = useCvs();
+const cvsStoreInstance = useCvsStore();
+const { currentCv, loading } = storeToRefs(cvsStoreInstance);
+const { fetchCv, updateCv } = cvsStoreInstance;
 
 const formRef = ref<VForm | null>(null);
 const form = ref({

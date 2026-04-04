@@ -36,15 +36,13 @@ const headers = computed(() => [
     :search="search"
     item-value="id"
     density="comfortable"
-    class="bg-transparent flex-grow-1"
-    fixed-header
-    :items-per-page="-1"
+    class="bg-transparent h-full flex flex-col"
+    :items-per-page="10"
     :no-data-text="$t('noDataAvailable')"
+    fixed-header
   >
-    <template #bottom></template>
-
     <template #[`item.avatar`]="{ item }">
-      <v-avatar color="secondary" size="40">
+      <v-avatar class="bg-secondary" size="40">
         <v-img
           v-if="item.profile?.avatar"
           :src="item.profile?.avatar"
@@ -94,5 +92,9 @@ const headers = computed(() => [
 :deep(.v-data-table__td) {
   padding-top: 12px !important;
   padding-bottom: 12px !important;
+}
+
+:deep(.v-table__wrapper) {
+  flex-grow: 1;
 }
 </style>

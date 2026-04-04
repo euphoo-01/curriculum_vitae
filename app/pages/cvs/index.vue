@@ -76,7 +76,9 @@ import { UserRole } from '~~/graphql/generated/graphql';
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const { allCvs, loading, fetchAllCvs, createCv, updateCv, deleteCv } = useCvs();
+const cvsStoreInstance = useCvsStore();
+const { allCvs, loading } = storeToRefs(cvsStoreInstance);
+const { fetchAllCvs, createCv, updateCv, deleteCv } = cvsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

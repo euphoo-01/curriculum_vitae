@@ -77,14 +77,10 @@ import { UserRole } from '~~/graphql/generated/graphql';
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const {
-  positions,
-  loading,
-  fetchPositions,
-  createPosition,
-  updatePosition,
-  deletePosition,
-} = usePositions();
+const positionsStoreInstance = usePositionsStore();
+const { positions, loading } = storeToRefs(positionsStoreInstance);
+const { fetchPositions, createPosition, updatePosition, deletePosition } =
+  positionsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

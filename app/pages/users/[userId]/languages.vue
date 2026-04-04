@@ -154,24 +154,28 @@ import { UserRole } from '~~/graphql/generated/graphql';
 const route = useRoute();
 const userId = route.params.userId as string;
 
+const profileStoreInstance = useProfileStore();
 const {
   user,
   loading: loadingUser,
   error: userError,
-  fetchUser,
-} = useProfile();
+} = storeToRefs(profileStoreInstance);
+const { fetchUser } = profileStoreInstance;
 
+const languagesStoreInstance = useLanguagesStore();
 const {
   profileLanguages,
   languagesList,
   loading: loadingLanguages,
   error: languagesError,
+} = storeToRefs(languagesStoreInstance);
+const {
   fetchProfileLanguages,
   fetchLanguages,
   addProfileLanguage,
   updateProfileLanguage,
   deleteProfileLanguage,
-} = useLanguages();
+} = languagesStoreInstance;
 
 const { user: currentUser } = useAuth();
 const { t } = useI18n();

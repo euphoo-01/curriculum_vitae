@@ -79,14 +79,14 @@ import { UserRole } from '~~/graphql/generated/graphql';
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
+const departmentsStoreInstance = useDepartmentsStore();
+const { departments, loading } = storeToRefs(departmentsStoreInstance);
 const {
-  departments,
-  loading,
   fetchDepartments,
   createDepartment,
   updateDepartment,
   deleteDepartment,
-} = useDepartments();
+} = departmentsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

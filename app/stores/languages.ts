@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import {
   GetProfileLanguagesDocument,
   GetLanguagesDocument,
@@ -18,7 +19,7 @@ import type {
   DeleteProfileLanguageInput,
 } from '../../graphql/generated/graphql';
 
-export const useLanguages = () => {
+export const useLanguagesStore = defineStore('languages', () => {
   const { clients } = useApollo();
   const client = clients?.default;
 
@@ -34,57 +35,39 @@ export const useLanguages = () => {
     loading.value = true;
     error.value = null;
 
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      `profile-languages-${userId}`,
-      async () => {
-        const { data } = await client!.query({
-          query: GetProfileLanguagesDocument,
-          variables: { userId },
-          fetchPolicy: 'network-only',
-        });
-        return data.profile.languages;
-      }
-    );
-
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetProfileLanguagesDocument,
+        variables: { userId },
+        fetchPolicy: 'network-only',
+      });
+      profileLanguages.value = data.profile.languages;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch profile languages');
-    } else if (fetchedData.value) {
-      profileLanguages.value = fetchedData.value;
+        e instanceof Error ? e : new Error('Failed to fetch profile languages');
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   };
 
   const fetchLanguages = async () => {
     loading.value = true;
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'languages',
-      async () => {
-        const { data } = await client!.query({
-          query: GetLanguagesDocument,
-          fetchPolicy: 'network-only',
-        });
-        return data.languages;
-      }
-    );
+    error.value = null;
 
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetLanguagesDocument,
+        fetchPolicy: 'network-only',
+      });
+      languagesList.value = data.languages;
+      return data.languages;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch languages');
-      loading.value = false;
+        e instanceof Error ? e : new Error('Failed to fetch languages');
       return [];
+    } finally {
+      loading.value = false;
     }
-
-    if (fetchedData.value) {
-      languagesList.value = fetchedData.value;
-    }
-    loading.value = false;
-    return fetchedData.value || [];
   };
 
   const createLanguage = async (language: CreateLanguageInput) => {
@@ -93,7 +76,6 @@ export const useLanguages = () => {
         mutation: CreateLanguageDocument,
         variables: { language },
       });
-      clearNuxtData('languages');
       await fetchLanguages();
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to create language');
@@ -106,7 +88,6 @@ export const useLanguages = () => {
         mutation: UpdateLanguageDocument,
         variables: { language },
       });
-      clearNuxtData('languages');
       await fetchLanguages();
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to update language');
@@ -119,7 +100,6 @@ export const useLanguages = () => {
         mutation: DeleteLanguageDocument,
         variables: { languageId },
       });
-      clearNuxtData('languages');
       await fetchLanguages();
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to delete language');
@@ -134,7 +114,6 @@ export const useLanguages = () => {
       });
       if (data?.addProfileLanguage) {
         profileLanguages.value = data.addProfileLanguage.languages;
-        clearNuxtData((k) => k.startsWith('profile-languages-'));
       }
     } catch (e) {
       throw e instanceof Error
@@ -151,7 +130,6 @@ export const useLanguages = () => {
       });
       if (data?.updateProfileLanguage) {
         profileLanguages.value = data.updateProfileLanguage.languages;
-        clearNuxtData((k) => k.startsWith('profile-languages-'));
       }
     } catch (e) {
       throw e instanceof Error
@@ -168,7 +146,6 @@ export const useLanguages = () => {
       });
       if (data?.deleteProfileLanguage) {
         profileLanguages.value = data.deleteProfileLanguage.languages;
-        clearNuxtData((k) => k.startsWith('profile-languages-'));
       }
     } catch (e) {
       throw e instanceof Error
@@ -191,4 +168,4 @@ export const useLanguages = () => {
     updateProfileLanguage,
     deleteProfileLanguage,
   };
-};
+});

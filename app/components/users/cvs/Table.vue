@@ -33,14 +33,11 @@ const headers = computed(() => [
     :search="search"
     item-value="id"
     density="comfortable"
-    class="bg-transparent flex flex-col flex-grow min-h-0"
+    class="bg-transparent h-full flex flex-col"
     fixed-header
-    height="100%"
-    :items-per-page="-1"
+    :items-per-page="10"
     :no-data-text="$t('cvs.noCvs')"
   >
-    <template #bottom></template>
-
     <template #[`item.actions`]="{ item }">
       <div class="d-flex justify-end">
         <v-menu v-if="canEdit">
@@ -81,5 +78,9 @@ const headers = computed(() => [
   padding-top: 12px !important;
   padding-bottom: 12px !important;
   border-bottom: 1px solid rgb(var(--v-theme-on-surface) / 0.12);
+}
+
+:deep(.v-table__wrapper) {
+  flex-grow: 1;
 }
 </style>

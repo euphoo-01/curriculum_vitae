@@ -153,22 +153,17 @@ const route = useRoute();
 const cvId = route.params.cvId as string;
 
 const { user: currentUser } = useAuth();
-const {
-  currentCv,
-  loading: loadingCv,
-  fetchCv,
-  addCvSkill,
-  updateCvSkill,
-  deleteCvSkill,
-} = useCvs();
+const cvsStoreInstance = useCvsStore();
+const { currentCv, loading: loadingCv } = storeToRefs(cvsStoreInstance);
+const { fetchCv, addCvSkill, updateCvSkill, deleteCvSkill } = cvsStoreInstance;
 
+const skillsStoreInstance = useSkillsStore();
 const {
   skillsList,
   categoriesList,
   loading: loadingSkills,
-  fetchSkills,
-  fetchCategories,
-} = useSkills();
+} = storeToRefs(skillsStoreInstance);
+const { fetchSkills, fetchCategories } = skillsStoreInstance;
 
 const updating = ref(false);
 const showSuccess = ref(false);

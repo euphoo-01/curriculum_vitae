@@ -201,8 +201,12 @@ const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;
 
-const { currentCv, loading: loadingCv, fetchCv, exportPdf } = useCvs();
-const { categoriesList, fetchCategories } = useSkills();
+const cvsStoreInstance = useCvsStore();
+const { currentCv, loading: loadingCv } = storeToRefs(cvsStoreInstance);
+const { fetchCv, exportPdf } = cvsStoreInstance;
+const skillsStoreInstance = useSkillsStore();
+const { categoriesList } = storeToRefs(skillsStoreInstance);
+const { fetchCategories } = skillsStoreInstance;
 
 const exporting = ref(false);
 const previewRef = ref<HTMLElement | null>(null);

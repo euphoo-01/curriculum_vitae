@@ -14,7 +14,12 @@
   "createAccount": "Create account",
   "haveAccount": "I have account",
   "noDataAvailable": "No data available",
+  "No data available": "No data available",
+  "No CVs added yet.": "No CVs added yet.",
+  "No skills added yet.": "No skills added yet.",
+  "No languages added yet.": "No languages added yet.",
   "common": {
+    "see": "See",
     "add": "Add",
     "update": "Update",
     "logout": "Logout",

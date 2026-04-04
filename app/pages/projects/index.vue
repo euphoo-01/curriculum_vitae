@@ -77,14 +77,10 @@ import { UserRole } from '~~/graphql/generated/graphql';
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = useAuth();
-const {
-  projects,
-  loading,
-  fetchProjects,
-  createProject,
-  updateProject,
-  deleteProject,
-} = useProjects();
+const projectsStoreInstance = useProjectsStore();
+const { projects, loading } = storeToRefs(projectsStoreInstance);
+const { fetchProjects, createProject, updateProject, deleteProject } =
+  projectsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

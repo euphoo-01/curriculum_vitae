@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useUsers } from '../../app/composables/useUsers';
 import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { clearNuxtData } from 'nuxt/app';
 
 const mockQuery = vi.fn();
 
@@ -16,8 +17,9 @@ mockNuxtImport('useApollo', () => {
 });
 
 describe('useUsers Composable', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+    await clearNuxtData('users');
   });
 
   it('fetches users successfully', async () => {

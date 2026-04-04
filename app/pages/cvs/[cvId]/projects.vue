@@ -94,16 +94,16 @@ const route = useRoute();
 const cvId = route.params.cvId as string;
 
 const { user: currentUser } = useAuth();
-const {
-  currentCv,
-  loading: loadingCv,
-  fetchCv,
-  addCvProject,
-  updateCvProject,
-  removeCvProject,
-} = useCvs();
+const cvsStoreInstance = useCvsStore();
+const { currentCv, loading: loadingCv } = storeToRefs(cvsStoreInstance);
+const { fetchCv, addCvProject, updateCvProject, removeCvProject } =
+  cvsStoreInstance;
 
-const { projects, loading: loadingProjects, fetchProjects } = useProjects();
+const projectsStoreInstance = useProjectsStore();
+const { projects, loading: loadingProjects } = storeToRefs(
+  projectsStoreInstance
+);
+const { fetchProjects } = projectsStoreInstance;
 
 const search = ref('');
 const isDeleteModal = ref(false);

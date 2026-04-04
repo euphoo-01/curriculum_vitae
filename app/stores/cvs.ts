@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import {
   GetUserCvsDocument,
   GetAllCvsDocument,
@@ -28,7 +29,7 @@ import type {
   ExportPdfInput,
 } from '../../graphql/generated/graphql';
 
-export const useCvs = () => {
+export const useCvsStore = defineStore('cvs', () => {
   const { clients } = useApollo();
   const client = clients?.default;
 
@@ -42,55 +43,37 @@ export const useCvs = () => {
     loading.value = true;
     error.value = null;
 
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      `user-cvs-${userId}`,
-      async () => {
-        const { data } = await client!.query({
-          query: GetUserCvsDocument,
-          variables: { userId },
-          fetchPolicy: 'network-only',
-        });
-        return data.user?.cvs || [];
-      }
-    );
-
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetUserCvsDocument,
+        variables: { userId },
+        fetchPolicy: 'network-only',
+      });
+      cvs.value = data.user?.cvs || [];
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch user CVs');
-    } else if (fetchedData.value) {
-      cvs.value = fetchedData.value;
+        e instanceof Error ? e : new Error('Failed to fetch user CVs');
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   };
 
   const fetchAllCvs = async () => {
     loading.value = true;
     error.value = null;
 
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'all-cvs',
-      async () => {
-        const { data } = await client!.query({
-          query: GetAllCvsDocument,
-          fetchPolicy: 'network-only',
-        });
-        return data.cvs;
-      }
-    );
-
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetAllCvsDocument,
+        fetchPolicy: 'network-only',
+      });
+      allCvs.value = data.cvs;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch all CVs');
-    } else if (fetchedData.value) {
-      allCvs.value = fetchedData.value;
+        e instanceof Error ? e : new Error('Failed to fetch all CVs');
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   };
 
   const fetchCv = async (cvId: string) => {
@@ -119,7 +102,6 @@ export const useCvs = () => {
         mutation: CreateCvDocument,
         variables: { cv: input },
       });
-      clearNuxtData((k) => k.startsWith('user-cvs-') || k === 'all-cvs');
       return data?.createCv;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to create CV');
@@ -132,7 +114,6 @@ export const useCvs = () => {
         mutation: UpdateCvDocument,
         variables: { cv: input },
       });
-      clearNuxtData((k) => k.startsWith('user-cvs-') || k === 'all-cvs');
       return data?.updateCv;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to update CV');
@@ -145,7 +126,6 @@ export const useCvs = () => {
         mutation: DeleteCvDocument,
         variables: { cvId },
       });
-      clearNuxtData((k) => k.startsWith('user-cvs-') || k === 'all-cvs');
       return data?.deleteCv;
     } catch (e) {
       throw e instanceof Error ? e : new Error('Failed to delete CV');
@@ -286,4 +266,4 @@ export const useCvs = () => {
     removeCvProject,
     exportPdf,
   };
-};
+});

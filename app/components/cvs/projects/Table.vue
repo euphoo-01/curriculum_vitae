@@ -39,14 +39,11 @@ const formatDate = (dateString: string | null | undefined) => {
     :search="search"
     item-value="project.id"
     density="comfortable"
-    class="bg-transparent flex flex-col flex-grow min-h-0"
+    class="bg-transparent h-full flex flex-col"
     fixed-header
-    height="100%"
-    :items-per-page="-1"
+    :items-per-page="10"
     :no-data-text="$t('noDataAvailable')"
   >
-    <template #bottom></template>
-
     <template #[`item.start_date`]="{ item }">
       {{ formatDate(item.start_date) }}
     </template>
@@ -87,5 +84,9 @@ const formatDate = (dateString: string | null | undefined) => {
   padding-top: 12px !important;
   padding-bottom: 12px !important;
   border-bottom: 1px solid rgb(var(--v-theme-on-surface) / 0.12);
+}
+
+:deep(.v-table__wrapper) {
+  flex-grow: 1;
 }
 </style>

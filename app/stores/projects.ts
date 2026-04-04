@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia';
 import {
   GetProjectsDocument,
   GetProjectDocument,
@@ -11,7 +12,7 @@ import type {
   UpdateProjectInput,
 } from '../../graphql/generated/graphql';
 
-export const useProjects = () => {
+export const useProjectsStore = defineStore('projects', () => {
   const { clients } = useApollo();
   const client = clients?.default;
 
@@ -23,27 +24,18 @@ export const useProjects = () => {
     loading.value = true;
     error.value = null;
 
-    const { data: fetchedData, error: fetchError } = await useAsyncData(
-      'projects',
-      async () => {
-        const { data } = await client!.query({
-          query: GetProjectsDocument,
-          fetchPolicy: 'network-only',
-        });
-        return data.projects;
-      }
-    );
-
-    if (fetchError.value) {
+    try {
+      const { data } = await client!.query({
+        query: GetProjectsDocument,
+        fetchPolicy: 'network-only',
+      });
+      projects.value = data.projects;
+    } catch (e) {
       error.value =
-        fetchError.value instanceof Error
-          ? fetchError.value
-          : new Error('Failed to fetch projects');
-    } else if (fetchedData.value) {
-      projects.value = fetchedData.value;
+        e instanceof Error ? e : new Error('Failed to fetch projects');
+    } finally {
+      loading.value = false;
     }
-
-    loading.value = false;
   };
 
   const createProject = async (project: CreateProjectInput) => {
@@ -53,7 +45,6 @@ export const useProjects = () => {
         mutation: CreateProjectDocument,
         variables: { project },
       });
-      clearNuxtData('projects');
       await fetchProjects();
     } catch (e) {
       error.value =
@@ -69,7 +60,6 @@ export const useProjects = () => {
         mutation: UpdateProjectDocument,
         variables: { project },
       });
-      clearNuxtData('projects');
       await fetchProjects();
     } catch (e) {
       error.value =
@@ -85,7 +75,6 @@ export const useProjects = () => {
         mutation: DeleteProjectDocument,
         variables: { projectId },
       });
-      clearNuxtData('projects');
       await fetchProjects();
     } catch (e) {
       error.value =
@@ -99,6 +88,7 @@ export const useProjects = () => {
       const { data } = await client!.query({
         query: GetProjectDocument,
         variables: { projectId },
+        fetchPolicy: 'network-only',
       });
       return data.project;
     } catch (e) {
@@ -118,4 +108,4 @@ export const useProjects = () => {
     updateProject,
     deleteProject,
   };
-};
+});
