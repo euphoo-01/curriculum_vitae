@@ -1,38 +1,18 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
+import type { ProjectEditData, ProjectFormData } from '~/types/projects';
 
 interface Props {
   modelValue: boolean;
   loading?: boolean;
-  editData?: {
-    id: string;
-    name: string;
-    internal_name: string;
-    domain: string;
-    start_date: string;
-    end_date?: string | null;
-    description: string;
-    environment: string[];
-  } | null;
+  editData?: ProjectEditData | null;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (
-    e: 'submit',
-    formData: {
-      id?: string;
-      name: string;
-      internal_name: string;
-      domain: string;
-      start_date: string;
-      end_date?: string;
-      description: string;
-      environment: string[];
-    }
-  ): void;
+  (e: 'submit', formData: ProjectFormData): void;
 }>();
 
 const { t } = useI18n();

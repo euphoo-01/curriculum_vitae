@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { GetProjectsQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
-
-type ProjectItem = GetProjectsQuery['projects'][number];
+import type { ProjectItem } from '~/types/projects';
 
 defineProps<{
   items: ProjectItem[];

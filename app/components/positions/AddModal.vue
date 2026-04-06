@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
+import type { PositionEditData, PositionFormData } from '~/types/positions';
 
 interface Props {
   modelValue: boolean;
   loading?: boolean;
-  editData?: { id: string; name: string } | null;
+  editData?: PositionEditData | null;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (e: 'submit', formData: { id?: string; name: string }): void;
+  (e: 'submit', formData: PositionFormData): void;
 }>();
 
 const { t } = useI18n();

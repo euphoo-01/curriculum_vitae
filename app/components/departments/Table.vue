@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { GetDepartmentsQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
-
-type DepartmentItem = GetDepartmentsQuery['departments'][number];
+import type { DepartmentItem } from '~/types/departments';
 
 defineProps<{
   items: DepartmentItem[];

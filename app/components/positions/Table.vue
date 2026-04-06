@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { GetPositionsQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
-
-type PositionItem = GetPositionsQuery['positions'][number];
+import type { PositionItem } from '~/types/positions';
 
 defineProps<{
   items: PositionItem[];
