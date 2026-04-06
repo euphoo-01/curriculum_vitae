@@ -142,7 +142,9 @@
     "edit": "Edit language",
     "name": "Language",
     "proficiency": "Proficiency level",
-    "noLanguages": "No languages added yet."
+    "noLanguages": "No languages added yet.",
+    "nativeName": "Native name",
+    "iso2": "ISO2 code"
   },
   "cvs": {
     "title": "CVs",

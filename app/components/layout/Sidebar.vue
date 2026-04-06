@@ -2,7 +2,13 @@
 import { ref } from 'vue';
 
 const authStore = useAuthStore();
+const route = useRoute();
 const isRail = ref(false);
+
+const isItemActive = (path: string) => {
+  if (path === '/') return route.path === '/';
+  return route.path.startsWith(path);
+};
 
 const menuItems = [
   {
@@ -75,9 +81,11 @@ const menuItems = [
           :prepend-icon="item.icon"
           :title="item.titleKey ? $t(item.titleKey) : undefined"
           :value="item.value"
+          :active="item.to ? isItemActive(item.to) : false"
           variant="text"
           density="default"
           active-class="bg-secondary font-weight-bold"
+          class="text-on-background"
           :class="[
             'mb-2 transition-all duration-200',
             isRail ? 'rounded-full' : 'rounded-r-full rounded-l-0',

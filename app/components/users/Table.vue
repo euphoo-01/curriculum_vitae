@@ -51,15 +51,15 @@ const headers = computed(() => [
     fixed-header
   >
     <template #[`item.avatar`]="{ item }">
-      <v-avatar class="bg-secondary" size="40">
+      <v-avatar size="40">
         <v-img
           v-if="item.profile?.avatar"
           :src="item.profile?.avatar"
           alt="Avatar"
         ></v-img>
-        <span v-else class="text-h6">{{
-          item.email?.charAt(0).toUpperCase()
-        }}</span>
+        <h6 v-else color="text-on-background">
+          {{ item.email?.charAt(0).toUpperCase() }}
+        </h6>
       </v-avatar>
     </template>
 

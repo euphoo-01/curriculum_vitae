@@ -9,18 +9,11 @@
         @dragleave.prevent="canEdit && (isDragging = false)"
         @drop.prevent="canEdit && onDrop($event)"
       >
-        <v-avatar
-          size="180"
-          :color="avatarUrl ? 'transparent' : 'secondary'"
-          class="border-2 border-dashed transition-all duration-300 group"
-          :class="[
-            isDragging ? 'border-primary opacity-80' : 'border-transparent',
-          ]"
-        >
+        <v-avatar size="180" color="secondary" class="text-on-background">
           <v-img v-if="avatarUrl" :src="avatarUrl">
             <template #placeholder>
               <div
-                class="d-flex content-center items-center justify-center h-full"
+                class="flex content-center items-center justify-center h-full"
               >
                 <v-progress-circular
                   indeterminate
@@ -29,17 +22,15 @@
               </div>
             </template>
           </v-img>
-          <span v-else class="text-h4 text-on-secondary font-bold">{{
-            initials
-          }}</span>
+          <h3 v-else class="text-on-background font-bold">{{ initials }}</h3>
 
           <div
             v-if="canEdit && avatarUrl && !isUploading"
-            class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 z-10 cursor-pointer"
+            class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 z-10 cursor-pointer"
             @click.prevent.stop="emit('delete')"
           >
             <div
-              class="text-white hover:text-primary transition-colors duration-200"
+              class="text-on-background hover:text-primary transition-colors duration-200"
             >
               <v-icon icon="mdi-close" size="x-large" color="inherit"></v-icon>
             </div>
@@ -50,7 +41,7 @@
             contained
             persistent
             model-value
-            class="align-center d-flex justify-center"
+            class="align-center flex justify-center"
           >
             <v-progress-circular
               indeterminate
@@ -70,7 +61,7 @@
 
     <v-col v-if="canEdit" cols="auto">
       <div
-        class="cursor-pointer d-flex flex-column justify-center align-center p-4 rounded-2xl transition-colors"
+        class="cursor-pointer flex flex-col justify-center align-center p-4 rounded-2xl transition-colors"
         :style="
           isDragging
             ? 'background-color: rgb(var(--v-theme-primary), 0.05); border: 1px dashed rgb(var(--v-theme-primary), 0.5)'
