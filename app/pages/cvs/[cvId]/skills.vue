@@ -170,17 +170,22 @@ const showSuccess = ref(false);
 const successMessage = ref('');
 const actionError = ref('');
 
-const isAddModalOpen = ref(false);
-const isEditModalOpen = ref(false);
-const isConfirmModalOpen = ref(false);
-const selectedSkill = ref<{
+const {
+  isAddModalOpen,
+  isEditModalOpen,
+  isConfirmModalOpen,
+  deleteMode,
+  selectedItem: selectedSkill,
+  selectedItemsToDelete: selectedSkillsToDelete,
+  toggleDeleteMode,
+  cancelDeleteMode,
+  handleItemClick: handleSkillClick,
+  openDeleteModalFromEdit,
+} = useListManager<{
   name: string;
   mastery: Mastery;
   categoryId?: string | null;
-} | null>(null);
-
-const deleteMode = ref(false);
-const selectedSkillsToDelete = ref<Set<string>>(new Set());
+}>('name');
 
 const canEdit = computed(() => {
   if (!currentUser.value || !currentCv.value) return false;
@@ -196,47 +201,11 @@ const availableSkillsToAdd = computed(() => {
   return skillsList.value.filter((s) => !cvSkillNames.has(s.name));
 });
 
-const categoriesWithSkills = computed(() => {
-  if (!currentCv.value) return [];
-  const categoryMap = new Map<
-    string,
-    {
-      id: string;
-      name: string;
-      skills: typeof currentCv.value.skills;
-      order: number;
-    }
-  >();
-
-  categoriesList.value.forEach((cat) => {
-    categoryMap.set(cat.id, {
-      id: cat.id,
-      name: cat.name,
-      skills: [],
-      order: cat.order,
-    });
-  });
-
-  categoryMap.set('uncategorized', {
-    id: 'uncategorized',
-    name: t('skills.uncategorized'),
-    skills: [],
-    order: 9999,
-  });
-
-  currentCv.value.skills.forEach((skill) => {
-    const catId = skill.categoryId || 'uncategorized';
-    if (categoryMap.has(catId)) {
-      categoryMap.get(catId)!.skills.push(skill);
-    } else {
-      categoryMap.get('uncategorized')!.skills.push(skill);
-    }
-  });
-
-  return Array.from(categoryMap.values())
-    .filter((c) => c.skills.length > 0)
-    .sort((a, b) => a.order - b.order);
-});
+const currentCvSkills = computed(() => currentCv.value?.skills || []);
+const { categoriesWithSkills } = useSkillCategories(
+  currentCvSkills,
+  categoriesList
+);
 
 onMounted(async () => {
   const [cv] = await Promise.all([
@@ -253,41 +222,6 @@ onMounted(async () => {
     ]);
   }
 });
-
-const toggleDeleteMode = () => {
-  if (!deleteMode.value) {
-    deleteMode.value = true;
-    selectedSkillsToDelete.value.clear();
-  } else {
-    if (selectedSkillsToDelete.value.size > 0) {
-      isConfirmModalOpen.value = true;
-    } else {
-      deleteMode.value = false;
-    }
-  }
-};
-
-const cancelDeleteMode = () => {
-  deleteMode.value = false;
-  selectedSkillsToDelete.value.clear();
-};
-
-const handleSkillClick = (skill: {
-  name: string;
-  mastery: Mastery;
-  categoryId?: string | null;
-}) => {
-  if (deleteMode.value) {
-    if (selectedSkillsToDelete.value.has(skill.name)) {
-      selectedSkillsToDelete.value.delete(skill.name);
-    } else {
-      selectedSkillsToDelete.value.add(skill.name);
-    }
-  } else {
-    selectedSkill.value = { ...skill };
-    isEditModalOpen.value = true;
-  }
-};
 
 const handleAddSkill = async (data: { name: string; mastery: Mastery }) => {
   updating.value = true;
@@ -332,15 +266,6 @@ const handleUpdateSkill = async (data: { name: string; mastery: Mastery }) => {
   }
 };
 
-const openDeleteModalFromEdit = () => {
-  isEditModalOpen.value = false;
-  selectedSkillsToDelete.value.clear();
-  if (selectedSkill.value) {
-    selectedSkillsToDelete.value.add(selectedSkill.value.name);
-  }
-  isConfirmModalOpen.value = true;
-};
-
 const confirmDelete = async () => {
   if (selectedSkillsToDelete.value.size === 0) {
     isConfirmModalOpen.value = false;
@@ -352,7 +277,7 @@ const confirmDelete = async () => {
   try {
     await deleteCvSkill({
       cvId,
-      name: Array.from(selectedSkillsToDelete.value),
+      name: Array.from(selectedSkillsToDelete.value) as string[],
     });
     successMessage.value = t('common.responses.deleteSuccess');
     showSuccess.value = true;
