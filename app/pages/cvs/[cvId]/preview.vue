@@ -181,7 +181,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GetCvQuery } from '~/graphql/generated/graphql';
+import type { GetCvQuery } from '~~/graphql/generated/graphql';
 
 type Skill = NonNullable<GetCvQuery['cv']>['skills'][number];
 
@@ -272,7 +272,6 @@ const handleExportPdf = async (): Promise<void> => {
             margin: 0 !important;
             padding: 20mm !important;
           }
-          /* Защита от разрывов (AC-5.4) */
           .project-row, .category-row {
             page-break-inside: avoid !important;
           }
@@ -357,7 +356,6 @@ onMounted(async () => {
 
 :deep(.project-row) {
   margin-top: 20px;
-  border-top: 1px solid rgba(var(--v-border-color), 0.1);
   padding-top: 10px;
 }
 </style>

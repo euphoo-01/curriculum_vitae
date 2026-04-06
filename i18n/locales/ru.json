@@ -64,7 +64,21 @@
     "departments": "Отделы",
     "positions": "Должности",
     "skills": "Навыки",
-    "languages": "Языки"
+    "languages": "Языки",
+    "settings": "Настройки"
+  },
+  "settings": {
+    "title": "Настройки",
+    "language": {
+      "title": "Язык",
+      "label": "Выберите язык"
+    },
+    "theme": {
+      "title": "Внешний вид",
+      "label": "Выберите тему",
+      "light": "Светлая",
+      "dark": "Темная"
+    }
   },
   "employees": {
     "title": "Сотрудники",

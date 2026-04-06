@@ -48,7 +48,15 @@
       </v-col>
     </v-row>
 
-    <v-row v-if="canEdit" justify="end">
+    <v-row v-if="canEdit" justify="end" class="items-center">
+      <v-col v-if="showLogout" cols="auto" class="pt-6">
+        <v-btn
+          variant="text"
+          icon="mdi-cog-outline"
+          size="x-large"
+          to="/settings"
+        ></v-btn>
+      </v-col>
       <v-col v-if="showLogout" cols="auto" class="pt-6">
         <v-btn
           color="error"

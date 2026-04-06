@@ -64,7 +64,21 @@
     "departments": "Departments",
     "positions": "Positions",
     "skills": "Skills",
-    "languages": "Languages"
+    "languages": "Languages",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": {
+      "title": "Language",
+      "label": "Choose your language"
+    },
+    "theme": {
+      "title": "Appearance",
+      "label": "Choose your theme",
+      "light": "Light",
+      "dark": "Dark"
+    }
   },
   "employees": {
     "title": "Employees",
