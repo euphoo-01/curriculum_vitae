@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { VForm } from 'vuetify/components';
 import type {
   GetDepartmentsQuery,
   GetPositionsQuery,
@@ -24,14 +23,32 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref<CreateUserInput>({
-  auth: { email: '', password: '' },
-  cvsIds: [],
-  departmentId: '',
-  positionId: '',
-  profile: { first_name: '', last_name: '' },
-  role: UserRole.Employee,
+const { formRef, form, close, submit } = useDomainForm<
+  CreateUserInput,
+  unknown
+>(props, emit, {
+  initialData: () => ({
+    auth: { email: '', password: '' },
+    cvsIds: [],
+    departmentId: '',
+    positionId: '',
+    profile: { first_name: '', last_name: '' },
+    role: UserRole.Employee,
+  }),
+  mapEditData: () => ({
+    auth: { email: '', password: '' },
+    cvsIds: [],
+    departmentId: '',
+    positionId: '',
+    profile: { first_name: '', last_name: '' },
+    role: UserRole.Employee,
+  }),
+  prepareSubmitData: (formData) => ({
+    ...formData,
+    departmentId: formData.departmentId || undefined,
+    positionId: formData.positionId || undefined,
+    cvsIds: formData.cvsIds.filter(Boolean),
+  }),
 });
 
 const rules = {
@@ -42,40 +59,6 @@ const rules = {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return pattern.test(value) || t('common.validation.email');
   },
-};
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (!val) {
-      form.value = {
-        auth: { email: '', password: '' },
-        cvsIds: [],
-        departmentId: '',
-        positionId: '',
-        profile: { first_name: '', last_name: '' },
-        role: UserRole.Employee,
-      };
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid) return;
-
-  const payload: CreateUserInput = {
-    ...form.value,
-    departmentId: form.value.departmentId || undefined,
-    positionId: form.value.positionId || undefined,
-    cvsIds: form.value.cvsIds.filter(Boolean),
-  };
-
-  emit('submit', payload);
 };
 </script>
 

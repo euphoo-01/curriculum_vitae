@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { VForm } from 'vuetify/components';
 import type { GetSkillCategoriesQuery } from '~~/graphql/generated/graphql';
 import type { SkillEditData, SkillFormData } from '~/types/skills';
 
@@ -19,47 +18,20 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref({
-  name: '',
-  categoryId: null as string | null,
+const { formRef, form, close, submit } = useDomainForm<
+  SkillFormData,
+  SkillEditData
+>(props, emit, {
+  initialData: () => ({ name: '', categoryId: undefined }),
+  mapEditData: (data) => ({
+    name: data.name,
+    categoryId: data.categoryId || undefined,
+  }),
 });
 
 const rules = {
   required: (value: string | null | undefined) =>
     !!value || t('common.validation.required'),
-};
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val && props.editData) {
-      form.value = {
-        name: props.editData.name,
-        categoryId: props.editData.categoryId || null,
-      };
-    } else if (val && !props.editData) {
-      form.value = {
-        name: '',
-        categoryId: null,
-      };
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid) return;
-
-  emit('submit', {
-    id: props.editData?.id,
-    name: form.value.name,
-    categoryId: form.value.categoryId || undefined,
-  });
 };
 </script>
 

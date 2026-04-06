@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { VForm } from 'vuetify/components';
 import type { ProjectEditData, ProjectFormData } from '~/types/projects';
 
 interface Props {
@@ -17,69 +16,44 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref({
-  id: '',
-  name: '',
-  internal_name: '',
-  domain: '',
-  start_date: '',
-  end_date: '',
-  description: '',
-  environment: [] as string[],
+const { formRef, form, close, submit } = useDomainForm<
+  ProjectFormData,
+  ProjectEditData
+>(props, emit, {
+  initialData: () => ({
+    name: '',
+    internal_name: '',
+    domain: '',
+    start_date: '',
+    end_date: '',
+    description: '',
+    environment: [],
+  }),
+  mapEditData: (data) => ({
+    name: data.name,
+    internal_name: data.internal_name,
+    domain: data.domain,
+    start_date: (data.start_date || '').split('T')[0] as string,
+    end_date: (data.end_date || '').split('T')[0] as string,
+    description: data.description,
+    environment: [...data.environment],
+  }),
+  prepareSubmitData: (formData, editData) => ({
+    id: editData?.id,
+    name: formData.name,
+    internal_name: formData.internal_name,
+    domain: formData.domain,
+    start_date: new Date(formData.start_date).toISOString(),
+    end_date: formData.end_date
+      ? new Date(formData.end_date).toISOString()
+      : undefined,
+    description: formData.description,
+    environment: formData.environment,
+  }),
 });
 
 const rules = {
   required: (value: unknown) => !!value || t('common.validation.required'),
-};
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val && props.editData) {
-      form.value.name = props.editData.name;
-      form.value.internal_name = props.editData.internal_name;
-      form.value.domain = props.editData.domain;
-      form.value.start_date = (props.editData.start_date || '').split(
-        'T'
-      )[0] as string;
-      form.value.end_date = (props.editData.end_date || '').split(
-        'T'
-      )[0] as string;
-      form.value.description = props.editData.description;
-      form.value.environment = [...props.editData.environment];
-    } else if (val && !props.editData) {
-      form.value.name = '';
-      form.value.internal_name = '';
-      form.value.domain = '';
-      form.value.start_date = '';
-      form.value.end_date = '';
-      form.value.description = '';
-      form.value.environment = [];
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid) return;
-
-  emit('submit', {
-    id: props.editData?.id,
-    name: form.value.name,
-    internal_name: form.value.internal_name,
-    domain: form.value.domain,
-    start_date: new Date(form.value.start_date).toISOString(),
-    end_date: form.value.end_date
-      ? new Date(form.value.end_date).toISOString()
-      : undefined,
-    description: form.value.description,
-    environment: form.value.environment,
-  });
 };
 </script>
 

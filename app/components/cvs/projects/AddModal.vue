@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { VForm } from 'vuetify/components';
 import type { GetProjectsQuery } from '~~/graphql/generated/graphql';
 import type { CvProjectEditData, CvProjectFormData } from '~/types/cvs';
 
@@ -19,59 +18,37 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref({
-  projectId: null as string | null,
-  start_date: '',
-  end_date: '',
-  roles: [] as string[],
-  responsibilities: [] as string[],
+const { formRef, form, close, submit } = useDomainForm<
+  CvProjectFormData,
+  CvProjectEditData
+>(props, emit, {
+  initialData: () => ({
+    projectId: '',
+    start_date: '',
+    end_date: '',
+    roles: [],
+    responsibilities: [],
+  }),
+  mapEditData: (data) => ({
+    projectId: data.projectId,
+    start_date: (data.start_date || '').split('T')[0] as string,
+    end_date: (data.end_date || '').split('T')[0] as string,
+    roles: [...data.roles],
+    responsibilities: [...data.responsibilities],
+  }),
+  prepareSubmitData: (formData) => ({
+    projectId: formData.projectId,
+    start_date: new Date(formData.start_date).toISOString(),
+    end_date: formData.end_date
+      ? new Date(formData.end_date).toISOString()
+      : undefined,
+    roles: formData.roles,
+    responsibilities: formData.responsibilities,
+  }),
 });
 
 const rules = {
   required: (value: unknown) => !!value || t('common.validation.required'),
-};
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val && props.editData) {
-      form.value.projectId = props.editData.projectId;
-      form.value.start_date = (props.editData.start_date || '').split(
-        'T'
-      )[0] as string;
-      form.value.end_date = (props.editData.end_date || '').split(
-        'T'
-      )[0] as string;
-      form.value.roles = [...props.editData.roles];
-      form.value.responsibilities = [...props.editData.responsibilities];
-    } else if (val && !props.editData) {
-      form.value.projectId = null;
-      form.value.start_date = '';
-      form.value.end_date = '';
-      form.value.roles = [];
-      form.value.responsibilities = [];
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid || !form.value.projectId) return;
-
-  emit('submit', {
-    projectId: form.value.projectId,
-    start_date: new Date(form.value.start_date).toISOString(),
-    end_date: form.value.end_date
-      ? new Date(form.value.end_date).toISOString()
-      : undefined,
-    roles: form.value.roles,
-    responsibilities: form.value.responsibilities,
-  });
 };
 </script>
 

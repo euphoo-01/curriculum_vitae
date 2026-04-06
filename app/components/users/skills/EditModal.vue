@@ -70,8 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import type { VForm } from 'vuetify/components';
+import { computed } from 'vue';
 import { Mastery } from '~~/graphql/generated/graphql';
 import { useI18n } from 'vue-i18n';
 
@@ -91,10 +90,28 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref<{ mastery: Mastery | null }>({
-  mastery: null,
-});
+const { formRef, form, close, submit } = useDomainForm<
+  { mastery: Mastery | null },
+  { name: string; mastery: Mastery },
+  { name: string; mastery: Mastery }
+>(
+  {
+    modelValue: props.modelValue,
+    editData: props.skill,
+  },
+  emit,
+  {
+    initialData: () => ({ mastery: null }),
+    mapEditData: (data) => ({ mastery: data.mastery }),
+    prepareSubmitData: (formData) => {
+      if (!formData.mastery || !props.skill) return undefined;
+      return {
+        name: props.skill.name,
+        mastery: formData.mastery,
+      };
+    },
+  }
+);
 
 const rules = {
   required: (value: unknown) => !!value || t('common.validation.required'),
@@ -107,31 +124,6 @@ const masteryOptions = computed(() => [
   { title: t('mastery.Proficient'), value: Mastery.Proficient },
   { title: t('mastery.Expert'), value: Mastery.Expert },
 ]);
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val && props.skill) {
-      form.value.mastery = props.skill.mastery;
-    } else if (!val) {
-      form.value.mastery = null;
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid || !form.value.mastery || !props.skill) return;
-
-  emit('submit', {
-    name: props.skill.name,
-    mastery: form.value.mastery,
-  });
-};
 
 const handleDelete = () => {
   emit('delete');

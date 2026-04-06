@@ -1,8 +1,16 @@
-import type { GetAllCvsQuery, GetCvQuery, GetUserCvsQuery } from '~~/graphql/generated/graphql';
+import type {
+  GetAllCvsQuery,
+  GetCvQuery,
+  GetUserCvsQuery,
+} from '~~/graphql/generated/graphql';
 
 export type CvItem = GetAllCvsQuery['cvs'][number];
-export type UserCvItem = NonNullable<NonNullable<GetUserCvsQuery['user']>['cvs']>[number];
-export type CvProjectItem = NonNullable<NonNullable<GetCvQuery['cv']>['projects']>[number];
+export type UserCvItem = NonNullable<
+  NonNullable<GetUserCvsQuery['user']>['cvs']
+>[number];
+export type CvProjectItem = NonNullable<
+  NonNullable<GetCvQuery['cv']>['projects']
+>[number];
 
 export interface CvProjectEditData {
   projectId: string;

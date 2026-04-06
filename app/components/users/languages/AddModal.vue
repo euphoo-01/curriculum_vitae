@@ -62,8 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import type { VForm } from 'vuetify/components';
+import { computed } from 'vue';
 import { Proficiency } from '~~/graphql/generated/graphql';
 import { useI18n } from 'vue-i18n';
 
@@ -82,10 +81,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref<{ name: string; proficiency: Proficiency | null }>({
-  name: '',
-  proficiency: null,
+const { formRef, form, close, submit } = useDomainForm<
+  { name: string; proficiency: Proficiency | null },
+  unknown,
+  { name: string; proficiency: Proficiency }
+>(props, emit, {
+  initialData: () => ({ name: '', proficiency: null }),
+  mapEditData: () => ({ name: '', proficiency: null }),
 });
 
 const rules = {
@@ -101,27 +103,4 @@ const proficiencyOptions = computed(() => [
   { title: t('proficiency.C2'), value: Proficiency.C2 },
   { title: t('proficiency.Native'), value: Proficiency.Native },
 ]);
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (!val) {
-      form.value = { name: '', proficiency: null };
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid || !form.value.name || !form.value.proficiency) return;
-
-  emit('submit', {
-    name: form.value.name,
-    proficiency: form.value.proficiency,
-  });
-};
 </script>

@@ -62,8 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import type { VForm } from 'vuetify/components';
+import { computed } from 'vue';
 import { Mastery } from '~~/graphql/generated/graphql';
 import { useI18n } from 'vue-i18n';
 
@@ -82,10 +81,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref<{ name: string; mastery: Mastery | null }>({
-  name: '',
-  mastery: null,
+const { formRef, form, close, submit } = useDomainForm<
+  { name: string; mastery: Mastery | null },
+  unknown,
+  { name: string; mastery: Mastery }
+>(props, emit, {
+  initialData: () => ({ name: '', mastery: null }),
+  mapEditData: () => ({ name: '', mastery: null }),
 });
 
 const rules = {
@@ -99,27 +101,4 @@ const masteryOptions = computed(() => [
   { title: t('mastery.Proficient'), value: Mastery.Proficient },
   { title: t('mastery.Expert'), value: Mastery.Expert },
 ]);
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (!val) {
-      form.value = { name: '', mastery: null };
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid || !form.value.name || !form.value.mastery) return;
-
-  emit('submit', {
-    name: form.value.name,
-    mastery: form.value.mastery,
-  });
-};
 </script>

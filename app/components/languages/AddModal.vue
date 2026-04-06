@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { VForm } from 'vuetify/components';
 import type { LanguageEditData, LanguageFormData } from '~/types/languages';
 
 interface Props {
@@ -17,53 +16,23 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref({
-  name: '',
-  native_name: '',
-  iso2: '',
+const { formRef, form, close, submit } = useDomainForm<
+  LanguageFormData,
+  LanguageEditData
+>(props, emit, {
+  initialData: () => ({ name: '', native_name: '', iso2: '' }),
+  mapEditData: (data) => ({
+    name: data.name,
+    native_name: data.native_name || '',
+    iso2: data.iso2,
+  }),
 });
 
 const rules = {
   required: (value: string | null | undefined) =>
     !!value || t('common.validation.required'),
   iso2: (value: string) =>
-    (value && value.length === 2) || t('common.validation.required'), // Should be exactly 2
-};
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val && props.editData) {
-      form.value = {
-        name: props.editData.name,
-        native_name: props.editData.native_name || '',
-        iso2: props.editData.iso2,
-      };
-    } else if (val && !props.editData) {
-      form.value = {
-        name: '',
-        native_name: '',
-        iso2: '',
-      };
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid) return;
-
-  emit('submit', {
-    id: props.editData?.id,
-    name: form.value.name,
-    native_name: form.value.native_name,
-    iso2: form.value.iso2,
-  });
+    (value && value.length === 2) || t('common.validation.required'),
 };
 </script>
 

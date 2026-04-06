@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import type { VForm } from 'vuetify/components';
-import type { DepartmentEditData, DepartmentFormData } from '~/types/departments';
+import type {
+  DepartmentEditData,
+  DepartmentFormData,
+} from '~/types/departments';
 
 interface Props {
   modelValue: boolean;
@@ -17,43 +19,17 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref({
-  name: '',
+const { formRef, form, close, submit } = useDomainForm<
+  DepartmentFormData,
+  DepartmentEditData
+>(props, emit, {
+  initialData: () => ({ name: '' }),
+  mapEditData: (data) => ({ name: data.name }),
 });
 
 const rules = {
   required: (value: string | null | undefined) =>
     !!value || t('common.validation.required'),
-};
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val && props.editData) {
-      form.value = {
-        name: props.editData.name,
-      };
-    } else if (val && !props.editData) {
-      form.value = {
-        name: '',
-      };
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid) return;
-
-  emit('submit', {
-    id: props.editData?.id,
-    name: form.value.name,
-  });
 };
 </script>
 

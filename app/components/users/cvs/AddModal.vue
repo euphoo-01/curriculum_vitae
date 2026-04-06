@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { VForm } from 'vuetify/components';
 import type { UserCvEditData, UserCvFormData } from '~/types/cvs';
 
 interface Props {
@@ -17,47 +16,17 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref({
-  name: '',
-  description: '',
+const { formRef, form, close, submit } = useDomainForm<
+  UserCvFormData,
+  UserCvEditData
+>(props, emit, {
+  initialData: () => ({ name: '', description: '' }),
+  mapEditData: (data) => ({ name: data.name, description: data.description }),
 });
 
 const rules = {
   required: (value: string | null | undefined) =>
     !!value || t('common.validation.required'),
-};
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val && props.editData) {
-      form.value = {
-        name: props.editData.name,
-        description: props.editData.description,
-      };
-    } else if (val && !props.editData) {
-      form.value = {
-        name: '',
-        description: '',
-      };
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid) return;
-
-  emit('submit', {
-    id: props.editData?.id,
-    name: form.value.name,
-    description: form.value.description,
-  });
 };
 </script>
 

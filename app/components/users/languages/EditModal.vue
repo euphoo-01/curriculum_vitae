@@ -72,8 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import type { VForm } from 'vuetify/components';
+import { computed } from 'vue';
 import { Proficiency } from '~~/graphql/generated/graphql';
 import { useI18n } from 'vue-i18n';
 
@@ -93,10 +92,28 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const formRef = ref<VForm | null>(null);
-const form = ref<{ proficiency: Proficiency | null }>({
-  proficiency: null,
-});
+const { formRef, form, close, submit } = useDomainForm<
+  { proficiency: Proficiency | null },
+  { name: string; proficiency: Proficiency },
+  { name: string; proficiency: Proficiency }
+>(
+  {
+    modelValue: props.modelValue,
+    editData: props.language,
+  },
+  emit,
+  {
+    initialData: () => ({ proficiency: null }),
+    mapEditData: (data) => ({ proficiency: data.proficiency }),
+    prepareSubmitData: (formData) => {
+      if (!formData.proficiency || !props.language) return undefined;
+      return {
+        name: props.language.name,
+        proficiency: formData.proficiency,
+      };
+    },
+  }
+);
 
 const rules = {
   required: (value: unknown) => !!value || t('common.validation.required'),
@@ -111,31 +128,6 @@ const proficiencyOptions = computed(() => [
   { title: t('proficiency.C2'), value: Proficiency.C2 },
   { title: t('proficiency.Native'), value: Proficiency.Native },
 ]);
-
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val && props.language) {
-      form.value.proficiency = props.language.proficiency;
-    } else if (!val) {
-      form.value.proficiency = null;
-      formRef.value?.resetValidation();
-    }
-  }
-);
-
-const close = () => emit('update:modelValue', false);
-
-const submit = async () => {
-  if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
-  if (!valid || !form.value.proficiency || !props.language) return;
-
-  emit('submit', {
-    name: props.language.name,
-    proficiency: form.value.proficiency,
-  });
-};
 
 const handleDelete = () => {
   emit('delete');
