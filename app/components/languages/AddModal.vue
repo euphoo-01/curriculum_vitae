@@ -99,13 +99,13 @@ const submit = async () => {
               ></v-text-field>
               <v-text-field
                 v-model="form.native_name"
-                label="Native Name"
+                :label="t('languages.nativeName')"
                 variant="outlined"
                 density="compact"
               ></v-text-field>
               <v-text-field
                 v-model="form.iso2"
-                label="ISO2 Code"
+                :label="t('languages.iso2')"
                 variant="outlined"
                 density="compact"
                 :rules="[rules.iso2]"

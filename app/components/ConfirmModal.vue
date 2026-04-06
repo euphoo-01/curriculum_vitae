@@ -10,13 +10,15 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  title: 'Подтвердите действие',
-  message: 'Вы уверены, что хотите выполнить это действие?',
-  confirmText: 'Подтвердить',
-  cancelText: 'Отмена',
+  title: '',
+  message: '',
+  confirmText: '',
+  cancelText: '',
   confirmColor: 'error',
   loading: false,
 });
+
+const { t } = useI18n();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
@@ -43,11 +45,11 @@ const confirm = () => {
   >
     <v-card class="p-4">
       <v-card-title class="text-h5">
-        {{ title }}
+        {{ title || t('confirmModal.title') }}
       </v-card-title>
 
-      <v-card-text v-if="message">
-        {{ message }}
+      <v-card-text>
+        {{ message || t('confirmModal.message') }}
       </v-card-text>
 
       <v-card-actions>
@@ -61,11 +63,11 @@ const confirm = () => {
           :disabled="loading"
           @click="close"
         >
-          {{ cancelText }}
+          {{ cancelText || t('confirmModal.cancel') }}
         </v-btn>
 
         <v-btn
-          color="primary"
+          :color="confirmColor"
           :loading="loading"
           variant="flat"
           rounded
@@ -73,7 +75,7 @@ const confirm = () => {
           size="x-large"
           @click="confirm"
         >
-          {{ confirmText }}
+          {{ confirmText || t('confirmModal.confirm') }}
         </v-btn>
       </v-card-actions>
     </v-card>

@@ -24,6 +24,9 @@
     "placeholders": {
       "search": "Search..."
     },
+    "hints": {
+      "enterToAdd": "Press enter to add"
+    },
     "validation": {
       "required": "Field is required",
       "email": "Invalid email"
@@ -39,6 +42,12 @@
       "deleteSuccess": "Successfully deleted",
       "exportSuccess": "Successfully exported"
     }
+  },
+  "confirmModal": {
+    "title": "Confirm action",
+    "message": "Are you sure you want to perform this action?",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   },
   "auth": {
     "welcome": "Welcome",
@@ -110,9 +119,22 @@
     "add": "Add skill",
     "edit": "Edit skill",
     "name": "Skill",
+    "category": "Category",
     "mastery": "Mastery level",
     "noSkills": "No skills added yet.",
     "uncategorized": "Uncategorized"
+  },
+  "projects": {
+    "title": "Projects",
+    "project": "Project",
+    "name": "Project Name",
+    "internalName": "Internal Name",
+    "domain": "Domain",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "description": "Description",
+    "environment": "Environment",
+    "noProjects": "No projects added yet."
   },
   "languages": {
     "title": "Languages",

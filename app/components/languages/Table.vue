@@ -16,8 +16,8 @@ const { t } = useI18n();
 
 const headers = computed(() => [
   { title: t('languages.name'), key: 'name', sortable: true },
-  { title: 'Native Name', key: 'native_name', sortable: true },
-  { title: 'ISO2 Code', key: 'iso2', sortable: true },
+  { title: t('languages.nativeName'), key: 'native_name', sortable: true },
+  { title: t('languages.iso2'), key: 'iso2', sortable: true },
   { title: '', key: 'actions', sortable: false, align: 'end' as const },
 ]);
 </script>

@@ -109,7 +109,7 @@ const submit = async () => {
                 :items="projects"
                 item-title="name"
                 item-value="id"
-                label="Project"
+                :label="t('projects.project')"
                 variant="outlined"
                 density="compact"
                 :rules="[rules.required]"
@@ -120,7 +120,7 @@ const submit = async () => {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.start_date"
-                label="Start Date"
+                :label="t('projects.startDate')"
                 type="date"
                 variant="outlined"
                 density="compact"
@@ -131,7 +131,7 @@ const submit = async () => {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.end_date"
-                label="End Date"
+                :label="t('projects.endDate')"
                 type="date"
                 variant="outlined"
                 density="compact"
@@ -141,12 +141,12 @@ const submit = async () => {
             <v-col cols="12">
               <v-combobox
                 v-model="form.roles"
-                label="Roles"
+                :label="t('cvPreview.roles')"
                 multiple
                 chips
                 variant="outlined"
                 density="compact"
-                hint="Press enter to add"
+                :hint="t('common.hints.enterToAdd')"
                 persistent-hint
                 :rules="[rules.required]"
                 required
@@ -155,12 +155,12 @@ const submit = async () => {
             <v-col cols="12">
               <v-combobox
                 v-model="form.responsibilities"
-                label="Responsibilities"
+                :label="t('cvPreview.responsibilities')"
                 multiple
                 chips
                 variant="outlined"
                 density="compact"
-                hint="Press enter to add"
+                :hint="t('common.hints.enterToAdd')"
                 persistent-hint
                 :rules="[rules.required]"
                 required

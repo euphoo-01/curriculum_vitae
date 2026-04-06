@@ -94,7 +94,7 @@ const submit = async () => {
                 :items="categories"
                 item-title="name"
                 item-value="id"
-                label="Category"
+                :label="t('skills.category')"
                 variant="outlined"
                 density="compact"
                 clearable

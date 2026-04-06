@@ -120,7 +120,7 @@ const submit = async () => {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.name"
-                label="Name"
+                :label="t('projects.name')"
                 variant="outlined"
                 density="compact"
                 :rules="[rules.required]"
@@ -130,7 +130,7 @@ const submit = async () => {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.internal_name"
-                label="Internal Name"
+                :label="t('projects.internalName')"
                 variant="outlined"
                 density="compact"
                 :rules="[rules.required]"
@@ -140,7 +140,7 @@ const submit = async () => {
             <v-col cols="12">
               <v-text-field
                 v-model="form.domain"
-                label="Domain"
+                :label="t('projects.domain')"
                 variant="outlined"
                 density="compact"
                 :rules="[rules.required]"
@@ -150,7 +150,7 @@ const submit = async () => {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.start_date"
-                label="Start Date"
+                :label="t('projects.startDate')"
                 type="date"
                 variant="outlined"
                 density="compact"
@@ -161,7 +161,7 @@ const submit = async () => {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.end_date"
-                label="End Date"
+                :label="t('projects.endDate')"
                 type="date"
                 variant="outlined"
                 density="compact"
@@ -171,7 +171,7 @@ const submit = async () => {
             <v-col cols="12">
               <v-textarea
                 v-model="form.description"
-                label="Description"
+                :label="t('projects.description')"
                 variant="outlined"
                 density="compact"
                 :rules="[rules.required]"
@@ -181,12 +181,12 @@ const submit = async () => {
             <v-col cols="12">
               <v-combobox
                 v-model="form.environment"
-                label="Environment"
+                :label="t('projects.environment')"
                 multiple
                 chips
                 variant="outlined"
                 density="compact"
-                hint="Press enter to add"
+                :hint="t('common.hints.enterToAdd')"
                 persistent-hint
               ></v-combobox>
             </v-col>

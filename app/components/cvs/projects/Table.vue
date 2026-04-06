@@ -17,11 +17,11 @@ defineProps<{
 const { t } = useI18n();
 
 const headers = computed(() => [
-  { title: 'Project Name', key: 'name', sortable: true },
-  { title: 'Internal Name', key: 'internal_name', sortable: true },
-  { title: 'Domain', key: 'domain', sortable: true },
-  { title: 'Start Date', key: 'start_date', sortable: true },
-  { title: 'End Date', key: 'end_date', sortable: true },
+  { title: t('projects.name'), key: 'name', sortable: true },
+  { title: t('projects.internalName'), key: 'internal_name', sortable: true },
+  { title: t('projects.domain'), key: 'domain', sortable: true },
+  { title: t('projects.startDate'), key: 'start_date', sortable: true },
+  { title: t('projects.endDate'), key: 'end_date', sortable: true },
   { title: '', key: 'actions', sortable: false, align: 'end' as const },
 ]);
 

@@ -16,7 +16,7 @@ const { t } = useI18n();
 
 const headers = computed(() => [
   { title: t('skills.name'), key: 'name', sortable: true },
-  { title: 'Category', key: 'category_name', sortable: true },
+  { title: t('skills.category'), key: 'category_name', sortable: true },
   { title: '', key: 'actions', sortable: false, align: 'end' as const },
 ]);
 </script>
