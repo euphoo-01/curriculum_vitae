@@ -74,6 +74,8 @@
 <script setup lang="ts">
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
+import { useTableManager } from '~/composables/useTableManager';
+import type { SkillEditData, SkillFormData } from '~/types/skills';
 
 const dictionariesStore = useDictionariesStore();
 const { skillsList, categoriesList, loading } = storeToRefs(dictionariesStore);
@@ -84,20 +86,23 @@ const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 
-const search = ref('');
-const isDeleteModal = ref(false);
-const isAddModal = ref(false);
-const isSnackbar = ref(false);
-const actionMessage = ref('');
-const snackbarColor = ref('error');
-const loadingAction = ref(false);
-
-const skillToDelete = ref<string>();
-const skillToEdit = ref<{
-  id: string;
-  name: string;
-  categoryId?: string | null;
-} | null>(null);
+const {
+  search,
+  isDeleteModal,
+  isAddModal,
+  isSnackbar,
+  actionMessage,
+  snackbarColor,
+  loadingAction,
+  itemToDelete: skillToDelete,
+  itemToEdit: skillToEdit,
+  openAddModal,
+  openEditModal,
+  openDeleteModal,
+  showSuccess,
+  showError,
+  closeModals,
+} = useTableManager<SkillEditData>();
 
 const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 
@@ -108,12 +113,11 @@ const adminActions: AdminAction[] = [
     action: (id: string) => {
       const skill = skillsList.value.find((s) => s.id === id);
       if (skill) {
-        skillToEdit.value = {
+        openEditModal({
           id: skill.id,
           name: skill.name,
           categoryId: skill.category?.id,
-        };
-        isAddModal.value = true;
+        });
       }
     },
   },
@@ -121,22 +125,12 @@ const adminActions: AdminAction[] = [
     name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
-      skillToDelete.value = id;
-      isDeleteModal.value = true;
+      openDeleteModal(id);
     },
   },
 ];
 
-const openAddModal = () => {
-  skillToEdit.value = null;
-  isAddModal.value = true;
-};
-
-const handleSubmitSkill = async (formData: {
-  id?: string;
-  name: string;
-  categoryId?: string;
-}) => {
+const handleSubmitSkill = async (formData: SkillFormData) => {
   loadingAction.value = true;
   try {
     if (formData.id) {
@@ -145,21 +139,18 @@ const handleSubmitSkill = async (formData: {
         name: formData.name,
         categoryId: formData.categoryId,
       });
-      actionMessage.value = t('common.responses.updateSuccess');
+      showSuccess(t('common.responses.updateSuccess'));
     } else {
       await createSkill({
         name: formData.name,
         categoryId: formData.categoryId,
       });
-      actionMessage.value = t('common.responses.addSuccess');
+      showSuccess(t('common.responses.addSuccess'));
     }
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isAddModal.value = false;
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
   }
@@ -169,16 +160,14 @@ const handleDeleteSkill = async (id: string) => {
   loadingAction.value = true;
   try {
     await deleteSkill(id);
-    actionMessage.value = t('common.responses.deleteSuccess');
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isDeleteModal.value = false;
+    showSuccess(t('common.responses.deleteSuccess'));
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
+    closeModals();
   }
 };
 

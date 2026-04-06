@@ -181,16 +181,21 @@ const showSuccess = ref(false);
 const successMessage = ref('');
 const actionError = ref('');
 
-const isAddModalOpen = ref(false);
-const isEditModalOpen = ref(false);
-const isConfirmModalOpen = ref(false);
-const selectedLanguage = ref<{
+const {
+  isAddModalOpen,
+  isEditModalOpen,
+  isConfirmModalOpen,
+  deleteMode,
+  selectedItem: selectedLanguage,
+  selectedItemsToDelete: selectedLanguagesToDelete,
+  toggleDeleteMode,
+  cancelDeleteMode,
+  handleItemClick: handleLanguageClick,
+  openDeleteModalFromEdit,
+} = useListManager<{
   name: string;
   proficiency: Proficiency;
-} | null>(null);
-
-const deleteMode = ref(false);
-const selectedLanguagesToDelete = ref<Set<string>>(new Set());
+}>('name');
 
 const canEdit = computed(() => {
   if (!currentUser.value || !user.value) return false;
@@ -228,40 +233,6 @@ if (userId) {
     },
   ]);
 }
-
-const toggleDeleteMode = () => {
-  if (!deleteMode.value) {
-    deleteMode.value = true;
-    selectedLanguagesToDelete.value.clear();
-  } else {
-    if (selectedLanguagesToDelete.value.size > 0) {
-      isConfirmModalOpen.value = true;
-    } else {
-      deleteMode.value = false;
-    }
-  }
-};
-
-const cancelDeleteMode = () => {
-  deleteMode.value = false;
-  selectedLanguagesToDelete.value.clear();
-};
-
-const handleLanguageClick = (language: {
-  name: string;
-  proficiency: Proficiency;
-}) => {
-  if (deleteMode.value) {
-    if (selectedLanguagesToDelete.value.has(language.name)) {
-      selectedLanguagesToDelete.value.delete(language.name);
-    } else {
-      selectedLanguagesToDelete.value.add(language.name);
-    }
-  } else {
-    selectedLanguage.value = { ...language };
-    isEditModalOpen.value = true;
-  }
-};
 
 const handleAddLanguage = async (data: {
   name: string;
@@ -308,15 +279,6 @@ const handleUpdateLanguage = async (data: {
   }
 };
 
-const openDeleteModalFromEdit = () => {
-  isEditModalOpen.value = false;
-  selectedLanguagesToDelete.value.clear();
-  if (selectedLanguage.value) {
-    selectedLanguagesToDelete.value.add(selectedLanguage.value.name);
-  }
-  isConfirmModalOpen.value = true;
-};
-
 const confirmDelete = async () => {
   if (selectedLanguagesToDelete.value.size === 0) {
     isConfirmModalOpen.value = false;
@@ -328,7 +290,7 @@ const confirmDelete = async () => {
   try {
     await deleteProfileLanguage({
       userId,
-      name: Array.from(selectedLanguagesToDelete.value),
+      name: Array.from(selectedLanguagesToDelete.value) as string[],
     });
     successMessage.value = t('common.responses.deleteSuccess');
     showSuccess.value = true;

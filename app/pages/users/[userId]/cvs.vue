@@ -10,10 +10,10 @@
     <v-snackbar
       v-model="isSnackbar"
       location="top"
-      color="error"
+      :color="snackbarColor"
       :timeout="3000"
     >
-      {{ actionError }}
+      {{ actionMessage }}
     </v-snackbar>
 
     <ConfirmModal
@@ -75,6 +75,7 @@
 <script setup lang="ts">
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
+import { useTableManager } from '~/composables/useTableManager';
 
 const employeesStore = useEmployeesStore();
 const { user: profileUser, loading } = storeToRefs(employeesStore);
@@ -90,19 +91,25 @@ const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 
-const search = ref('');
 let timeout: ReturnType<typeof setTimeout> | null = null;
 
-const isDeleteModal = ref(false);
-const isAddModal = ref(false);
-const isSnackbar = ref(false);
-const actionError = ref('');
-const loadingAction = ref(false);
-
-const cvToDelete = ref<string>();
-const cvToEdit = ref<{ id: string; name: string; description: string } | null>(
-  null
-);
+const {
+  search,
+  isDeleteModal,
+  isAddModal,
+  isSnackbar,
+  actionMessage,
+  snackbarColor,
+  loadingAction,
+  itemToDelete: cvToDelete,
+  itemToEdit: cvToEdit,
+  openAddModal,
+  openEditModal,
+  openDeleteModal,
+  showSuccess,
+  showError,
+  closeModals,
+} = useTableManager<{ id: string; name: string; description: string }>();
 
 const canEdit = computed(() => {
   if (!currentUser.value || !profileUser.value) return false;
@@ -126,12 +133,11 @@ const adminActions: AdminAction[] = [
     action: (id: string) => {
       const cv = cvs.value?.find((c) => c.id === id);
       if (cv) {
-        cvToEdit.value = {
+        openEditModal({
           id: cv.id,
           name: cv.name,
           description: cv.description,
-        };
-        isAddModal.value = true;
+        });
       }
     },
   },
@@ -139,16 +145,10 @@ const adminActions: AdminAction[] = [
     name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
-      cvToDelete.value = id;
-      isDeleteModal.value = true;
+      openDeleteModal(id);
     },
   },
 ];
-
-const openAddModal = () => {
-  cvToEdit.value = null;
-  isAddModal.value = true;
-};
 
 const handleSubmitCv = async (formData: {
   id?: string;
@@ -156,7 +156,6 @@ const handleSubmitCv = async (formData: {
   description: string;
 }) => {
   loadingAction.value = true;
-  actionError.value = '';
   try {
     if (formData.id) {
       await updateCv({
@@ -164,18 +163,20 @@ const handleSubmitCv = async (formData: {
         name: formData.name,
         description: formData.description,
       });
+      showSuccess(t('common.responses.updateSuccess'));
     } else {
       await createCv({
         name: formData.name,
         description: formData.description,
         userId: userId,
       });
+      showSuccess(t('common.responses.addSuccess'));
     }
-    isAddModal.value = false;
     await fetchUserCvs(userId);
   } catch (e) {
-    actionError.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
   }
@@ -183,16 +184,17 @@ const handleSubmitCv = async (formData: {
 
 const handleDeleteCv = async (id: string) => {
   loadingAction.value = true;
-  actionError.value = '';
   try {
     await deleteCv(id);
-    isDeleteModal.value = false;
+    showSuccess(t('common.responses.deleteSuccess'));
     await fetchUserCvs(userId);
   } catch (e) {
-    actionError.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
+    closeModals();
   }
 };
 

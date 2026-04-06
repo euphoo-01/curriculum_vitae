@@ -72,6 +72,7 @@
 <script setup lang="ts">
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
+import { useTableManager } from '~/composables/useTableManager';
 
 const cvsStore = useCvsStore();
 const { allCvs, loading } = storeToRefs(cvsStore);
@@ -81,18 +82,23 @@ const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 
-const search = ref('');
-const isDeleteModal = ref(false);
-const isAddModal = ref(false);
-const isSnackbar = ref(false);
-const actionMessage = ref('');
-const snackbarColor = ref('error');
-const loadingAction = ref(false);
-
-const cvToDelete = ref<string>();
-const cvToEdit = ref<{ id: string; name: string; description: string } | null>(
-  null
-);
+const {
+  search,
+  isDeleteModal,
+  isAddModal,
+  isSnackbar,
+  actionMessage,
+  snackbarColor,
+  loadingAction,
+  itemToDelete: cvToDelete,
+  itemToEdit: cvToEdit,
+  openAddModal,
+  openEditModal,
+  openDeleteModal,
+  showSuccess,
+  showError,
+  closeModals,
+} = useTableManager<{ id: string; name: string; description: string }>();
 
 const canEdit = (item: { user?: { id: string } | null }) => {
   if (!currentUser.value) return false;
@@ -116,12 +122,11 @@ const adminActions: AdminAction[] = [
     action: (id: string) => {
       const cv = allCvs.value.find((c) => c.id === id);
       if (cv) {
-        cvToEdit.value = {
+        openEditModal({
           id: cv.id,
           name: cv.name,
           description: cv.description,
-        };
-        isAddModal.value = true;
+        });
       }
     },
   },
@@ -129,16 +134,10 @@ const adminActions: AdminAction[] = [
     name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
-      cvToDelete.value = id;
-      isDeleteModal.value = true;
+      openDeleteModal(id);
     },
   },
 ];
-
-const openAddModal = () => {
-  cvToEdit.value = null;
-  isAddModal.value = true;
-};
 
 const handleSubmitCv = async (formData: {
   id?: string;
@@ -153,23 +152,20 @@ const handleSubmitCv = async (formData: {
         name: formData.name,
         description: formData.description,
       });
-      actionMessage.value = t('common.responses.updateSuccess');
+      showSuccess(t('common.responses.updateSuccess'));
     } else {
       await createCv({
         name: formData.name,
         description: formData.description,
         userId: currentUser.value?.id,
       });
-      actionMessage.value = t('common.responses.addSuccess');
+      showSuccess(t('common.responses.addSuccess'));
     }
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isAddModal.value = false;
     await fetchAllCvs();
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
   }
@@ -179,17 +175,15 @@ const handleDeleteCv = async (id: string) => {
   loadingAction.value = true;
   try {
     await deleteCv(id);
-    actionMessage.value = t('common.responses.deleteSuccess');
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isDeleteModal.value = false;
+    showSuccess(t('common.responses.deleteSuccess'));
     await fetchAllCvs();
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
+    closeModals();
   }
 };
 

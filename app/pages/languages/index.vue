@@ -73,6 +73,8 @@
 <script setup lang="ts">
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
+import { useTableManager } from '~/composables/useTableManager';
+import type { LanguageEditData, LanguageFormData } from '~/types/languages';
 
 const dictionariesStore = useDictionariesStore();
 const { languagesList, loading } = storeToRefs(dictionariesStore);
@@ -83,21 +85,23 @@ const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 
-const search = ref('');
-const isDeleteModal = ref(false);
-const isAddModal = ref(false);
-const isSnackbar = ref(false);
-const actionMessage = ref('');
-const snackbarColor = ref('error');
-const loadingAction = ref(false);
-
-const languageToDelete = ref<string>();
-const languageToEdit = ref<{
-  id: string;
-  name: string;
-  native_name?: string | null;
-  iso2: string;
-} | null>(null);
+const {
+  search,
+  isDeleteModal,
+  isAddModal,
+  isSnackbar,
+  actionMessage,
+  snackbarColor,
+  loadingAction,
+  itemToDelete: languageToDelete,
+  itemToEdit: languageToEdit,
+  openAddModal,
+  openEditModal,
+  openDeleteModal,
+  showSuccess,
+  showError,
+  closeModals,
+} = useTableManager<LanguageEditData>();
 
 const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 
@@ -108,13 +112,12 @@ const adminActions: AdminAction[] = [
     action: (id: string) => {
       const lang = languagesList.value.find((l) => l?.id === id);
       if (lang) {
-        languageToEdit.value = {
+        openEditModal({
           id: lang.id,
           name: lang.name,
           native_name: lang.native_name,
           iso2: lang.iso2,
-        };
-        isAddModal.value = true;
+        });
       }
     },
   },
@@ -122,23 +125,12 @@ const adminActions: AdminAction[] = [
     name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
-      languageToDelete.value = id;
-      isDeleteModal.value = true;
+      openDeleteModal(id);
     },
   },
 ];
 
-const openAddModal = () => {
-  languageToEdit.value = null;
-  isAddModal.value = true;
-};
-
-const handleSubmitLanguage = async (formData: {
-  id?: string;
-  name: string;
-  native_name?: string;
-  iso2: string;
-}) => {
+const handleSubmitLanguage = async (formData: LanguageFormData) => {
   loadingAction.value = true;
   try {
     if (formData.id) {
@@ -148,22 +140,19 @@ const handleSubmitLanguage = async (formData: {
         native_name: formData.native_name,
         iso2: formData.iso2,
       });
-      actionMessage.value = t('common.responses.updateSuccess');
+      showSuccess(t('common.responses.updateSuccess'));
     } else {
       await createLanguage({
         name: formData.name,
         native_name: formData.native_name,
         iso2: formData.iso2,
       });
-      actionMessage.value = t('common.responses.addSuccess');
+      showSuccess(t('common.responses.addSuccess'));
     }
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isAddModal.value = false;
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
   }
@@ -173,16 +162,14 @@ const handleDeleteLanguage = async (id: string) => {
   loadingAction.value = true;
   try {
     await deleteLanguage(id);
-    actionMessage.value = t('common.responses.deleteSuccess');
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isDeleteModal.value = false;
+    showSuccess(t('common.responses.deleteSuccess'));
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
+    closeModals();
   }
 };
 

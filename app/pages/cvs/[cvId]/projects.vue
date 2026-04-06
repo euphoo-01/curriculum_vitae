@@ -87,6 +87,8 @@
 <script setup lang="ts">
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
+import { useTableManager } from '~/composables/useTableManager';
+import type { CvProjectEditData, CvProjectFormData } from '~/types/cvs';
 
 const cvsStore = useCvsStore();
 const { currentCv, loading: loadingCv } = storeToRefs(cvsStore);
@@ -103,22 +105,23 @@ const { user: currentUser } = storeToRefs(useAuthStore());
 
 const { projects, loading: loadingProjects } = storeToRefs(projectsStore);
 
-const search = ref('');
-const isDeleteModal = ref(false);
-const isAddModal = ref(false);
-const isSnackbar = ref(false);
-const actionMessage = ref('');
-const snackbarColor = ref('error');
-const loadingAction = ref(false);
-
-const projectToDelete = ref<string>();
-const projectToEdit = ref<{
-  projectId: string;
-  start_date: string;
-  end_date?: string | null;
-  roles: string[];
-  responsibilities: string[];
-} | null>(null);
+const {
+  search,
+  isDeleteModal,
+  isAddModal,
+  isSnackbar,
+  actionMessage,
+  snackbarColor,
+  loadingAction,
+  itemToDelete: projectToDelete,
+  itemToEdit: projectToEdit,
+  openAddModal,
+  openEditModal,
+  openDeleteModal,
+  showSuccess,
+  showError,
+  closeModals,
+} = useTableManager<CvProjectEditData>();
 
 const canEdit = computed(() => {
   if (!currentUser.value || !currentCv.value) return false;
@@ -148,14 +151,13 @@ const adminActions: AdminAction[] = [
         (p) => p.project.id === projectId
       );
       if (proj) {
-        projectToEdit.value = {
+        openEditModal({
           projectId: proj.project.id,
           start_date: proj.start_date,
           end_date: proj.end_date,
           roles: proj.roles,
           responsibilities: proj.responsibilities,
-        };
-        isAddModal.value = true;
+        });
       }
     },
   },
@@ -163,24 +165,12 @@ const adminActions: AdminAction[] = [
     name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (projectId: string) => {
-      projectToDelete.value = projectId;
-      isDeleteModal.value = true;
+      openDeleteModal(projectId);
     },
   },
 ];
 
-const openAddModal = () => {
-  projectToEdit.value = null;
-  isAddModal.value = true;
-};
-
-const handleSubmitProject = async (formData: {
-  projectId: string;
-  start_date: string;
-  end_date?: string;
-  roles: string[];
-  responsibilities: string[];
-}) => {
+const handleSubmitProject = async (formData: CvProjectFormData) => {
   loadingAction.value = true;
   try {
     if (projectToEdit.value) {
@@ -192,7 +182,7 @@ const handleSubmitProject = async (formData: {
         roles: formData.roles,
         responsibilities: formData.responsibilities,
       });
-      actionMessage.value = t('common.responses.updateSuccess');
+      showSuccess(t('common.responses.updateSuccess'));
     } else {
       await addCvProject({
         cvId,
@@ -202,16 +192,13 @@ const handleSubmitProject = async (formData: {
         roles: formData.roles,
         responsibilities: formData.responsibilities,
       });
-      actionMessage.value = t('common.responses.addSuccess');
+      showSuccess(t('common.responses.addSuccess'));
     }
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isAddModal.value = false;
     await fetchCv(cvId);
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
   }
@@ -221,17 +208,15 @@ const handleDeleteProject = async (projectId: string) => {
   loadingAction.value = true;
   try {
     await removeCvProject({ cvId, projectId });
-    actionMessage.value = t('common.responses.deleteSuccess');
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isDeleteModal.value = false;
+    showSuccess(t('common.responses.deleteSuccess'));
     await fetchCv(cvId);
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
+    closeModals();
   }
 };
 

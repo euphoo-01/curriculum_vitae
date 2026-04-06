@@ -73,6 +73,8 @@
 <script setup lang="ts">
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
+import { useTableManager } from '~/composables/useTableManager';
+import type { ProjectEditData, ProjectFormData } from '~/types/projects';
 
 const projectsStore = useProjectsStore();
 const { projects, loading } = storeToRefs(projectsStore);
@@ -83,25 +85,23 @@ const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 
-const search = ref('');
-const isDeleteModal = ref(false);
-const isAddModal = ref(false);
-const isSnackbar = ref(false);
-const actionMessage = ref('');
-const snackbarColor = ref('error');
-const loadingAction = ref(false);
-
-const projectToDelete = ref<string>();
-const projectToEdit = ref<{
-  id: string;
-  name: string;
-  internal_name: string;
-  domain: string;
-  start_date: string;
-  end_date?: string | null;
-  description: string;
-  environment: string[];
-} | null>(null);
+const {
+  search,
+  isDeleteModal,
+  isAddModal,
+  isSnackbar,
+  actionMessage,
+  snackbarColor,
+  loadingAction,
+  itemToDelete: projectToDelete,
+  itemToEdit: projectToEdit,
+  openAddModal,
+  openEditModal,
+  openDeleteModal,
+  showSuccess,
+  showError,
+  closeModals,
+} = useTableManager<ProjectEditData>();
 
 const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 
@@ -112,8 +112,7 @@ const adminActions: AdminAction[] = [
     action: (id: string) => {
       const proj = projects.value.find((p) => p.id === id);
       if (proj) {
-        projectToEdit.value = proj;
-        isAddModal.value = true;
+        openEditModal(proj);
       }
     },
   },
@@ -121,27 +120,12 @@ const adminActions: AdminAction[] = [
     name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
-      projectToDelete.value = id;
-      isDeleteModal.value = true;
+      openDeleteModal(id);
     },
   },
 ];
 
-const openAddModal = () => {
-  projectToEdit.value = null;
-  isAddModal.value = true;
-};
-
-const handleSubmitProject = async (formData: {
-  id?: string;
-  name: string;
-  internal_name: string;
-  domain: string;
-  start_date: string;
-  end_date?: string;
-  description: string;
-  environment: string[];
-}) => {
+const handleSubmitProject = async (formData: ProjectFormData) => {
   loadingAction.value = true;
   try {
     if (formData.id) {
@@ -154,7 +138,7 @@ const handleSubmitProject = async (formData: {
         description: formData.description,
         environment: formData.environment,
       });
-      actionMessage.value = t('common.responses.updateSuccess');
+      showSuccess(t('common.responses.updateSuccess'));
     } else {
       await createProject({
         name: formData.name,
@@ -164,15 +148,12 @@ const handleSubmitProject = async (formData: {
         description: formData.description,
         environment: formData.environment,
       });
-      actionMessage.value = t('common.responses.addSuccess');
+      showSuccess(t('common.responses.addSuccess'));
     }
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isAddModal.value = false;
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
   }
@@ -182,16 +163,14 @@ const handleDeleteProject = async (id: string) => {
   loadingAction.value = true;
   try {
     await deleteProject(id);
-    actionMessage.value = t('common.responses.deleteSuccess');
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isDeleteModal.value = false;
+    showSuccess(t('common.responses.deleteSuccess'));
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
+    closeModals();
   }
 };
 

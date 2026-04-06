@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import { AdminActionsNames, type AdminAction } from '~/types/users';
 import { UserRole } from '~~/graphql/generated/graphql';
+import { useTableManager } from '~/composables/useTableManager';
 
 const dictionariesStore = useDictionariesStore();
 const { positions, loading } = storeToRefs(dictionariesStore);
@@ -83,16 +84,23 @@ const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 
-const search = ref('');
-const isDeleteModal = ref(false);
-const isAddModal = ref(false);
-const isSnackbar = ref(false);
-const actionMessage = ref('');
-const snackbarColor = ref('error');
-const loadingAction = ref(false);
-
-const positionToDelete = ref<string>();
-const positionToEdit = ref<{ id: string; name: string } | null>(null);
+const {
+  search,
+  isDeleteModal,
+  isAddModal,
+  isSnackbar,
+  actionMessage,
+  snackbarColor,
+  loadingAction,
+  itemToDelete: positionToDelete,
+  itemToEdit: positionToEdit,
+  openAddModal,
+  openEditModal,
+  openDeleteModal,
+  showSuccess,
+  showError,
+  closeModals,
+} = useTableManager<{ id: string; name: string }>();
 
 const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 
@@ -103,8 +111,7 @@ const adminActions: AdminAction[] = [
     action: (id: string) => {
       const pos = positions.value.find((p) => p.id === id);
       if (pos) {
-        positionToEdit.value = { id: pos.id, name: pos.name };
-        isAddModal.value = true;
+        openEditModal({ id: pos.id, name: pos.name });
       }
     },
   },
@@ -112,16 +119,10 @@ const adminActions: AdminAction[] = [
     name: t('common.actions.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
-      positionToDelete.value = id;
-      isDeleteModal.value = true;
+      openDeleteModal(id);
     },
   },
 ];
-
-const openAddModal = () => {
-  positionToEdit.value = null;
-  isAddModal.value = true;
-};
 
 const handleSubmitPosition = async (formData: {
   id?: string;
@@ -134,20 +135,17 @@ const handleSubmitPosition = async (formData: {
         positionId: formData.id,
         name: formData.name,
       });
-      actionMessage.value = t('common.responses.updateSuccess');
+      showSuccess(t('common.responses.updateSuccess'));
     } else {
       await createPosition({
         name: formData.name,
       });
-      actionMessage.value = t('common.responses.addSuccess');
+      showSuccess(t('common.responses.addSuccess'));
     }
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isAddModal.value = false;
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
   }
@@ -157,16 +155,14 @@ const handleDeletePosition = async (id: string) => {
   loadingAction.value = true;
   try {
     await deletePosition(id);
-    actionMessage.value = t('common.responses.deleteSuccess');
-    snackbarColor.value = 'success';
-    isSnackbar.value = true;
-    isDeleteModal.value = false;
+    showSuccess(t('common.responses.deleteSuccess'));
   } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   } finally {
     loadingAction.value = false;
+    closeModals();
   }
 };
 

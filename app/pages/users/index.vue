@@ -6,6 +6,7 @@ import {
   type GetPositionsQuery,
   type CreateUserInput,
 } from '~~/graphql/generated/graphql';
+import { useTableManager } from '~/composables/useTableManager';
 
 const dictionariesStore = useDictionariesStore();
 const { fetchDepartments, fetchPositions } = dictionariesStore;
@@ -26,15 +27,20 @@ setBreadcrumbs([
 const router = useRouter();
 
 const { user } = storeToRefs(useAuthStore());
-const search = ref('');
-
 let timeout: ReturnType<typeof setTimeout> | null = null;
-const userToDelete = ref<string>();
-const isDeleteModal = ref<boolean>(false);
-const isAddModal = ref<boolean>(false);
-const isSnackbar = ref<boolean>(false);
-const snackbarMessage = ref('');
-const snackbarColor = ref('success');
+
+const {
+  search,
+  isDeleteModal,
+  isAddModal,
+  isSnackbar,
+  actionMessage: snackbarMessage,
+  snackbarColor,
+  itemToDelete: userToDelete,
+  openDeleteModal,
+  showSuccess,
+  showError,
+} = useTableManager<unknown>();
 
 const departments = ref<GetDepartmentsQuery['departments']>([]);
 const positions = ref<GetPositionsQuery['positions']>([]);
@@ -56,8 +62,7 @@ const adminActions: AdminAction[] = [
     name: t('profile.delete'),
     type: AdminActionsNames.DELETE,
     action: (id: string) => {
-      userToDelete.value = id;
-      isDeleteModal.value = true;
+      openDeleteModal(id);
     },
   },
 ];
@@ -66,19 +71,14 @@ const handleCreateUser = async (payload: CreateUserInput) => {
   try {
     await createUser(payload);
     if (error.value) {
-      snackbarMessage.value = `${t('common.responses.error')}: ${error.value}`;
-      snackbarColor.value = 'error';
-      isSnackbar.value = true;
+      showError(`${t('common.responses.error')}: ${error.value}`);
     } else {
-      snackbarMessage.value = t('common.responses.addSuccess');
-      snackbarColor.value = 'success';
-      isSnackbar.value = true;
-      isAddModal.value = false;
+      showSuccess(t('common.responses.addSuccess'));
     }
   } catch (e) {
-    snackbarMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   }
 };
 
@@ -87,19 +87,14 @@ const handleDeleteUser = async () => {
   try {
     await deleteUser(userToDelete.value);
     if (error.value) {
-      snackbarMessage.value = `${t('common.responses.error')}: ${error.value}`;
-      snackbarColor.value = 'error';
-      isSnackbar.value = true;
+      showError(`${t('common.responses.error')}: ${error.value}`);
     } else {
-      snackbarMessage.value = t('common.responses.deleteSuccess');
-      snackbarColor.value = 'success';
-      isSnackbar.value = true;
-      isDeleteModal.value = false;
+      showSuccess(t('common.responses.deleteSuccess'));
     }
   } catch (e) {
-    snackbarMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
-    snackbarColor.value = 'error';
-    isSnackbar.value = true;
+    showError(
+      `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`
+    );
   }
 };
 
