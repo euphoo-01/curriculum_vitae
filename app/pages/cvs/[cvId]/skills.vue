@@ -2,7 +2,7 @@
   <div
     class="flex flex-col h-full w-full min-h-0 overflow-hidden pb-4 bg-background px-4"
   >
-    <div class="flex flex-col bg-background shadow-sm mb-4 flex-none">
+    <div class="flex flex-col bg-background mb-4 flex-none">
       <LayoutBreadcrumbs class="flex-none" />
       <CvsTabs />
     </div>

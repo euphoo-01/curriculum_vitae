@@ -1,14 +1,24 @@
 <template>
-  <div class="flex-grow-1 d-flex flex-column pb-4 m-0 bg-background h-screen">
-    <div class="d-flex flex-column bg-background shadow-sm mb-4 px-4">
+  <div class="flex-grow-1 flex flex-col pb-4 m-0 bg-background h-screen">
+    <div class="flex flex-col bg-background px-4">
       <LayoutBreadcrumbs class="flex-none" />
-      <CvsTabs />
+      <div class="flex justify-between items-center">
+        <CvsTabs />
+        <v-btn
+          color="primary"
+          variant="outlined"
+          size="large"
+          rounded
+          class="px-8 mb-2"
+          :loading="exporting"
+          @click="handleExportPdf"
+        >
+          {{ t('cvPreview.exportPdf') }}
+        </v-btn>
+      </div>
     </div>
 
-    <div
-      v-if="loadingCv"
-      class="d-flex justify-center align-center flex-grow-1"
-    >
+    <div v-if="loadingCv" class="flex justify-center align-center flex-grow">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
 
@@ -16,19 +26,8 @@
       v-else-if="currentCv"
       flat
       rounded
-      class="mx-4 pa-4 overflow-scroll min-h-0"
+      class="flex flex-col flex-grow min-h-0 w-full overflow-y-auto"
     >
-      <v-row class="justify-end mb-4 px-4">
-        <v-btn
-          color="primary"
-          prepend-icon="mdi-file-pdf-box"
-          :loading="exporting"
-          @click="handleExportPdf"
-        >
-          {{ t('cvPreview.exportPdf') }}
-        </v-btn>
-      </v-row>
-
       <v-snackbar
         v-model="isSnackbar"
         location="top"
@@ -41,167 +40,162 @@
       <div
         id="cv-preview-content"
         ref="previewRef"
-        class="bg-surface text-on-surface mx-auto"
-        style="
-          max-width: 210mm;
-          min-height: 297mm;
-          padding: 20mm;
-          font-family: sans-serif;
-          line-height: 1.5;
-          font-size: 14px;
-        "
+        class="bg-surface text-on-surface mx-auto cv-print-area"
+        style="width: 210mm; min-height: 297mm; padding: 20mm"
       >
-        <div style="text-align: center; margin-bottom: 20px">
-          <h1 style="margin: 0; font-size: 28px">
-            {{ currentCv.user?.profile?.full_name || currentCv.user?.email }}
-          </h1>
-          <h2
-            style="
-              margin: 5px 0 0;
-              font-size: 20px;
-              font-weight: normal;
-              color: #555;
-            "
-          >
-            {{ currentCv.name }}
-          </h2>
-        </div>
+        <v-row class="justify-between mb-4 items-center">
+          <v-col>
+            <h1 class="mb-0">
+              {{ currentCv.user?.profile?.full_name || currentCv.user?.email }}
+            </h1>
+            <h3 class="m-0">
+              {{ currentCv.user?.position_name?.toUpperCase() }}
+            </h3>
+          </v-col>
+        </v-row>
 
-        <div style="margin-bottom: 20px">
-          <p style="margin: 0">{{ currentCv.description }}</p>
-        </div>
+        <v-row>
+          <v-col cols="4">
+            <h3>{{ t('cvPreview.education') }}</h3>
+            <p>{{ currentCv.education }}</p>
+            <h3>{{ t('cvPreview.languageProficiency') }}</h3>
+            <ul class="m-0 p-0 list-none">
+              <li v-for="lang in currentCv.languages" :key="lang.name">
+                {{ lang.name }} - {{ lang.proficiency }}
+              </li>
+            </ul>
+            <h3>{{ t('cvPreview.domains') }}</h3>
+            <ul class="m-0 p-0 list-none">
+              <li v-for="proj in currentCv.projects" :key="proj.id">
+                {{ proj.domain }}
+              </li>
+            </ul>
+          </v-col>
 
-        <div v-if="currentCv.education" style="margin-bottom: 20px">
-          <h3
-            style="
-              border-bottom: 1px solid #ccc;
-              padding-bottom: 5px;
-              margin-bottom: 10px;
-            "
-          >
-            {{ t('cvPreview.education') }}
-          </h3>
-          <p style="margin: 0">{{ currentCv.education }}</p>
-        </div>
+          <v-divider
+            color="primary"
+            thickness="2"
+            variant="solid"
+            opacity="1"
+            vertical
+          ></v-divider>
 
-        <div
-          v-if="currentCv.languages && currentCv.languages.length > 0"
-          style="margin-bottom: 20px"
-        >
-          <h3
-            style="
-              border-bottom: 1px solid #ccc;
-              padding-bottom: 5px;
-              margin-bottom: 10px;
-            "
-          >
-            {{ t('cvPreview.languages') }}
-          </h3>
-          <ul style="margin: 0; padding-left: 20px">
-            <li v-for="lang in currentCv.languages" :key="lang.name">
-              <strong>{{ lang.name }}</strong> - {{ lang.proficiency }}
-            </li>
-          </ul>
-        </div>
-
-        <div
-          v-if="currentCv.skills && currentCv.skills.length > 0"
-          style="margin-bottom: 20px"
-        >
-          <h3
-            style="
-              border-bottom: 1px solid #ccc;
-              padding-bottom: 5px;
-              margin-bottom: 10px;
-            "
-          >
-            {{ t('cvPreview.skills') }}
-          </h3>
-          <div
-            v-for="category in categoriesWithSkills"
-            :key="category.id"
-            style="margin-bottom: 10px"
-          >
-            <strong style="display: block; margin-bottom: 5px">{{
-              category.name
-            }}</strong>
-            <div style="display: flex; flex-wrap: wrap; gap: 5px">
-              <span
-                v-for="skill in category.skills"
-                :key="skill.name"
-                style="
-                  background: #eee;
-                  padding: 2px 8px;
-                  border-radius: 12px;
-                  font-size: 12px;
-                "
-              >
-                {{ skill.name }} ({{ skill.mastery }})
-              </span>
+          <v-col>
+            <h3>{{ currentCv.name }}</h3>
+            <p>{{ currentCv.description }}</p>
+            <div
+              v-for="category in categoriesWithSkills.slice(0, 3)"
+              :key="category.id"
+              style="margin-bottom: 10px"
+            >
+              <strong style="display: block; margin-bottom: 5px">{{
+                category.name
+              }}</strong>
+              <p>{{ category.skills.map((skill) => skill.name).join(', ') }}</p>
             </div>
-          </div>
-        </div>
+          </v-col>
+        </v-row>
 
-        <div
-          v-if="currentCv.projects && currentCv.projects.length > 0"
-          style="margin-bottom: 20px"
+        <h1>{{ t('cvPreview.projects') }}</h1>
+
+        <v-row
+          v-for="proj in currentCv?.projects"
+          :key="proj.id"
+          class="project-row"
         >
-          <h3
-            style="
-              border-bottom: 1px solid #ccc;
-              padding-bottom: 5px;
-              margin-bottom: 10px;
-            "
-          >
-            {{ t('cvPreview.projects') }}
-          </h3>
-          <div
-            v-for="proj in currentCv.projects"
-            :key="proj.project.id"
-            style="margin-bottom: 15px"
-          >
-            <h4 style="margin: 0 0 5px">{{ proj.name }}</h4>
-            <div style="font-size: 12px; color: #666; margin-bottom: 5px">
-              {{ formatDate(proj.start_date) }} -
-              {{ formatDate(proj.end_date) }} | {{ proj.domain }}
-            </div>
-            <p style="margin: 0 0 5px; font-size: 13px">
-              {{ proj.description }}
+          <v-col cols="4">
+            <h3 style="color: var(--v-theme-primary)">
+              {{ proj.name.toUpperCase() }}
+            </h3>
+            <p>{{ proj.description }}</p>
+          </v-col>
+          <v-divider
+            color="primary"
+            thickness="2"
+            opacity="1"
+            variant="solid"
+            vertical
+          ></v-divider>
+          <v-col>
+            <h3>{{ t('cvPreview.projectRoles') }}</h3>
+            <p>{{ proj.roles.join(', ') }}</p>
+            <h3>{{ t('cvPreview.period') }}</h3>
+            <p>
+              {{ proj.start_date }} -
+              {{ proj.end_date || t('common.time.tillNow') }}
             </p>
-            <div
-              v-if="proj.roles.length > 0"
-              style="font-size: 13px; margin-bottom: 5px"
+            <h3>{{ t('cvPreview.responsibilities') }}</h3>
+            <ul>
+              <li v-for="(resp, index) in proj.responsibilities" :key="index">
+                {{ resp }}
+              </li>
+            </ul>
+            <h3>{{ t('cvPreview.environment') }}</h3>
+            <p>{{ proj.environment.join(', ') }}</p>
+          </v-col>
+        </v-row>
+
+        <h1>{{ t('cvPreview.professionalSkills') }}</h1>
+        <v-table class="mt-4 bg-transparent skills-table-print">
+          <thead>
+            <tr class="border-b border-primary border-solid">
+              <th class="text-uppercase font-weight-bold text-caption pr-4">
+                {{ t('cvPreview.skills') }}
+              </th>
+              <th class="px-4"></th>
+              <th
+                class="text-uppercase font-weight-bold text-caption text-center px-4"
+              >
+                {{ t('cvPreview.experienceInYears') }}
+              </th>
+              <th
+                class="text-uppercase font-weight-bold text-caption text-right pl-4"
+              >
+                {{ t('cvPreview.lastUsed') }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <template
+              v-for="category in categoriesWithSkills"
+              :key="category.id"
             >
-              <strong>{{ t('cvPreview.roles') }}:</strong> {{ proj.roles.join(', ') }}
-            </div>
-            <div
-              v-if="proj.responsibilities.length > 0"
-              style="font-size: 13px; margin-bottom: 5px"
-            >
-              <strong>{{ t('cvPreview.responsibilities') }}:</strong>
-              <ul style="margin: 0; padding-left: 20px">
-                <li v-for="resp in proj.responsibilities" :key="resp">
-                  {{ resp }}
-                </li>
-              </ul>
-            </div>
-            <div v-if="proj.environment.length > 0" style="font-size: 13px">
-              <strong>{{ t('cvPreview.environment') }}:</strong> {{ proj.environment.join(', ') }}
-            </div>
-          </div>
-        </div>
+              <tr class="category-row">
+                <td>{{ category.name }}</td>
+                <td>
+                  <ul class="list-none">
+                    <li v-for="(skill, index) in category.skills" :key="index">
+                      {{ skill.name }}
+                    </li>
+                  </ul>
+                </td>
+                <td class="text-center">-</td>
+                <td class="text-center">-</td>
+              </tr>
+            </template>
+          </tbody>
+        </v-table>
       </div>
     </v-card>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { GetCvQuery } from '~/graphql/generated/graphql';
+
+type Skill = NonNullable<GetCvQuery['cv']>['skills'][number];
+
+interface CategoryWithSkills {
+  id: string;
+  name: string;
+  skills: Skill[];
+  order: number;
+}
+
 const dictionariesStore = useDictionariesStore();
-const { categoriesList } = storeToRefs(dictionariesStore);
-const { fetchCategories } = dictionariesStore;
 const cvsStore = useCvsStore();
+const { categoriesList } = storeToRefs(dictionariesStore);
 const { currentCv, loading: loadingCv } = storeToRefs(cvsStore);
-const { fetchCv, exportPdf } = cvsStore;
 
 const { t } = useI18n();
 const { setBreadcrumbs } = useBreadcrumbs();
@@ -215,17 +209,9 @@ const isSnackbar = ref(false);
 const actionMessage = ref('');
 const snackbarColor = ref('success');
 
-const categoriesWithSkills = computed(() => {
+const categoriesWithSkills = computed<CategoryWithSkills[]>(() => {
   if (!currentCv.value) return [];
-  const categoryMap = new Map<
-    string,
-    {
-      id: string;
-      name: string;
-      skills: typeof currentCv.value.skills;
-      order: number;
-    }
-  >();
+  const categoryMap = new Map<string, CategoryWithSkills>();
 
   categoriesList.value.forEach((cat) => {
     categoryMap.set(cat.id, {
@@ -236,19 +222,20 @@ const categoriesWithSkills = computed(() => {
     });
   });
 
-  categoryMap.set('uncategorized', {
-    id: 'uncategorized',
-    name: t('skills.uncategorized'),
-    skills: [],
-    order: 9999,
-  });
+  const uncategorizedId = 'uncategorized';
+  if (!categoryMap.has(uncategorizedId)) {
+    categoryMap.set(uncategorizedId, {
+      id: uncategorizedId,
+      name: t('skills.uncategorized'),
+      skills: [],
+      order: 999,
+    });
+  }
 
   currentCv.value.skills.forEach((skill) => {
-    const catId = skill.categoryId || 'uncategorized';
-    if (categoryMap.has(catId)) {
-      categoryMap.get(catId)!.skills.push(skill);
-    } else {
-      categoryMap.get('uncategorized')!.skills.push(skill);
+    const target = categoryMap.get(skill.categoryId || uncategorizedId);
+    if (target) {
+      target.skills.push(skill);
     }
   });
 
@@ -257,65 +244,89 @@ const categoriesWithSkills = computed(() => {
     .sort((a, b) => a.order - b.order);
 });
 
-const formatDate = (dateString: string | null | undefined) => {
-  if (!dateString) return t('common.time.tillNow', 'Till now');
-  return new Date(dateString).toLocaleDateString();
-};
-
-const handleExportPdf = async () => {
-  if (!previewRef.value) return;
+const handleExportPdf = async (): Promise<void> => {
+  if (!previewRef.value || !currentCv.value) return;
   exporting.value = true;
   try {
     const htmlContent = previewRef.value.outerHTML;
+
+    const styleTags = Array.from(document.querySelectorAll('style'))
+      .map((s) => s.textContent)
+      .join('\n');
+
+    const computedStyle = getComputedStyle(document.documentElement);
+    const primaryColor = computedStyle.getPropertyValue('--v-theme-primary');
 
     const fullHtml = `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="utf-8">
-        <title>${currentCv.value?.name || 'CV'}</title>
+        <style>
+          ${styleTags}
+          :root { --v-theme-primary: ${primaryColor}; }
+          body { background: white !important; margin: 0; padding: 0; }
+          #cv-preview-content {
+            box-shadow: none !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 20mm !important;
+          }
+          /* Защита от разрывов (AC-5.4) */
+          .project-row, .category-row {
+            page-break-inside: avoid !important;
+          }
+          h1, h2, h3 { page-break-after: avoid !important; }
+          @page { size: A4; margin: 0; }
+
+          .v-divider--vertical {
+            border-right: 2px solid var(--v-theme-primary) !important;
+            height: auto !important;
+            align-self: stretch !important;
+          }
+        </style>
       </head>
-      <body style="margin: 0; padding: 0;">
-        ${htmlContent}
+      <body>
+        <div class="v-application v-theme--light">
+          <div class="v-application__wrap">
+            ${htmlContent}
+          </div>
+        </div>
       </body>
       </html>
     `;
 
-    const base64Pdf = await exportPdf({
+    const base64Pdf = await cvsStore.exportPdf({
       html: fullHtml,
       margin: {
-        top: '20mm',
-        bottom: '20mm',
-        left: '20mm',
-        right: '20mm',
+        top: '0mm',
+        bottom: '0mm',
+        left: '0mm',
+        right: '0mm',
       },
     });
 
-    if (base64Pdf) {
-      const binaryString = window.atob(base64Pdf);
-      const len = binaryString.length;
-      const bytes = new Uint8Array(len);
-      for (let i = 0; i < len; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
+    if (!base64Pdf) throw new Error('Server returned empty PDF data');
 
-      const blob = new Blob([bytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${currentCv.value?.name || 'CV'}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      actionMessage.value = t('common.responses.exportSuccess');
-      snackbarColor.value = 'success';
-      isSnackbar.value = true;
+    const binaryString = window.atob(base64Pdf);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
     }
-  } catch (e) {
-    actionMessage.value = `${t('common.responses.error')}: ${e instanceof Error ? e.message : 'Unknown error'}`;
+
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentCv.value.name || 'CV'}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    actionMessage.value = t('common.responses.exportSuccess');
+    snackbarColor.value = 'success';
+    isSnackbar.value = true;
+  } catch (e: unknown) {
+    actionMessage.value = e instanceof Error ? e.message : String(e);
     snackbarColor.value = 'error';
     isSnackbar.value = true;
   } finally {
@@ -324,7 +335,10 @@ const handleExportPdf = async () => {
 };
 
 onMounted(async () => {
-  const [cv] = await Promise.all([fetchCv(cvId), fetchCategories()]);
+  const [cv] = await Promise.all([
+    cvsStore.fetchCv(cvId),
+    dictionariesStore.fetchCategories(),
+  ]);
 
   if (cv) {
     setBreadcrumbs([
@@ -335,3 +349,15 @@ onMounted(async () => {
   }
 });
 </script>
+
+<style scoped>
+:deep(.v-table.skills-table-print) {
+  background: transparent !important;
+}
+
+:deep(.project-row) {
+  margin-top: 20px;
+  border-top: 1px solid rgba(var(--v-border-color), 0.1);
+  padding-top: 10px;
+}
+</style>
