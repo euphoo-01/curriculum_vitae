@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import type { GetUserCvsQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
+import type { UserCvItem } from '~/types/cvs';
 
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-type CvItem = NonNullable<NonNullable<GetUserCvsQuery['user']>['cvs']>[number];
-
 defineProps<{
-  items: CvItem[];
+  items: UserCvItem[];
   loading?: boolean;
   search?: string;
   adminActions: AdminAction[];

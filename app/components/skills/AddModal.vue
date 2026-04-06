@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
 import type { GetSkillCategoriesQuery } from '~~/graphql/generated/graphql';
+import type { SkillEditData, SkillFormData } from '~/types/skills';
 
 interface Props {
   modelValue: boolean;
   loading?: boolean;
-  editData?: { id: string; name: string; categoryId?: string | null } | null;
+  editData?: SkillEditData | null;
   categories: GetSkillCategoriesQuery['skillCategories'];
 }
 
@@ -13,10 +14,7 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (
-    e: 'submit',
-    formData: { id?: string; name: string; categoryId?: string }
-  ): void;
+  (e: 'submit', formData: SkillFormData): void;
 }>();
 
 const { t } = useI18n();

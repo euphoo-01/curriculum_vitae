@@ -91,13 +91,7 @@ import type {
   GetDepartmentsQuery,
   GetPositionsQuery,
 } from '~~/graphql/generated/graphql';
-
-export interface ProfileFormData {
-  first_name: string;
-  last_name: string;
-  departmentId: string | null;
-  positionId: string | null;
-}
+import type { ProfileFormData } from '~/types/users';
 
 const props = defineProps<{
   initialData: ProfileFormData;

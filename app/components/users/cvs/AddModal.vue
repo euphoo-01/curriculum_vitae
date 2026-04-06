@@ -1,20 +1,18 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
+import type { UserCvEditData, UserCvFormData } from '~/types/cvs';
 
 interface Props {
   modelValue: boolean;
   loading?: boolean;
-  editData?: { id: string; name: string; description: string } | null;
+  editData?: UserCvEditData | null;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (
-    e: 'submit',
-    formData: { id?: string; name: string; description: string }
-  ): void;
+  (e: 'submit', formData: UserCvFormData): void;
 }>();
 
 const { t } = useI18n();

@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { GetAllCvsQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
-
-type CvItem = GetAllCvsQuery['cvs'][number];
+import type { CvItem } from '~/types/cvs';
 
 defineProps<{
   items: CvItem[];

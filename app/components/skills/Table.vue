@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { GetSkillsQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
-
-type SkillItem = GetSkillsQuery['skills'][number];
+import type { SkillItem } from '~/types/skills';
 
 defineProps<{
   items: SkillItem[];

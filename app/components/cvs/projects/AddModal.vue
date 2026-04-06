@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import type { VForm } from 'vuetify/components';
 import type { GetProjectsQuery } from '~~/graphql/generated/graphql';
+import type { CvProjectEditData, CvProjectFormData } from '~/types/cvs';
 
 interface Props {
   modelValue: boolean;
   loading?: boolean;
-  editData?: {
-    projectId: string;
-    start_date: string;
-    end_date?: string | null;
-    roles: string[];
-    responsibilities: string[];
-  } | null;
+  editData?: CvProjectEditData | null;
   projects: GetProjectsQuery['projects'];
 }
 
@@ -19,16 +14,7 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
-  (
-    e: 'submit',
-    formData: {
-      projectId: string;
-      start_date: string;
-      end_date?: string;
-      roles: string[];
-      responsibilities: string[];
-    }
-  ): void;
+  (e: 'submit', formData: CvProjectFormData): void;
 }>();
 
 const { t } = useI18n();

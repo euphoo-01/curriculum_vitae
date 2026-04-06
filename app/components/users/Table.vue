@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import type { UsersQuery } from '~~/graphql/generated/graphql';
-import type { AdminAction } from '~/types/users';
+import type { AdminAction, UserItem } from '~/types/users';
 
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-type UserItem = UsersQuery['users'][number];
 
 defineProps<{
   items: UserItem[];

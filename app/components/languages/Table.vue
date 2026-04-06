@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { GetLanguagesQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
-
-type LanguageItem = GetLanguagesQuery['languages'][number];
+import type { LanguageItem } from '~/types/languages';
 
 defineProps<{
   items: LanguageItem[];

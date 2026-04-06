@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import type { GetCvQuery } from '~~/graphql/generated/graphql';
 import type { AdminAction } from '~/types/users';
-
-type CvProjectItem = NonNullable<
-  NonNullable<GetCvQuery['cv']>['projects']
->[number];
+import type { CvProjectItem } from '~/types/cvs';
 
 defineProps<{
   items: CvProjectItem[];
