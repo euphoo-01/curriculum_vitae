@@ -30,15 +30,16 @@ export function useDomainForm<
   const form = ref(options.initialData()) as Ref<TFormData>;
 
   watch(
-    () => props.modelValue,
-    (val) => {
-      if (val && props.editData) {
-        form.value = options.mapEditData(props.editData);
-      } else if (!val || (val && !props.editData)) {
+    [() => props.modelValue, () => props.editData],
+    ([newModelValue, newEditData]) => {
+      if (newModelValue && newEditData) {
+        form.value = options.mapEditData(newEditData as TEditData);
+      } else if (!newModelValue || (newModelValue && !newEditData)) {
         form.value = options.initialData();
         formRef.value?.resetValidation();
       }
-    }
+    },
+    { immediate: true }
   );
 
   const close = () => emit('update:modelValue', false);

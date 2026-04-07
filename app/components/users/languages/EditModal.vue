@@ -12,7 +12,7 @@
       <v-form ref="formRef" validate-on="submit lazy" @submit.prevent="submit">
         <div class="p-4">
           <v-text-field
-            :model-value="language?.name"
+            :model-value="editData?.name"
             :label="t('languages.name')"
             variant="outlined"
             density="compact"
@@ -79,7 +79,7 @@ import { useI18n } from 'vue-i18n';
 interface Props {
   modelValue: boolean;
   loading?: boolean;
-  language: { name: string; proficiency: Proficiency } | null;
+  editData: { name: string; proficiency: Proficiency } | null;
 }
 
 const props = defineProps<Props>();
@@ -96,24 +96,17 @@ const { formRef, form, close, submit } = useDomainForm<
   { proficiency: Proficiency | null },
   { name: string; proficiency: Proficiency },
   { name: string; proficiency: Proficiency }
->(
-  {
-    modelValue: props.modelValue,
-    editData: props.language,
+>(props, emit, {
+  initialData: () => ({ proficiency: null }),
+  mapEditData: (data) => ({ proficiency: data.proficiency }),
+  prepareSubmitData: (formData) => {
+    if (!formData.proficiency || !props.editData) return undefined;
+    return {
+      name: props.editData.name,
+      proficiency: formData.proficiency,
+    };
   },
-  emit,
-  {
-    initialData: () => ({ proficiency: null }),
-    mapEditData: (data) => ({ proficiency: data.proficiency }),
-    prepareSubmitData: (formData) => {
-      if (!formData.proficiency || !props.language) return undefined;
-      return {
-        name: props.language.name,
-        proficiency: formData.proficiency,
-      };
-    },
-  }
-);
+});
 
 const rules = {
   required: (value: unknown) => !!value || t('common.validation.required'),

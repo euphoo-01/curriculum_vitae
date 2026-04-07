@@ -134,7 +134,7 @@
 
       <UsersSkillsEditModal
         v-model="isEditModalOpen"
-        :skill="selectedSkill"
+        :edit-data="selectedSkill"
         :loading="updating"
         @submit="handleUpdateSkill"
         @delete="openDeleteModalFromEdit"

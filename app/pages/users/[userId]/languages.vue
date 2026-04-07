@@ -129,7 +129,7 @@
 
       <UsersLanguagesEditModal
         v-model="isEditModalOpen"
-        :language="selectedLanguage"
+        :edit-data="selectedLanguage"
         :loading="updating"
         @submit="handleUpdateLanguage"
         @delete="openDeleteModalFromEdit"

@@ -10,7 +10,7 @@
       <v-form ref="formRef" validate-on="submit lazy" @submit.prevent="submit">
         <div class="p-4">
           <v-text-field
-            :model-value="skill?.name"
+            :model-value="editData?.name"
             :label="t('skills.name')"
             variant="outlined"
             density="compact"
@@ -77,7 +77,7 @@ import { useI18n } from 'vue-i18n';
 interface Props {
   modelValue: boolean;
   loading?: boolean;
-  skill: { name: string; mastery: Mastery } | null;
+  editData: { name: string; mastery: Mastery } | null;
 }
 
 const props = defineProps<Props>();
@@ -94,24 +94,17 @@ const { formRef, form, close, submit } = useDomainForm<
   { mastery: Mastery | null },
   { name: string; mastery: Mastery },
   { name: string; mastery: Mastery }
->(
-  {
-    modelValue: props.modelValue,
-    editData: props.skill,
+>(props, emit, {
+  initialData: () => ({ mastery: null }),
+  mapEditData: (data) => ({ mastery: data.mastery }),
+  prepareSubmitData: (formData) => {
+    if (!formData.mastery || !props.editData) return undefined;
+    return {
+      name: props.editData.name,
+      mastery: formData.mastery,
+    };
   },
-  emit,
-  {
-    initialData: () => ({ mastery: null }),
-    mapEditData: (data) => ({ mastery: data.mastery }),
-    prepareSubmitData: (formData) => {
-      if (!formData.mastery || !props.skill) return undefined;
-      return {
-        name: props.skill.name,
-        mastery: formData.mastery,
-      };
-    },
-  }
-);
+});
 
 const rules = {
   required: (value: unknown) => !!value || t('common.validation.required'),
