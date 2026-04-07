@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { AdminAction, UserItem } from '~/types/users';
-
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useDisplay } from 'vuetify';
 
 defineProps<{
   items: UserItem[];
@@ -13,28 +13,50 @@ defineProps<{
 }>();
 
 const { t } = useI18n();
+const { width } = useDisplay();
 
-const headers = computed(() => [
-  { title: '', key: 'avatar', sortable: false, width: '60px' },
-  {
-    title: t('common.fields.firstName'),
-    key: 'profile.first_name',
-    sortable: true,
-  },
-  {
-    title: t('common.fields.lastName'),
-    key: 'profile.last_name',
-    sortable: true,
-  },
-  { title: t('common.fields.email'), key: 'email', sortable: true },
-  {
-    title: t('common.fields.department'),
-    key: 'department_name',
-    sortable: true,
-  },
-  { title: t('common.fields.position'), key: 'position_name', sortable: true },
-  { title: '', key: 'actions', sortable: false },
-]);
+const isMobile = computed(() => width.value <= 768);
+
+const headers = computed(() => {
+  const allHeaders = [
+    { title: '', key: 'avatar', sortable: false, width: '60px' },
+    {
+      title: t('common.fields.firstName'),
+      key: 'profile.first_name',
+      sortable: true,
+    },
+    {
+      title: t('common.fields.lastName'),
+      key: 'profile.last_name',
+      sortable: true,
+    },
+    { title: t('common.fields.email'), key: 'email', sortable: true },
+    {
+      title: t('common.fields.department'),
+      key: 'department_name',
+      sortable: true,
+    },
+    {
+      title: t('common.fields.position'),
+      key: 'position_name',
+      sortable: true,
+    },
+    { title: '', key: 'actions', sortable: false },
+  ];
+
+  if (isMobile.value) {
+    const mobileKeys = [
+      'avatar',
+      'profile.first_name',
+      'department_name',
+      'position_name',
+      'actions',
+    ];
+    return allHeaders.filter((header) => mobileKeys.includes(header.key));
+  }
+
+  return allHeaders;
+});
 </script>
 
 <template>
