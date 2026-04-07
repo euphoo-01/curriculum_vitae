@@ -61,7 +61,12 @@ export const useAuthStore = defineStore('auth', () => {
         return data.user;
       }
     } catch (e) {
-      console.error('Store: GetUser error', e);
+      if (e instanceof Error) {
+        console.error('Store: GetUser error', e.message);
+      } else {
+        console.error('Store: GetUser error. Unknown error');
+      }
+
       throw e;
     }
   };
@@ -81,9 +86,17 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const logout = async () => {
-    await onLogout();
-    clearUser();
-    return navigateTo('/auth/login');
+    try {
+      await onLogout();
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error('Error on Apollo logout', e.message);
+      } else {
+        console.error('Error on Apollo logout');
+      }
+    } finally {
+      clearUser();
+    }
   };
 
   const refresh = async () => {
@@ -101,7 +114,11 @@ export const useAuthStore = defineStore('auth', () => {
         }
         throw new Error('Refresh failed');
       } catch (e) {
-        await logout();
+        if (e instanceof Error) {
+          console.error('Store: Refresh error', e.message);
+        } else {
+          console.error('Store: Refresh error: Unknown Error');
+        }
         throw e;
       } finally {
         refreshPromise = null;

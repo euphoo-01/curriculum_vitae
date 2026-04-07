@@ -1,54 +1,43 @@
 export default defineNuxtRouteMiddleware(async (to) => {
+  if (to.path.includes('.')) return;
+
   const authStore = useAuthStore();
 
-  const accessToken = useCookie('access_token').value;
-  const refreshToken = useCookie('refresh_token').value;
+  const getAccessToken = () => useCookie('access_token').value;
+  const getRefreshToken = () => useCookie('refresh_token').value;
 
   const isAuthPage = to.path.startsWith('/auth');
 
-  let validToken = !!accessToken;
-
-  if (!validToken && refreshToken) {
+  if (!getAccessToken() && getRefreshToken()) {
     try {
       await authStore.refresh();
-      validToken = true;
-    } catch (e) {
-      console.error('Error while updating token:', e);
-      validToken = false;
+    } catch {
+      console.error('Middleware: Refresh failed');
     }
   }
 
-  if (validToken && !authStore.user) {
-    if (authStore.userId) {
-      try {
+  if (getAccessToken() && !authStore.user) {
+    try {
+      if (authStore.userId) {
         await authStore.getUser(authStore.userId);
-      } catch (e) {
-        console.error('Error while fetching user:', e);
-
-        if (refreshToken) {
-          try {
-            await authStore.refresh();
-            await authStore.getUser(authStore.userId);
-          } catch {
-            await authStore.logout();
-            validToken = false;
-          }
-        } else {
-          await authStore.logout();
-          validToken = false;
-        }
+      } else {
+        throw new Error('No user ID in cookies');
       }
-    } else {
+    } catch {
+      console.error('Middleware: GetUser failed, logging out');
       await authStore.logout();
-      validToken = false;
     }
   }
 
-  if (!validToken && !isAuthPage) {
+  const isAuthenticated = !!getAccessToken();
+
+  if (!isAuthenticated && !isAuthPage) {
     return navigateTo('/auth/login');
   }
 
-  if (validToken && (isAuthPage || to.path === '/')) {
-    return navigateTo('/users');
+  if (isAuthenticated && (isAuthPage || to.path === '/')) {
+    if (to.path !== '/users') {
+      return navigateTo('/users');
+    }
   }
 });

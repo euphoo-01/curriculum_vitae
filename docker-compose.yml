@@ -31,7 +31,6 @@ volumes:
   cv_postgres:
     external: false
 
-# Add this section to force a specific IP range
 networks:
   cv_net:
     driver: bridge

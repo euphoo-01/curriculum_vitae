@@ -25,7 +25,7 @@ describe('Users Languages AddModal Component', () => {
 
   beforeEach(() => {
     const nuxtApp = useNuxtApp() as ReturnType<typeof useNuxtApp> & {
-      $apollo?: { defaultClient: any };
+      $apollo?: { defaultClient: ApolloClient };
     };
 
     const apolloMock = {

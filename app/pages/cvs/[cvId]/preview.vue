@@ -2,7 +2,7 @@
   <div class="flex-grow-1 flex flex-col pb-4 m-0 bg-background h-screen">
     <div class="flex flex-col bg-background px-4">
       <LayoutBreadcrumbs class="flex-none" />
-      <div class="flex justify-between items-center flex-wrap">
+      <div class="flex justify-between items-center">
         <CvsTabs />
         <v-btn
           color="primary"
@@ -257,7 +257,20 @@ const handleExportPdf = async (): Promise<void> => {
     const htmlContent = previewRef.value.outerHTML;
 
     const styleTags = Array.from(document.querySelectorAll('style'))
-      .map((s) => s.textContent)
+      .map((s) => s.textContent || '')
+      .map((css) => css.replace(/\/\*# sourceMappingURL=[\s\S]*?\*\//g, ''))
+      .join('\n');
+
+    const linkTags = Array.from(
+      document.querySelectorAll('link[rel="stylesheet"]')
+    )
+      .map((l) => {
+        const href = new URL(
+          (l as HTMLLinkElement).href,
+          window.location.origin
+        ).href;
+        return `<link rel="stylesheet" href="${href}">`;
+      })
       .join('\n');
 
     const computedStyle = getComputedStyle(document.documentElement);
@@ -268,6 +281,7 @@ const handleExportPdf = async (): Promise<void> => {
       <html>
       <head>
         <meta charset="utf-8">
+        ${linkTags}
         <style>
           ${styleTags}
           :root { --v-theme-primary: ${primaryColor}; }
