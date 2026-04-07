@@ -37,21 +37,28 @@ const rules = {
 
 <template>
   <v-dialog
+    data-test-id="skills-add-modal"
     :model-value="modelValue"
     max-width="500"
     @update:model-value="emit('update:modelValue', $event)"
   >
     <v-card class="p-4">
-      <v-card-title class="px-4 text-h5">{{
+      <v-card-title data-test-id="modal-title" class="px-4 text-h5">{{
         editData ? t('common.actions.update') : t('common.actions.add')
       }}</v-card-title>
 
-      <v-form ref="formRef" validate-on="submit lazy" @submit.prevent="submit">
+      <v-form
+        ref="formRef"
+        data-test-id="skills-form"
+        validate-on="submit lazy"
+        @submit.prevent="submit"
+      >
         <v-container>
           <v-row>
             <v-col cols="12">
               <v-text-field
                 v-model="form.name"
+                data-test-id="input-name"
                 :label="t('skills.name')"
                 variant="outlined"
                 density="compact"
@@ -61,6 +68,7 @@ const rules = {
 
               <v-select
                 v-model="form.categoryId"
+                data-test-id="input-category"
                 :items="categories"
                 item-title="name"
                 item-value="id"
@@ -76,6 +84,7 @@ const rules = {
         <v-card-actions class="px-4">
           <v-spacer></v-spacer>
           <v-btn
+            data-test-id="cancel-button"
             variant="text"
             size="large"
             rounded
@@ -86,6 +95,7 @@ const rules = {
             {{ t('common.actions.cancel') }}
           </v-btn>
           <v-btn
+            data-test-id="submit-button"
             color="primary"
             variant="flat"
             size="large"

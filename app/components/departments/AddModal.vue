@@ -73,6 +73,7 @@ const rules = {
             {{ t('common.actions.cancel') }}
           </v-btn>
           <v-btn
+            data-test-id="submit-btn"
             color="primary"
             variant="flat"
             size="large"
@@ -90,3 +91,4 @@ const rules = {
     </v-card>
   </v-dialog>
 </template>
+te>

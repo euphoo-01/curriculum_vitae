@@ -49,6 +49,7 @@
           ></v-text-field>
           <v-btn
             v-if="isAdmin"
+            data-test-id="add-button"
             prepend-icon="mdi-plus"
             variant="text"
             color="primary"
@@ -183,3 +184,4 @@ onMounted(() => {
   fetchDepartments();
 });
 </script>
+> t>

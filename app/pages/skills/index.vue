@@ -11,6 +11,7 @@
       location="top"
       :color="snackbarColor"
       :timeout="3000"
+      data-test-id="snackbar"
     >
       {{ actionMessage }}
     </v-snackbar>
@@ -21,6 +22,7 @@
       :message="$t('profile.deleteConfirm')"
       :confirm-text="$t('common.actions.delete')"
       :cancel-text="$t('common.actions.cancel')"
+      data-test-id="delete-modal"
       @confirm="skillToDelete && handleDeleteSkill(skillToDelete)"
     />
 
@@ -29,6 +31,7 @@
       :loading="loadingAction"
       :edit-data="skillToEdit"
       :categories="categoriesList"
+      data-test-id="add-modal"
       @submit="handleSubmitSkill"
     />
 
@@ -45,6 +48,7 @@
             hide-details
             class="max-w-md"
             style="max-width: 400px"
+            data-test-id="search-input"
           ></v-text-field>
           <v-btn
             v-if="isAdmin"
@@ -53,6 +57,7 @@
             color="primary"
             size="large"
             rounded
+            data-test-id="add-button"
             @click="openAddModal"
           >
             {{ $t('common.actions.add') }}
@@ -65,6 +70,7 @@
           :admin-actions="adminActions"
           :can-edit="isAdmin"
           class="overflow-y-auto mt-4"
+          data-test-id="skills-table"
         />
       </v-card-text>
     </v-card>

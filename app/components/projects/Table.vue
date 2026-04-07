@@ -29,6 +29,7 @@ const formatDate = (dateString: string | null | undefined) => {
 
 <template>
   <v-data-table
+    data-test-id="projects-table"
     :headers="headers"
     :items="items"
     :loading="loading"
@@ -53,6 +54,7 @@ const formatDate = (dateString: string | null | undefined) => {
         <v-menu v-if="canEdit">
           <template #activator="{ props }">
             <v-btn
+              data-test-id="actions-button"
               icon="mdi-dots-vertical"
               variant="text"
               size="small"

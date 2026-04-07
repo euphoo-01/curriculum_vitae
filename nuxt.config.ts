@@ -34,6 +34,9 @@ export default defineNuxtConfig({
       default: {
         httpEndpoint:
           process.env.VITE_GRAPHQL_URL || 'http://localhost:3001/api/graphql',
+        httpLinkOptions: {
+          credentials: 'include',
+        },
       },
     },
   },
@@ -61,6 +64,15 @@ export default defineNuxtConfig({
   eslint: {
     config: {
       stylistic: false,
+    },
+  },
+
+  nitro: {
+    devProxy: {
+      '/api/graphql': {
+        target: 'http://localhost:3001/api/graphql',
+        changeOrigin: true,
+      },
     },
   },
 

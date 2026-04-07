@@ -8,6 +8,7 @@
 
     <v-snackbar
       v-model="isSnackbar"
+      data-test-id="snackbar"
       location="top"
       :color="snackbarColor"
       :timeout="3000"
@@ -36,6 +37,7 @@
         <v-row class="m-0 justify-between px-4 pt-4 flex-none">
           <v-text-field
             v-model="search"
+            data-test-id="search-input"
             prepend-inner-icon="mdi-magnify"
             :placeholder="$t('cvs.search')"
             variant="outlined"
@@ -46,6 +48,7 @@
             style="max-width: 400px"
           ></v-text-field>
           <v-btn
+            data-test-id="add-button"
             prepend-icon="mdi-plus"
             variant="text"
             color="primary"
@@ -57,6 +60,7 @@
           </v-btn>
         </v-row>
         <CvsTable
+          data-test-id="cvs-table"
           :items="allCvs"
           :loading="loading"
           :search="search"

@@ -47,6 +47,7 @@ const rules = {
             <v-col cols="12">
               <v-text-field
                 v-model="form.name"
+                data-test-id="name-input"
                 :label="t('common.fields.position')"
                 variant="outlined"
                 density="compact"
@@ -60,6 +61,7 @@ const rules = {
         <v-card-actions class="px-4">
           <v-spacer></v-spacer>
           <v-btn
+            data-test-id="cancel-button"
             variant="text"
             size="large"
             rounded
@@ -70,6 +72,7 @@ const rules = {
             {{ t('common.actions.cancel') }}
           </v-btn>
           <v-btn
+            data-test-id="submit-button"
             color="primary"
             variant="flat"
             size="large"

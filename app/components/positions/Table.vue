@@ -20,6 +20,7 @@ const headers = computed(() => [
 
 <template>
   <v-data-table
+    data-test-id="positions-table"
     :headers="headers"
     :items="items"
     :loading="loading"
@@ -36,13 +37,14 @@ const headers = computed(() => [
         <v-menu v-if="canEdit">
           <template #activator="{ props }">
             <v-btn
+              data-test-id="actions-button"
               icon="mdi-dots-vertical"
               variant="text"
               size="small"
               v-bind="props"
             ></v-btn>
           </template>
-          <v-list>
+          <v-list data-test-id="actions-list">
             <v-list-item
               v-for="(action, idx) in adminActions"
               :key="idx"

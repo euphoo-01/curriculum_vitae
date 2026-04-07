@@ -44,7 +44,13 @@ export const useAuthStore = defineStore('auth', () => {
     sameSite: 'lax',
   });
 
-  const refreshTokenCookie = useCookie<string | null>('auth_refresh_token', {
+  const refreshTokenCookie = useCookie<string | null>('refresh_token', {
+    maxAge: 60 * 60 * 24 * 30,
+    path: '/',
+    sameSite: 'lax',
+  });
+
+  const accessTokenCookie = useCookie<string | null>('access_token', {
     maxAge: 60 * 60 * 24 * 30,
     path: '/',
     sameSite: 'lax',
@@ -111,6 +117,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (data?.login) {
         await onLogin(data.login.access_token);
+        accessTokenCookie.value = data.login.access_token;
         refreshTokenCookie.value = data.login.refresh_token;
         setUser(data.login.user);
         return data.login;
@@ -130,6 +137,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (data?.signup) {
         await onLogin(data.signup.access_token);
+        accessTokenCookie.value = data.signup.access_token;
         refreshTokenCookie.value = data.signup.refresh_token;
         setUser(data.signup.user);
         return data.signup;
@@ -142,6 +150,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const logout = async () => {
     await onLogout();
+    accessTokenCookie.value = null;
     refreshTokenCookie.value = null;
     clearUser();
     navigateTo('/auth/login');
@@ -158,10 +167,13 @@ export const useAuthStore = defineStore('auth', () => {
 
     refreshPromise = (async () => {
       try {
-        const { data } = await client.mutate({ mutation: UpdateTokenDocument });
+        const { data } = await client.mutate({
+          mutation: UpdateTokenDocument,
+        });
 
         if (data?.updateToken) {
           await onLogin(data.updateToken.access_token);
+          accessTokenCookie.value = data.updateToken.access_token;
           refreshTokenCookie.value = data.updateToken.refresh_token;
           return data.updateToken;
         }

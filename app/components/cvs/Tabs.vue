@@ -30,5 +30,5 @@ const cvTabs = computed(() => [
 </script>
 
 <template>
-  <LayoutTabs :items="cvTabs" class="mt-2" />
+  <LayoutTabs :items="cvTabs" class="mt-2" data-test-id="cvs-tabs" />
 </template>

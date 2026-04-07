@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
-import EditForm from '../../../app/components/users/profile/EditForm.vue';
+import EditForm from '../../../../app/components/users/profile/EditForm.vue';
 
 describe('EditForm Component', () => {
   it('renders correct data and handles submit', async () => {
@@ -56,10 +56,8 @@ describe('EditForm Component', () => {
     expect(inputs.length).toBe(2);
     expect(inputs[0].attributes('value')).toBe('John');
 
-    // Test the event emitting
     await inputs[0].setValue('Jane');
 
-    // Submitting the form
     await wrapper.find('form').trigger('submit');
 
     expect(wrapper.emitted('update')).toBeTruthy();

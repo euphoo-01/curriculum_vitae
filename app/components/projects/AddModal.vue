@@ -59,21 +59,28 @@ const rules = {
 
 <template>
   <v-dialog
+    data-test-id="projects-add-modal"
     :model-value="modelValue"
     max-width="700"
     @update:model-value="emit('update:modelValue', $event)"
   >
     <v-card class="p-4">
-      <v-card-title class="px-4 text-h5">{{
+      <v-card-title data-test-id="modal-title" class="px-4 text-h5">{{
         editData ? t('common.actions.update') : t('common.actions.add')
       }}</v-card-title>
 
-      <v-form ref="formRef" validate-on="submit lazy" @submit.prevent="submit">
+      <v-form
+        ref="formRef"
+        data-test-id="projects-form"
+        validate-on="submit lazy"
+        @submit.prevent="submit"
+      >
         <v-container>
           <v-row>
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.name"
+                data-test-id="input-name"
                 :label="t('projects.name')"
                 variant="outlined"
                 density="compact"
@@ -84,6 +91,7 @@ const rules = {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.internal_name"
+                data-test-id="input-internal-name"
                 :label="t('projects.internalName')"
                 variant="outlined"
                 density="compact"
@@ -94,6 +102,7 @@ const rules = {
             <v-col cols="12">
               <v-text-field
                 v-model="form.domain"
+                data-test-id="input-domain"
                 :label="t('projects.domain')"
                 variant="outlined"
                 density="compact"
@@ -104,6 +113,7 @@ const rules = {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.start_date"
+                data-test-id="input-start-date"
                 :label="t('projects.startDate')"
                 type="date"
                 variant="outlined"
@@ -115,6 +125,7 @@ const rules = {
             <v-col cols="12" sm="6">
               <v-text-field
                 v-model="form.end_date"
+                data-test-id="input-end-date"
                 :label="t('projects.endDate')"
                 type="date"
                 variant="outlined"
@@ -125,6 +136,7 @@ const rules = {
             <v-col cols="12">
               <v-textarea
                 v-model="form.description"
+                data-test-id="input-description"
                 :label="t('projects.description')"
                 variant="outlined"
                 density="compact"
@@ -135,6 +147,7 @@ const rules = {
             <v-col cols="12">
               <v-combobox
                 v-model="form.environment"
+                data-test-id="input-environment"
                 :label="t('projects.environment')"
                 multiple
                 chips
@@ -150,6 +163,7 @@ const rules = {
         <v-card-actions class="px-4">
           <v-spacer></v-spacer>
           <v-btn
+            data-test-id="cancel-button"
             variant="text"
             size="large"
             rounded
@@ -160,6 +174,7 @@ const rules = {
             {{ t('common.actions.cancel') }}
           </v-btn>
           <v-btn
+            data-test-id="submit-button"
             color="primary"
             variant="flat"
             size="large"

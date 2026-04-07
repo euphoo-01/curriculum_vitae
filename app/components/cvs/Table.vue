@@ -22,6 +22,7 @@ const headers = computed(() => [
 
 <template>
   <v-data-table
+    data-test-id="cvs-table"
     :headers="headers"
     :items="items"
     :loading="loading"
@@ -40,6 +41,7 @@ const headers = computed(() => [
         <v-menu>
           <template #activator="{ props }">
             <v-btn
+              data-test-id="actions-button"
               icon="mdi-dots-vertical"
               variant="text"
               size="small"

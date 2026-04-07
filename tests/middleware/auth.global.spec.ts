@@ -54,11 +54,8 @@ describe('Auth Global Middleware', () => {
   });
 
   it('attempts refresh if no token but refresh token exists', async () => {
-    mocks.apollo.getToken.mockResolvedValueOnce(null);
     mocks.cookie.value = 'refresh-123';
     mocks.auth.refresh.mockResolvedValueOnce(true);
-    mocks.store.userId = '1';
-    mocks.auth.getUser.mockResolvedValueOnce({ id: '1' });
 
     const middleware = authMiddleware as RouteMiddleware;
     await middleware(
@@ -67,12 +64,9 @@ describe('Auth Global Middleware', () => {
     );
 
     expect(mocks.auth.refresh).toHaveBeenCalled();
-    expect(mocks.auth.getUser).toHaveBeenCalledWith('1');
-    expect(mocks.navigateTo).not.toHaveBeenCalledWith('/auth/login');
   });
 
   it('redirects to login if refresh fails on protected route', async () => {
-    mocks.apollo.getToken.mockResolvedValueOnce(null);
     mocks.cookie.value = 'refresh-123';
     mocks.auth.refresh.mockRejectedValueOnce(new Error('fail'));
 
@@ -86,48 +80,73 @@ describe('Auth Global Middleware', () => {
     expect(mocks.navigateTo).toHaveBeenCalledWith('/auth/login');
   });
 
-  it('redirects to /employees if refresh succeeds on auth page', async () => {
-    mocks.apollo.getToken.mockResolvedValueOnce(null);
-    mocks.cookie.value = 'refresh-123';
-    mocks.auth.refresh.mockResolvedValueOnce(true);
-    mocks.store.userId = '1';
-    mocks.auth.getUser.mockResolvedValueOnce({ id: '1' });
-
-    const middleware = authMiddleware as RouteMiddleware;
-    await middleware(
-      { path: '/auth/login' } as RouteLocationNormalized,
-      { path: '/' } as RouteLocationNormalized
-    );
-
-    expect(mocks.auth.refresh).toHaveBeenCalled();
-    expect(mocks.navigateTo).toHaveBeenCalledWith('/users');
-  });
-
-  it('redirects to /employees if token is valid and visiting auth page', async () => {
-    mocks.apollo.getToken.mockResolvedValue('valid-token');
-    mocks.store.user = { id: '1' };
-
-    const middleware = authMiddleware as RouteMiddleware;
-    await middleware(
-      { path: '/auth/login' } as RouteLocationNormalized,
-      { path: '/' } as RouteLocationNormalized
-    );
-
-    expect(mocks.navigateTo).toHaveBeenCalledWith('/users');
-  });
-
-  it('does not refresh if token is null but user is already in store', async () => {
-    mocks.apollo.getToken.mockResolvedValue(null);
-    mocks.store.user = { id: '1' };
-    mocks.cookie.value = 'refresh-123';
+  it('fetches user if token is valid but user is missing from store', async () => {
+    mocks.apollo.getToken.mockResolvedValue('valid');
+    mocks.store.userId = 'user-1';
+    mocks.auth.getUser.mockResolvedValueOnce(true);
 
     const middleware = authMiddleware as RouteMiddleware;
     await middleware(
       { path: '/users' } as RouteLocationNormalized,
-      { path: '/other' } as RouteLocationNormalized
+      { path: '/' } as RouteLocationNormalized
     );
 
-    expect(mocks.auth.refresh).not.toHaveBeenCalled();
-    expect(mocks.navigateTo).not.toHaveBeenCalled();
+    expect(mocks.auth.getUser).toHaveBeenCalledWith('user-1');
+    expect(mocks.navigateTo).not.toHaveBeenCalledWith('/auth/login');
+  });
+
+  it('logs out if getUser fails and no refresh token exists', async () => {
+    mocks.apollo.getToken.mockResolvedValue('valid');
+    mocks.store.userId = 'user-1';
+    mocks.auth.getUser.mockRejectedValueOnce(new Error('Token Expired'));
+    mocks.cookie.value = null;
+
+    const middleware = authMiddleware as RouteMiddleware;
+    await middleware(
+      { path: '/users' } as RouteLocationNormalized,
+      { path: '/' } as RouteLocationNormalized
+    );
+
+    expect(mocks.auth.logout).toHaveBeenCalled();
+    expect(mocks.navigateTo).toHaveBeenCalledWith('/auth/login');
+  });
+
+  it('attempts refresh and getUser if getUser fails initially but refresh token exists', async () => {
+    mocks.apollo.getToken.mockResolvedValue('valid');
+    mocks.store.userId = 'user-1';
+    mocks.cookie.value = 'refresh-123';
+
+    mocks.auth.getUser
+      .mockRejectedValueOnce(new Error('Token Expired'))
+      .mockResolvedValueOnce(true);
+    mocks.auth.refresh.mockResolvedValueOnce(true);
+
+    const middleware = authMiddleware as RouteMiddleware;
+    await middleware(
+      { path: '/users' } as RouteLocationNormalized,
+      { path: '/' } as RouteLocationNormalized
+    );
+
+    expect(mocks.auth.refresh).toHaveBeenCalled();
+    expect(mocks.auth.getUser).toHaveBeenCalledTimes(2);
+    expect(mocks.auth.logout).not.toHaveBeenCalled();
+  });
+
+  it('logs out if the fallback refresh -> getUser flow fails', async () => {
+    mocks.apollo.getToken.mockResolvedValue('valid');
+    mocks.store.userId = 'user-1';
+    mocks.cookie.value = 'refresh-123';
+
+    mocks.auth.getUser.mockRejectedValueOnce(new Error('Token Expired'));
+    mocks.auth.refresh.mockRejectedValueOnce(new Error('Refresh Failed'));
+
+    const middleware = authMiddleware as RouteMiddleware;
+    await middleware(
+      { path: '/users' } as RouteLocationNormalized,
+      { path: '/' } as RouteLocationNormalized
+    );
+
+    expect(mocks.auth.logout).toHaveBeenCalled();
+    expect(mocks.navigateTo).toHaveBeenCalledWith('/auth/login');
   });
 });

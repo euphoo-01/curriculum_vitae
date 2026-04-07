@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime';
-import AvatarUpload from '../../../app/components/users/profile/AvatarUpload.vue';
+import AvatarUpload from '../../../../app/components/users/profile/AvatarUpload.vue';
 
 mockNuxtImport('useI18n', () => () => ({
   t: (key: string) => key,
