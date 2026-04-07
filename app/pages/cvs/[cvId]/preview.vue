@@ -198,6 +198,12 @@ const { categoriesList } = storeToRefs(dictionariesStore);
 const { currentCv, loading: loadingCv } = storeToRefs(cvsStore);
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.cvPreview.title'),
+  ogTitle: t('seo.cvPreview.title'),
+  description: t('seo.cvPreview.description'),
+  ogDescription: t('seo.cvPreview.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;

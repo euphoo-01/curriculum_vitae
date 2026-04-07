@@ -82,6 +82,12 @@ const { fetchLanguages, createLanguage, updateLanguage, deleteLanguage } =
   dictionariesStore;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.languages.title'),
+  ogTitle: t('seo.languages.title'),
+  description: t('seo.languages.description'),
+  ogDescription: t('seo.languages.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 

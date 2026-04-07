@@ -4,6 +4,14 @@ import type { VForm } from 'vuetify/components';
 definePageMeta({ layout: 'auth' });
 
 const { t } = useI18n();
+
+useSeoMeta({
+  title: t('seo.login.title'),
+  ogTitle: t('seo.login.title'),
+  description: t('seo.login.description'),
+  ogDescription: t('seo.login.description'),
+});
+
 const router = useRouter();
 const auth = useAuthStore();
 

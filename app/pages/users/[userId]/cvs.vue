@@ -88,6 +88,12 @@ const route = useRoute();
 const userId = route.params.userId as string;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.userCvs.title'),
+  ogTitle: t('seo.userCvs.title'),
+  description: t('seo.userCvs.description'),
+  ogDescription: t('seo.userCvs.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 

@@ -87,6 +87,12 @@ const {
 } = dictionariesStore;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.departments.title'),
+  ogTitle: t('seo.departments.title'),
+  description: t('seo.departments.description'),
+  ogDescription: t('seo.departments.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 

@@ -120,6 +120,12 @@ const authStore = useAuthStore();
 const { user: currentUser } = storeToRefs(authStore);
 const logout = () => authStore.logout();
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.userProfile.title'),
+  ogTitle: t('seo.userProfile.title'),
+  description: t('seo.userProfile.description'),
+  ogDescription: t('seo.userProfile.description'),
+});
 const { formatDate, getInitials } = useFormatters();
 const { setBreadcrumbs } = useBreadcrumbs();
 

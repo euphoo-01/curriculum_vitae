@@ -97,6 +97,12 @@ const projectsStore = useProjectsStore();
 const { fetchProjects } = projectsStore;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.cvProjects.title'),
+  ogTitle: t('seo.cvProjects.title'),
+  description: t('seo.cvProjects.description'),
+  ogDescription: t('seo.cvProjects.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;

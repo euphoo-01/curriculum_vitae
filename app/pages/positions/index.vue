@@ -81,6 +81,12 @@ const { fetchPositions, createPosition, updatePosition, deletePosition } =
   dictionariesStore;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.positions.title'),
+  ogTitle: t('seo.positions.title'),
+  description: t('seo.positions.description'),
+  ogDescription: t('seo.positions.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 

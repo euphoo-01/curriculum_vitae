@@ -83,6 +83,12 @@ const { fetchSkills, fetchCategories, createSkill, updateSkill, deleteSkill } =
   dictionariesStore;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.skills.title'),
+  ogTitle: t('seo.skills.title'),
+  description: t('seo.skills.description'),
+  ogDescription: t('seo.skills.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 

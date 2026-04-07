@@ -14,6 +14,12 @@ const employeesStore = useEmployeesStore();
 const { users, loading, error } = storeToRefs(employeesStore);
 const { fetchUsers, deleteUser, createUser } = employeesStore;
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.users.title'),
+  ogTitle: t('seo.users.title'),
+  description: t('seo.users.description'),
+  ogDescription: t('seo.users.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 
 setBreadcrumbs([

@@ -1,4 +1,79 @@
 {
+  "seo": {
+    "title": "Innowise CV",
+    "login": {
+      "title": "Вход - Innowise CV",
+      "description": "Войдите в свой аккаунт Innowise CV, чтобы управлять своим резюме и профилем."
+    },
+    "register": {
+      "title": "Регистрация - Innowise CV",
+      "description": "Создайте аккаунт на Innowise CV, чтобы начать управлять своим профессиональным профилем."
+    },
+    "users": {
+      "title": "Сотрудники - Innowise CV",
+      "description": "Просматривайте и ищите сотрудников в организации."
+    },
+    "userProfile": {
+      "title": "Профиль - Innowise CV",
+      "description": "Управляйте данными профиля сотрудника, аватаром и ролями."
+    },
+    "userSkills": {
+      "title": "Навыки сотрудника - Innowise CV",
+      "description": "Управляйте и просматривайте навыки сотрудника и уровни владения ими."
+    },
+    "userLanguages": {
+      "title": "Языки сотрудника - Innowise CV",
+      "description": "Управляйте и просматривайте уровень владения языками сотрудника."
+    },
+    "userCvs": {
+      "title": "Резюме сотрудника - Innowise CV",
+      "description": "Управляйте и просматривайте все резюме, связанные с этим сотрудником."
+    },
+    "cvs": {
+      "title": "Список резюме - Innowise CV",
+      "description": "Просматривайте и управляйте всеми резюме в системе."
+    },
+    "cvDetails": {
+      "title": "Детали резюме - Innowise CV",
+      "description": "Редактируйте основные данные резюме."
+    },
+    "cvSkills": {
+      "title": "Навыки в резюме - Innowise CV",
+      "description": "Управляйте навыками, отображаемыми в резюме."
+    },
+    "cvProjects": {
+      "title": "Проекты в резюме - Innowise CV",
+      "description": "Управляйте проектами и обязанностями, указанными в резюме."
+    },
+    "cvPreview": {
+      "title": "Предпросмотр резюме - Innowise CV",
+      "description": "Предпросмотр и экспорт резюме в формат PDF."
+    },
+    "projects": {
+      "title": "Проекты - Innowise CV",
+      "description": "Управляйте и просматривайте все проекты в компании."
+    },
+    "departments": {
+      "title": "Отделы - Innowise CV",
+      "description": "Управляйте и просматривайте отделы компании."
+    },
+    "positions": {
+      "title": "Должности - Innowise CV",
+      "description": "Управляйте и просматривайте профессиональные должности."
+    },
+    "skills": {
+      "title": "Справочник навыков - Innowise CV",
+      "description": "Управляйте глобальным справочником навыков и категорий."
+    },
+    "languages": {
+      "title": "Справочник языков - Innowise CV",
+      "description": "Управляйте глобальным справочником языков."
+    },
+    "settings": {
+      "title": "Настройки - Innowise CV",
+      "description": "Настройте параметры языка и внешнего вида."
+    }
+  },
   "common": {
     "noData": "Нет данных",
     "fields": {

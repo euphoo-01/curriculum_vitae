@@ -160,6 +160,12 @@ const {
 const { fetchCv, addCvSkill, updateCvSkill, deleteCvSkill } = cvsStore;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.cvSkills.title'),
+  ogTitle: t('seo.cvSkills.title'),
+  description: t('seo.cvSkills.description'),
+  ogDescription: t('seo.cvSkills.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;

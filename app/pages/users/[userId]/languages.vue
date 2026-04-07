@@ -175,6 +175,12 @@ const userId = route.params.userId as string;
 
 const { user: currentUser } = storeToRefs(useAuthStore());
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.userLanguages.title'),
+  ogTitle: t('seo.userLanguages.title'),
+  description: t('seo.userLanguages.description'),
+  ogDescription: t('seo.userLanguages.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 
 const updating = ref(false);

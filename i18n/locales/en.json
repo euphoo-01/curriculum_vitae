@@ -1,4 +1,79 @@
 {
+  "seo": {
+    "title": "Innowise CV",
+    "login": {
+      "title": "Login - Innowise CV",
+      "description": "Log in to your Innowise CV account to manage your CV and profile."
+    },
+    "register": {
+      "title": "Register - Innowise CV",
+      "description": "Create an account on Innowise CV to start managing your professional profile."
+    },
+    "users": {
+      "title": "Employees - Innowise CV",
+      "description": "Browse and search for employees within the organization."
+    },
+    "userProfile": {
+      "title": "Profile - Innowise CV",
+      "description": "Manage employee profile details, avatar, and roles."
+    },
+    "userSkills": {
+      "title": "Employee Skills - Innowise CV",
+      "description": "Manage and view employee skills and mastery levels."
+    },
+    "userLanguages": {
+      "title": "Employee Languages - Innowise CV",
+      "description": "Manage and view employee language proficiency."
+    },
+    "userCvs": {
+      "title": "Employee CVs - Innowise CV",
+      "description": "Manage and view all CVs associated with this employee."
+    },
+    "cvs": {
+      "title": "CV List - Innowise CV",
+      "description": "View and manage all curriculum vitaes in the system."
+    },
+    "cvDetails": {
+      "title": "CV Details - Innowise CV",
+      "description": "Edit general details of the CV."
+    },
+    "cvSkills": {
+      "title": "CV Skills - Innowise CV",
+      "description": "Manage skills displayed on the CV."
+    },
+    "cvProjects": {
+      "title": "CV Projects - Innowise CV",
+      "description": "Manage projects and responsibilities shown on the CV."
+    },
+    "cvPreview": {
+      "title": "CV Preview - Innowise CV",
+      "description": "Preview and export the CV to PDF format."
+    },
+    "projects": {
+      "title": "Projects - Innowise CV",
+      "description": "Manage and view all projects within the company."
+    },
+    "departments": {
+      "title": "Departments - Innowise CV",
+      "description": "Manage and view company departments."
+    },
+    "positions": {
+      "title": "Positions - Innowise CV",
+      "description": "Manage and view professional positions."
+    },
+    "skills": {
+      "title": "Skills Dictionary - Innowise CV",
+      "description": "Manage the global dictionary of skills and categories."
+    },
+    "languages": {
+      "title": "Languages Dictionary - Innowise CV",
+      "description": "Manage the global dictionary of languages."
+    },
+    "settings": {
+      "title": "Settings - Innowise CV",
+      "description": "Customize your language and appearance settings."
+    }
+  },
   "common": {
     "noData": "No data available",
     "fields": {

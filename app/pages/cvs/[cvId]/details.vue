@@ -93,6 +93,12 @@ const { currentCv, loading } = storeToRefs(cvsStore);
 const { fetchCv, updateCv } = cvsStore;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.cvDetails.title'),
+  ogTitle: t('seo.cvDetails.title'),
+  description: t('seo.cvDetails.description'),
+  ogDescription: t('seo.cvDetails.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const route = useRoute();
 const cvId = route.params.cvId as string;

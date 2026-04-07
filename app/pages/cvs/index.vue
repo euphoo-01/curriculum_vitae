@@ -79,6 +79,12 @@ const { allCvs, loading } = storeToRefs(cvsStore);
 const { fetchAllCvs, createCv, updateCv, deleteCv } = cvsStore;
 
 const { t } = useI18n();
+useSeoMeta({
+  title: t('seo.cvs.title'),
+  ogTitle: t('seo.cvs.title'),
+  description: t('seo.cvs.description'),
+  ogDescription: t('seo.cvs.description'),
+});
 const { setBreadcrumbs } = useBreadcrumbs();
 const { user: currentUser } = storeToRefs(useAuthStore());
 

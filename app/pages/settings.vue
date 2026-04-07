@@ -50,6 +50,12 @@
 import { useTheme } from 'vuetify';
 
 const { t, locale, locales, setLocale } = useI18n();
+useSeoMeta({
+  title: t('seo.settings.title'),
+  ogTitle: t('seo.settings.title'),
+  description: t('seo.settings.description'),
+  ogDescription: t('seo.settings.description'),
+});
 const theme = useTheme();
 const { setBreadcrumbs } = useBreadcrumbs();
 
