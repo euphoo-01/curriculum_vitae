@@ -8,7 +8,7 @@
 
     <div
       class="w-full flex min-h-0 overflow-y-auto gap-3 flex-col pt-4"
-      style="width: 768px; margin: 0 auto"
+      style="max-width: 768px; margin: 0 auto"
     >
       <v-select
         v-model="currentLocale"

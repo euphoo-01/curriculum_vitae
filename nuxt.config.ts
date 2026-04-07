@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
@@ -34,6 +33,8 @@ export default defineNuxtConfig({
       default: {
         httpEndpoint:
           process.env.VITE_GRAPHQL_URL || 'http://localhost:3001/api/graphql',
+        browserHttpEndpoint:
+          process.env.VITE_GRAPHQL_BROWSER_URL || '/api/graphql',
         httpLinkOptions: {
           credentials: 'include',
         },
@@ -44,27 +45,11 @@ export default defineNuxtConfig({
   i18n: {
     langDir: 'locales',
     locales: [
-      {
-        code: 'en',
-        language: 'en-US',
-        file: 'en.json',
-        name: 'English',
-      },
-      {
-        code: 'ru',
-        language: 'ru-RU',
-        file: 'ru.json',
-        name: 'Русский',
-      },
+      { code: 'en', language: 'en-US', file: 'en.json', name: 'English' },
+      { code: 'ru', language: 'ru-RU', file: 'ru.json', name: 'Русский' },
     ],
     defaultLocale: 'ru',
     strategy: 'no_prefix',
-  },
-
-  eslint: {
-    config: {
-      stylistic: false,
-    },
   },
 
   nitro: {
@@ -77,7 +62,6 @@ export default defineNuxtConfig({
   },
 
   vuetify: {
-    moduleOptions: {},
     vuetifyOptions: {
       theme: {
         defaultTheme: 'light',

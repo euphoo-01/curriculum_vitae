@@ -2,7 +2,7 @@
   <div class="flex-grow-1 flex flex-col pb-4 m-0 bg-background h-screen">
     <div class="flex flex-col bg-background px-4">
       <LayoutBreadcrumbs class="flex-none" />
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center flex-wrap">
         <CvsTabs />
         <v-btn
           color="primary"

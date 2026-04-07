@@ -1,38 +1,46 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const authStore = useAuthStore();
-  const { getToken } = useApollo();
-  const refreshTokenCookie = useCookie('refresh_token');
+
+  const accessToken = useCookie('access_token').value;
+  const refreshToken = useCookie('refresh_token').value;
 
   const isAuthPage = to.path.startsWith('/auth');
 
-  const token = await getToken();
-  let validToken = !!token || !!authStore.user;
+  let validToken = !!accessToken;
 
-  if (!validToken && refreshTokenCookie.value) {
+  if (!validToken && refreshToken) {
     try {
       await authStore.refresh();
       validToken = true;
-    } catch {
+    } catch (e) {
+      console.error('Error while updating token:', e);
       validToken = false;
     }
   }
 
-  if (validToken && !authStore.user && authStore.userId) {
-    try {
-      await authStore.getUser(authStore.userId);
-    } catch {
-      if (refreshTokenCookie.value) {
-        try {
-          await authStore.refresh();
-          await authStore.getUser(authStore.userId);
-        } catch {
+  if (validToken && !authStore.user) {
+    if (authStore.userId) {
+      try {
+        await authStore.getUser(authStore.userId);
+      } catch (e) {
+        console.error('Error while fetching user:', e);
+
+        if (refreshToken) {
+          try {
+            await authStore.refresh();
+            await authStore.getUser(authStore.userId);
+          } catch {
+            await authStore.logout();
+            validToken = false;
+          }
+        } else {
           await authStore.logout();
           validToken = false;
         }
-      } else {
-        await authStore.logout();
-        validToken = false;
       }
+    } else {
+      await authStore.logout();
+      validToken = false;
     }
   }
 
