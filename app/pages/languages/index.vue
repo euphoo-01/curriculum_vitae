@@ -18,7 +18,7 @@
     <ConfirmModal
       v-model="isDeleteModal"
       :title="$t('common.actions.delete')"
-      :message="$t('profile.deleteConfirm')"
+      :message="$t('languages.deleteConfirm')"
       :confirm-text="$t('common.actions.delete')"
       :cancel-text="$t('common.actions.cancel')"
       @confirm="languageToDelete && handleDeleteLanguage(languageToDelete)"

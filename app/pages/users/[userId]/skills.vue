@@ -143,7 +143,8 @@
       <ConfirmModal
         v-model="isConfirmModalOpen"
         :loading="updating"
-        :title="$t('profile.deleteConfirm')"
+        :title="$t('common.actions.delete')"
+        :message="$t('skills.deleteConfirm')"
         @confirm="confirmDelete"
       />
     </div>

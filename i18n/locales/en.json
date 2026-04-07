@@ -115,38 +115,46 @@
     }
   },
   "skills": {
-    "title": "Skills",
-    "add": "Add skill",
-    "edit": "Edit skill",
-    "name": "Skill",
-    "category": "Category",
-    "mastery": "Mastery level",
-    "noSkills": "No skills added yet.",
-    "uncategorized": "Uncategorized"
+  "title": "Skills",
+  "add": "Add skill",
+  "edit": "Edit skill",
+  "name": "Skill",
+  "category": "Category",
+  "mastery": "Mastery level",
+  "noSkills": "No skills added yet.",
+  "uncategorized": "Uncategorized",
+  "deleteConfirm": "Are you sure you want to delete selected skills?"
   },
   "projects": {
-    "title": "Projects",
-    "project": "Project",
-    "name": "Project Name",
-    "internalName": "Internal Name",
-    "domain": "Domain",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "description": "Description",
-    "environment": "Environment",
-    "noProjects": "No projects added yet."
+  "title": "Projects",
+  "project": "Project",
+  "name": "Project Name",
+  "internalName": "Internal Name",
+  "domain": "Domain",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "description": "Description",
+  "environment": "Environment",
+  "noProjects": "No projects added yet.",
+  "deleteConfirm": "Are you sure you want to delete this project?"
   },
   "languages": {
-    "title": "Languages",
-    "add": "Add language",
-    "edit": "Edit language",
-    "name": "Language",
-    "proficiency": "Proficiency level",
-    "noLanguages": "No languages added yet.",
-    "nativeName": "Native name",
-    "iso2": "ISO2 code"
+  "title": "Languages",
+  "add": "Add language",
+  "edit": "Edit language",
+  "name": "Language",
+  "proficiency": "Proficiency level",
+  "noLanguages": "No languages added yet.",
+  "nativeName": "Native name",
+  "iso2": "ISO2 code",
+  "deleteConfirm": "Are you sure you want to delete selected languages?"
   },
-  "cvs": {
+  "departments": {
+  "deleteConfirm": "Are you sure you want to delete this department?"
+  },
+  "positions": {
+  "deleteConfirm": "Are you sure you want to delete this position?"
+  },  "cvs": {
     "title": "CVs",
     "add": "Create",
     "edit": "Edit",
