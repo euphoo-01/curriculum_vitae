@@ -26,7 +26,7 @@
       v-else-if="currentCv"
       flat
       rounded
-      class="flex flex-col flex-grow min-h-0 w-full overflow-y-auto"
+      class="flex bg-transparent flex-col flex-grow min-h-0 w-full overflow-y-auto"
     >
       <v-snackbar
         v-model="isSnackbar"
@@ -40,7 +40,7 @@
       <div
         id="cv-preview-content"
         ref="previewRef"
-        class="bg-surface text-on-surface mx-auto cv-print-area"
+        class="bg-transparent text-on-surface mx-auto cv-print-area"
         style="width: 210mm; min-height: 297mm; padding: 20mm"
       >
         <v-row class="justify-between mb-4 items-center">
@@ -136,22 +136,28 @@
         </v-row>
 
         <h1>{{ t('cvPreview.professionalSkills') }}</h1>
-        <v-table class="mt-4 bg-transparent skills-table-print">
+        <v-table class="mt-4 skills-table text-on-surface skills-table-print">
           <thead>
             <tr class="border-b border-primary border-solid">
               <th class="text-uppercase font-weight-bold text-caption pr-4">
-                {{ t('cvPreview.skills') }}
+                <h3>
+                  {{ t('cvPreview.skills') }}
+                </h3>
               </th>
               <th class="px-4"></th>
               <th
                 class="text-uppercase font-weight-bold text-caption text-center px-4"
               >
-                {{ t('cvPreview.experienceInYears') }}
+                <h3>
+                  {{ t('cvPreview.experienceInYears') }}
+                </h3>
               </th>
               <th
                 class="text-uppercase font-weight-bold text-caption text-right pl-4"
               >
-                {{ t('cvPreview.lastUsed') }}
+                <h3>
+                  {{ t('cvPreview.lastUsed') }}
+                </h3>
               </th>
             </tr>
           </thead>
@@ -161,11 +167,15 @@
               :key="category.id"
             >
               <tr class="category-row">
-                <td>{{ category.name }}</td>
+                <td>
+                  <p>
+                    <b>{{ category.name }}</b>
+                  </p>
+                </td>
                 <td>
                   <ul class="list-none">
                     <li v-for="(skill, index) in category.skills" :key="index">
-                      {{ skill.name }}
+                      <p>{{ skill.name }}</p>
                     </li>
                   </ul>
                 </td>
@@ -370,10 +380,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-:deep(.v-table.skills-table-print) {
-  background: transparent !important;
+:deep(.skills-table) {
+  background-color: transparent !important;
 }
-
 :deep(.project-row) {
   margin-top: 20px;
   padding-top: 10px;

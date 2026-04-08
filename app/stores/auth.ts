@@ -5,6 +5,7 @@ import {
   LoginDocument,
   UpdateTokenDocument,
   GetUserDocument,
+  SignupDocument,
 } from '../../graphql/generated/graphql';
 import type {
   AuthInput,
@@ -103,6 +104,20 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
+  const register = async (auth: AuthInput) => {
+    const { data } = await client.mutate({
+      mutation: SignupDocument,
+      variables: { auth },
+    });
+    if (data?.signup) {
+      accessTokenCookie.value = data.signup.access_token;
+      refreshTokenCookie.value = data.signup.refresh_token;
+      await onLogin(data.signup.access_token);
+      setUser(data.signup.user);
+      return data.signup;
+    }
+  };
+
   const logout = async () => {
     try {
       await onLogout();
@@ -160,5 +175,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     refresh,
+    register,
   };
 });

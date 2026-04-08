@@ -118,7 +118,10 @@ const userId = route.params.userId as string;
 
 const authStore = useAuthStore();
 const { user: currentUser } = storeToRefs(authStore);
-const logout = () => authStore.logout();
+const logout = () => {
+  authStore.logout();
+  navigateTo('/auth/login');
+};
 const { t } = useI18n();
 useSeoMeta({
   title: t('seo.userProfile.title'),
