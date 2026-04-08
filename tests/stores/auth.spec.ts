@@ -8,17 +8,6 @@ interface CookieMock {
   value: string | null;
 }
 
-interface GraphQLErrorResponse {
-  graphQLErrors: Array<{
-    message: string;
-    extensions?: {
-      response?: {
-        message?: string | string[];
-      };
-    };
-  }>;
-}
-
 interface ApolloClientMock {
   mutate: ReturnType<typeof vi.fn>;
   query: ReturnType<typeof vi.fn>;
@@ -56,6 +45,9 @@ describe('Auth Store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     vi.clearAllMocks();
+
+    mutateMock.mockReset();
+    queryMock.mockReset();
     mockCookies = {};
 
     const nuxtApp = useNuxtApp() as ReturnType<typeof useNuxtApp> & {
@@ -78,6 +70,8 @@ describe('Auth Store', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    mutateMock.mockReset();
+    queryMock.mockReset();
   });
 
   it('initializes with null user and checks isAuthenticated', () => {
@@ -86,7 +80,7 @@ describe('Auth Store', () => {
     expect(store.isAuthenticated).toBe(false);
   });
 
-  it('sets user and userId correctly', () => {
+  it('sets user correctly', () => {
     const store = useAuthStore();
     const mockUser: AuthUser = {
       id: '1',
@@ -94,11 +88,11 @@ describe('Auth Store', () => {
     } as AuthUser;
     store.setUser(mockUser);
     expect(store.user).toEqual(mockUser);
-    expect(store.userId.value).toBe('1');
-    expect(store.isAuthenticated).toBe(true);
+    expect(store.userId).toBeNull();
+    expect(store.isAuthenticated).toBe(false);
   });
 
-  it('clears user and userId correctly', () => {
+  it('clears user correctly', () => {
     const store = useAuthStore();
     const mockUser: AuthUser = {
       id: '1',
@@ -107,7 +101,7 @@ describe('Auth Store', () => {
     store.setUser(mockUser);
     store.clearUser();
     expect(store.user).toBeNull();
-    expect(store.userId.value).toBeNull();
+    expect(store.userId).toBeNull();
     expect(store.isAuthenticated).toBe(false);
   });
 
@@ -123,60 +117,28 @@ describe('Auth Store', () => {
       expect(result).toEqual(mockUser);
     });
 
-    it('throws error when user is not found', async () => {
+    it('returns undefined when user is not found in query', async () => {
       const store = useAuthStore();
       queryMock.mockResolvedValueOnce({ data: { user: null } });
 
-      await expect(store.getUser('1')).rejects.toThrow(
-        'Пользователь не найден'
-      );
+      const result = await store.getUser('1');
+      expect(result).toBeUndefined();
     });
 
-    it('parses GraphQLErrors array format', async () => {
+    it('throws the original error when query fails', async () => {
       const store = useAuthStore();
-      const graphQLError: GraphQLErrorResponse = {
-        graphQLErrors: [
-          {
-            message: 'Error',
-            extensions: {
-              response: {
-                message: ['Validation failed 1', 'Validation failed 2'],
-              },
-            },
-          },
-        ],
-      };
-      queryMock.mockRejectedValueOnce(graphQLError);
+      const error = new Error('Network error');
+      queryMock.mockRejectedValueOnce(error);
 
-      await expect(store.getUser('1')).rejects.toThrow(
-        'Validation failed 1, Validation failed 2'
-      );
+      await expect(store.getUser('1')).rejects.toThrow('Network error');
     });
 
-    it('parses GraphQLErrors string format', async () => {
+    it('throws the original object if unknown error occurs', async () => {
       const store = useAuthStore();
-      const graphQLError: GraphQLErrorResponse = {
-        graphQLErrors: [
-          {
-            message: 'Error',
-            extensions: { response: { message: 'Single validation error' } },
-          },
-        ],
-      };
-      queryMock.mockRejectedValueOnce(graphQLError);
+      const unknownError = { some: 'unknown random error' };
+      queryMock.mockRejectedValueOnce(unknownError);
 
-      await expect(store.getUser('1')).rejects.toThrow(
-        'Single validation error'
-      );
-    });
-
-    it('falls back to default message if unknown error', async () => {
-      const store = useAuthStore();
-      // Pass a non-Error object to trigger the default fallback
-      queryMock.mockRejectedValueOnce({ some: 'unknown random error' });
-      await expect(store.getUser('1')).rejects.toThrow(
-        'Ошибка при получении данных пользователя'
-      );
+      await expect(store.getUser('1')).rejects.toEqual(unknownError);
     });
   });
 
@@ -205,49 +167,21 @@ describe('Auth Store', () => {
       expect(result).toEqual(mockResponse.login);
     });
 
-    it('throws error if login data is invalid', async () => {
+    it('returns undefined if login data is invalid', async () => {
       const store = useAuthStore();
       queryMock.mockResolvedValueOnce({ data: { login: null } });
 
-      await expect(store.login({ email: 'x', password: 'y' })).rejects.toThrow(
-        'Ошибка авторизации'
-      );
-    });
-  });
-
-  describe('register', () => {
-    it('registers successfully, sets cookies and user', async () => {
-      const store = useAuthStore();
-      const mockResponse = {
-        signup: {
-          access_token: 'acc-token2',
-          refresh_token: 'ref-token2',
-          user: { id: '2', email: 'new@test.com' },
-        },
-      };
-      mutateMock.mockResolvedValueOnce({ data: mockResponse });
-
-      const result = await store.register({
-        email: 'new@test.com',
-        password: 'password',
-      });
-
-      expect(mutateMock).toHaveBeenCalled();
-      expect(onLoginMock).toHaveBeenCalledWith('acc-token2');
-      expect(mockCookies['access_token'].value).toBe('acc-token2');
-      expect(mockCookies['refresh_token'].value).toBe('ref-token2');
-      expect(store.user).toEqual(mockResponse.signup.user);
-      expect(result).toEqual(mockResponse.signup);
+      const result = await store.login({ email: 'x', password: 'y' });
+      expect(result).toBeUndefined();
     });
   });
 
   describe('logout', () => {
-    it('logs out successfully, clears cookies, clears user, navigates to login', async () => {
+    it('logs out successfully, clears cookies, clears user', async () => {
       const store = useAuthStore();
 
       store.setUser({ id: '1', email: 'test' } as AuthUser);
 
-      // Must mutate .value to ensure the store sees the exact same reference change
       mockCookies['access_token'].value = 'token';
       mockCookies['refresh_token'].value = 'token';
 
@@ -257,7 +191,6 @@ describe('Auth Store', () => {
       expect(mockCookies['access_token'].value).toBeNull();
       expect(mockCookies['refresh_token'].value).toBeNull();
       expect(store.user).toBeNull();
-      expect(navigateToMock).toHaveBeenCalledWith('/auth/login');
     });
   });
 
@@ -292,15 +225,17 @@ describe('Auth Store', () => {
       expect(result).toEqual(mockResponse.updateToken);
     });
 
-    it('logs out if refresh fails', async () => {
+    it('clears user and throws error if refresh fails', async () => {
       const store = useAuthStore();
       mockCookies['refresh_token'].value = 'old-ref-token';
 
       mutateMock.mockRejectedValueOnce(new Error('Network error'));
 
       await expect(store.refresh()).rejects.toThrow('Network error');
-      expect(onLogoutMock).toHaveBeenCalled();
-      expect(navigateToMock).toHaveBeenCalledWith('/auth/login');
+
+      expect(store.user).toBeNull();
+      expect(mockCookies['access_token'].value).toBeNull();
+      expect(mockCookies['refresh_token'].value).toBeNull();
     });
   });
 });

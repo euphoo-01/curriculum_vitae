@@ -1,3 +1,6 @@
+import { defineStore } from 'pinia';
+import { useApollo } from '#imports';
+import { jwtDecode } from 'jwt-decode';
 import {
   LoginDocument,
   UpdateTokenDocument,
@@ -11,39 +14,59 @@ import type {
 
 export type AuthUser = LoginQuery['login']['user'];
 
-let refreshPromise: Promise<UpdateTokenResult> | null = null;
+interface JwtPayload {
+  sub: number;
+  email: string;
+  role: string;
+  exp: number;
+  iat: number;
+}
 
 export const useAuthStore = defineStore('auth', () => {
+  let refreshPromise: Promise<UpdateTokenResult> | null = null;
+
   const { onLogin, onLogout } = useApollo();
   const { $apollo } = useNuxtApp();
   const client = $apollo.defaultClient;
 
-  const userIdCookie = useCookie<string | null>('auth_user_id', {
-    maxAge: 60 * 60 * 24 * 30,
-    path: '/',
-  });
   const refreshTokenCookie = useCookie<string | null>('refresh_token', {
     maxAge: 60 * 60 * 24 * 30,
     path: '/',
   });
+
   const accessTokenCookie = useCookie<string | null>('access_token', {
-    maxAge: 60 * 60 * 24 * 30,
     path: '/',
   });
 
   const user = ref<AuthUser | null>(null);
 
-  const userId = computed(() => userIdCookie.value);
-  const isAuthenticated = computed(() => !!accessTokenCookie.value);
+  const decodedToken = computed<JwtPayload | null>(() => {
+    if (!accessTokenCookie.value) return null;
+    try {
+      return jwtDecode<JwtPayload>(accessTokenCookie.value);
+    } catch {
+      return null;
+    }
+  });
+
+  const userId = computed(() => decodedToken.value?.sub || null);
+
+  const isTokenExpired = computed(() => {
+    if (!decodedToken.value?.exp) return true;
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decodedToken.value.exp < currentTime + 10;
+  });
+
+  const isAuthenticated = computed(
+    () => !!accessTokenCookie.value && !isTokenExpired.value
+  );
 
   const setUser = (newUser: AuthUser) => {
     user.value = newUser;
-    userIdCookie.value = newUser.id;
   };
 
   const clearUser = () => {
     user.value = null;
-    userIdCookie.value = null;
     accessTokenCookie.value = null;
     refreshTokenCookie.value = null;
   };
@@ -61,12 +84,7 @@ export const useAuthStore = defineStore('auth', () => {
         return data.user;
       }
     } catch (e) {
-      if (e instanceof Error) {
-        console.error('Store: GetUser error', e.message);
-      } else {
-        console.error('Store: GetUser error. Unknown error');
-      }
-
+      console.error('Store: GetUser error', e);
       throw e;
     }
   };
@@ -89,41 +107,43 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await onLogout();
     } catch (e) {
-      if (e instanceof Error) {
-        console.error('Error on Apollo logout', e.message);
-      } else {
-        console.error('Error on Apollo logout');
-      }
+      console.error('Error on Apollo logout', e);
     } finally {
       clearUser();
     }
   };
 
   const refresh = async () => {
-    if (!refreshTokenCookie.value) throw new Error('No refresh token');
+    if (!refreshTokenCookie.value)
+      throw new Error('No refresh token available');
     if (refreshPromise) return refreshPromise;
 
     refreshPromise = (async () => {
       try {
-        const { data } = await client.mutate({ mutation: UpdateTokenDocument });
+        await onLogin(refreshTokenCookie.value || '', 'default', true);
+
+        const { data } = await client.mutate({
+          mutation: UpdateTokenDocument,
+        });
+
         if (data?.updateToken) {
           accessTokenCookie.value = data.updateToken.access_token;
           refreshTokenCookie.value = data.updateToken.refresh_token;
-          await onLogin(data.updateToken.access_token);
+
+          await onLogin(data.updateToken.access_token, 'default', true);
+
           return data.updateToken;
         }
-        throw new Error('Refresh failed');
+        throw new Error('Refresh mutation returned no data');
       } catch (e) {
-        if (e instanceof Error) {
-          console.error('Store: Refresh error', e.message);
-        } else {
-          console.error('Store: Refresh error: Unknown Error');
-        }
+        console.error('Store: Refresh error', e);
+        clearUser();
         throw e;
       } finally {
         refreshPromise = null;
       }
     })();
+
     return refreshPromise;
   };
 
@@ -131,6 +151,9 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     userId,
     isAuthenticated,
+    isTokenExpired,
+    accessTokenCookie,
+    refreshTokenCookie,
     setUser,
     clearUser,
     getUser,

@@ -4,7 +4,6 @@ import type { ToRefs } from 'vue';
 import { toRefs, reactive } from 'vue';
 import ProfilePage from '../../../../app/pages/users/[userId]/profile.vue';
 
-// 1. Define Interfaces for your data
 interface UserProfile {
   first_name: string;
   last_name: string;
@@ -32,7 +31,6 @@ interface EmployeesStore {
   deleteAvatar: ReturnType<typeof vi.fn>;
 }
 
-// 2. Mock Imports with Types
 mockNuxtImport('useI18n', () => () => ({
   t: (key: string): string => key,
 }));
@@ -90,8 +88,6 @@ mockNuxtImport(
   })
 );
 
-// 3. Strictly typed storeToRefs using Generics
-// This mimics the actual Pinia behavior: taking an object and returning an object of Refs
 mockNuxtImport(
   'storeToRefs',
   () =>

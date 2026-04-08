@@ -220,9 +220,16 @@ This file configures the `cv_node` service. An example content might look like t
 ```
 # .env.cv_node
 PORT=3001
-NODE_ENV=development
-DATABASE_URL=postgresql://user:password@cv_postgres:5432/database_name
-JWT_SECRET=your_jwt_secret_key
+DATABASE_URL=postgres://user:pass@cv_postgres:5432/db
+DATABASE_SSL=
+JWT_SECRET=
+JWT_SECRET_2=
+CLOUDINARY_URL=
+MAIL_FROM=
+SMTP_URL=
+CHROME_WS=
+SENTRY_DSN_URL=
+
 ```
 *   `PORT`: The port the Node.js backend listens on within its container.
 *   `NODE_ENV`: Application environment (e.g., `development`, `production`).
