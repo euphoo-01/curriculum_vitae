@@ -117,7 +117,7 @@ const isAdmin = computed(() => currentUser.value?.role === UserRole.Admin);
 const adminActions: AdminAction[] = [
   {
     name: t('common.actions.update'),
-    type: AdminActionsNames.SEE,
+    type: AdminActionsNames.UPDATE,
     action: (id: string) => {
       const proj = projects.value.find((p) => p.id === id);
       if (proj) {

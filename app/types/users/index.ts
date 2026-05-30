@@ -3,6 +3,7 @@ import type { UsersQuery } from '~~/graphql/generated/graphql';
 export const enum AdminActionsNames {
   'SEE' = 'see',
   'DELETE' = 'delete',
+  'UPDATE' = 'update',
 }
 
 export type AdminAction = {

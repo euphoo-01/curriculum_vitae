@@ -15,11 +15,25 @@ services:
     networks:
       - cv_net
 
+  cv_chrome:
+    image: browserless/chrome:latest
+    container_name: cv_chrome
+    restart: unless-stopped
+    volumes:
+      - /dev/shm:/dev/shm
+    environment:
+      - MAX_CONCURRENT_SESSIONS=10
+      - MAX_QUEUE_COUNT=20
+      - CONNECTION_TIMEOUT=300000
+    networks:
+      - cv_net
+
   cv_node:
     image: thornpear/cv_node
     container_name: cv_node
     depends_on:
       - cv_postgres
+      - cv_chrome
     env_file:
       - .env.cv_node
     ports:

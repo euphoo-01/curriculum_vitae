@@ -22,6 +22,7 @@ vi.mock('#app', () => ({
       buildAssetsDir: '/_nuxt/',
     },
   }),
+  // eslint-disable-next-line
   defineNuxtPlugin: (fn: any) => fn,
   navigateTo: mockNavigateTo,
 }));
@@ -45,7 +46,7 @@ const mockConcat = vi.fn().mockImplementation(() => ({ name: 'linked-chain' }));
 const mockOnErrorCallback = vi.fn();
 
 vi.mock('@apollo/client/link/error', () => ({
-  onError: (cb: (error: ErrorResponse) => Observable<FetchResult> | void) => {
+  onError: (cb: (error: ErrorResponse) => Observable<FetchResult>) => {
     mockOnErrorCallback(cb);
     return { concat: mockConcat };
   },

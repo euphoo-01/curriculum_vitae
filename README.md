@@ -1,6 +1,72 @@
 # Curriculum Vitae Management System
 
+Server-side rendered Nuxt.js application for managing employee CVs, skills, projects, and organizational dictionaries.
+
 This project is a modern web application serving as the frontend client for a Curriculum Vitae (CV) management system. It is built with a focus on efficient CV management, employee data organization, and skill tracking.
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/Screenshot%202026-05-30%20at%2021-53-37%20CV%20Preview%20-%20Innowise%20CV.png" alt="CV preview screen" width="100%" />
+</p>
+
+<table>
+  <tr>
+    <td colspan="2">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2022-04-04%20Profile%20-%20Innowise%20CV.png" alt="Employee profile screen" />
+      <br />
+      <sub><b>Employee Profile</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2021-50-10%20Login%20-%20Innowise%20CV.png" alt="Login screen" />
+      <br />
+      <sub><b>Login</b></sub>
+    </td>
+    <td width="50%">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2021-50-50%20Employees%20-%20Innowise%20CV.png" alt="Employees list screen" />
+      <br />
+      <sub><b>Employees</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2021-51-02%20CV%20List%20-%20Innowise%20CV.png" alt="CV list screen" />
+      <br />
+      <sub><b>CV List</b></sub>
+    </td>
+    <td width="50%">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2021-50-57%20Projects%20-%20Innowise%20CV.png" alt="Projects management screen" />
+      <br />
+      <sub><b>Projects</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2021-52-31%20Employee%20Skills%20-%20Innowise%20CV.png" alt="Employee skills screen" />
+      <br />
+      <sub><b>Employee Skills</b></sub>
+    </td>
+    <td width="50%">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2021-52-38%20Employee%20Languages%20-%20Innowise%20CV.png" alt="Employee languages screen" />
+      <br />
+      <sub><b>Employee Languages</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2021-52-44%20Employee%20CVs%20-%20Innowise%20CV.png" alt="Employee CVs screen" />
+      <br />
+      <sub><b>Employee CVs</b></sub>
+    </td>
+    <td width="50%">
+      <img src="screenshots/Screenshot%202026-05-30%20at%2021-51-08%20Departments%20-%20Innowise%20CV.png" alt="Departments management screen" />
+      <br />
+      <sub><b>Departments</b></sub>
+    </td>
+  </tr>
+</table>
 
 ## Project Structure
 
